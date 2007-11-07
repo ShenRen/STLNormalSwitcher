@@ -39,8 +39,8 @@
     <Reference Include="System.Drawing.Design" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
-    <Reference Include="Tao.OpenGl, Version=0.0.0.0, Culture=neutral, PublicKeyToken=1ca010269a4501ef" />
-    <Reference Include="Tao.Platform.Windows, Version=1.0.0.3, Culture=neutral, PublicKeyToken=701104b2da67a104" />
+    <Reference Include="Tao.OpenGl, Version=2.1.0.4, Culture=neutral, PublicKeyToken=1ca010269a4501ef, processorArchitecture=MSIL" />
+    <Reference Include="Tao.Platform.Windows, Version=1.0.0.4, Culture=neutral, PublicKeyToken=701104b2da67a104, processorArchitecture=MSIL" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="About.cs">
@@ -91,6 +91,9 @@
     </Compile>
     <Compile Include="STLParser.cs" />
     <Compile Include="SwitchersHelpers.cs" />
+    <Compile Include="Triangle.cs" />
+    <Compile Include="TriangleList.cs" />
+    <Compile Include="Vertex.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\switcher.ico" />

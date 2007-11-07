@@ -5,9 +5,9 @@
 //                 Mandy Kröller, Christian Moritz, Daniel Niggemann, Mathias Stöber,
 //                 Timo Stönner, Jan Varwig, Dafan Zhai
 //
-// This program is free software; you can redistribute it and/or modify
+// This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
-// the Free Software Foundation; either version 2 of the License, or
+// the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
 // This program is distributed in the hope that it will be useful,
@@ -16,9 +16,7 @@
 // GNU General Public License for more details.
 //
 // You should have received a copy of the GNU General Public License along
-// with this program; if not, write to the Free Software Foundation, Inc.,
-// 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
-// The licence can also be found at: http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt
+// with this program. If not, see <http://www.gnu.org/licenses/>.
 //
 // For more information and contact details look at STLNormalSwitchers website:
 //      http://normalswitcher.sourceforge.net/
@@ -41,93 +39,20 @@ namespace STLNormalSwitcher {
         #region Methods
 
         /// <summary>
-        /// Expands the given <paramref name="normalArray"/> for the facets
-        /// to an array of normal vectors three times as big for the vertices.
-        /// </summary>
-        /// <param name="normalArray">Array of normal vectors for the facets</param>
-        /// <returns>Expanded array of normal vectors for the vertices</returns>
-        public static float[] ExpandNormalArray(float[] normalArray) {
-            float x = new float();
-            float y = new float();
-            float z = new float();
-            List<float> nA = new List<float>();
-
-            for (int i = 0; i < normalArray.Length; i += 3) {
-                x = normalArray[i];
-                y = normalArray[i + 1];
-                z = normalArray[i + 2];
-                for (int j = 0; j < 3; j++) {
-                    nA.Add(x);
-                    nA.Add(y);
-                    nA.Add(z);
-                }
-            }
-
-            return nA.ToArray();
-        }
-
-        /// <summary>
-        /// Normalizes the array of vertices given by <paramref name="vertexArray"/>.
-        /// The displayed object is scaled and centered at the origin.
-        /// </summary>
-        /// <param name="vertexArray">Array of vertices</param>
-        /// <param name="min">Minima in the three dimensions</param>
-        /// <param name="scale">Factor to scale the object by</param>
-        /// <returns>Normalized array of vertices</returns>
-        public static float[] NormalizeVertexArray(float[] vertexArray, float[] min, float scale) {
-            float[] temp = new float[vertexArray.Length];
-            for (int i = 0; i < vertexArray.Length; i++) {
-                temp[i] = scale * (((vertexArray[i] - min[i % 3]) / (scale)) - 0.5f);
-            }
-            return temp;
-        }
-
-        /// <summary>
-        /// Switches all values in the given array.
-        /// </summary>
-        /// <param name="normalArray">Array of normal vectors</param>
-        /// <returns>Array of negated normal vectors</returns>
-        public static float[] SwitchAll(float[] normalArray) {
-            float[] tmp = new float[normalArray.Length];
-            for (int i = 0; i < normalArray.Length; i++) {
-                tmp[i] = -normalArray[i];
-            }
-            return tmp;
-        }
-
-        /// <summary>
-        /// Switches the normal vectors in <paramref name="normalArray"/> that are
-        /// contained in the <paramref name="selection"/>.
-        /// </summary>
-        /// <param name="normalArray">Array of normal vectors</param>
-        /// <param name="selection">List of indices of selected normal vectors</param>
-        /// <returns>Array with the selected normal vectors negated</returns>
-        public static float[] SwitchSelected(float[] normalArray, List<int> selection) {
-            float[] tmp = new float[normalArray.Length];
-            normalArray.CopyTo(tmp, 0);
-            for (int i = 0; i < selection.Count; i++) {
-                for (int j = 0; j < 3; j++) {
-                    tmp[selection[i] * 3 + j] = -normalArray[selection[i] * 3 + j];
-                }
-            }
-            return tmp;
-        }
-
-        /// <summary>
         /// Writes the data (normal vectors and vertices of the triangles) to the chosen file in ASCII-mode.
         /// </summary>
         /// <param name="filename">Path of the file to be saved</param>
         /// <param name="normalArray">The normal vectors</param>
         /// <param name="vertexArray">The vertices</param>
-        public static void WriteToASCII(string filename, float[] normalArray, float[] vertexArray) {
+        public static void WriteToASCII(string filename, TriangleList triangleList) {
             StreamWriter sw = new StreamWriter(filename);
             try {
                 sw.WriteLine("solid ");
-                for (int i = 0; i < normalArray.Length; i += 3) {
-                    sw.WriteLine("  facet normal " + normalArray[i] + " " + normalArray[i + 1] + " " + normalArray[i + 2] + " ");
+                for (int i = 0; i < triangleList.Count; i++) {
+                    sw.WriteLine("  facet normal " + triangleList[i][3][0] + " " + triangleList[i][3][1] + " " + triangleList[i][3][2] + " ");
                     sw.WriteLine("    outer loop");
                     for (int j = 0; j < 3; j++) {
-                        sw.WriteLine("      vertex " + vertexArray[(i + j) * 3] + " " + vertexArray[(i + j) * 3 + 1] + " " + vertexArray[(i + j) * 3 + 2] + " ");
+                        sw.WriteLine("      vertex " + triangleList[i][j][0] + " " + triangleList[i][j][1] + " " + triangleList[i][j][2] + " ");
                     }
                     sw.WriteLine("    endloop");
                     sw.WriteLine("  endfacet");
@@ -146,7 +71,7 @@ namespace STLNormalSwitcher {
         /// <param name="filename">Path of the file to be saved</param>
         /// <param name="normalArray">The normal vectors</param>
         /// <param name="vertexArray">The vertices</param>
-        public static void WriteToBinary(string filename, float[] normalArray, float[] vertexArray) {
+        public static void WriteToBinary(string filename, TriangleList triangleList) {
             FileStream fs = new FileStream(filename, FileMode.Create);
             BinaryWriter bw = new BinaryWriter(fs);
             try {
@@ -156,21 +81,20 @@ namespace STLNormalSwitcher {
 
                 for (int c = 0; c < 80; c++) { bw.Write(headerArr[c]); }
 
-                bw.Write((UInt32)(normalArray.Length / 3));
+                bw.Write((UInt32)(triangleList.Count));
 
-                for (int i = 0; i < normalArray.Length; i += 3) {
+                for (int i = 0; i < triangleList.Count; i++) {
 
-                    // Normal/vertices
+                    // Normal vector
                     for (int j = 0; j < 3; j++) {
-                        // First one is the normal
-                        bw.Write(normalArray[i + j]);
+                        bw.Write(triangleList[i][3][j]);
                     }
 
                     // Next three are vertices
                     for (int k = 0; k < 3; k++) {
-                        bw.Write(vertexArray[(i + k) * 3]);
-                        bw.Write(vertexArray[(i + k) * 3 + 1]);
-                        bw.Write(vertexArray[(i + k) * 3 + 2]);
+                        for (int h = 0; h < 3; h++) {
+                            bw.Write(triangleList[i][k][h]);
+                        }
                     }
 
                     // Last two bytes are only to fill up to 50 bytes

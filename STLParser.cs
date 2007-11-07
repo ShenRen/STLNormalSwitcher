@@ -5,9 +5,9 @@
 //                 Mandy Kröller, Christian Moritz, Daniel Niggemann, Mathias Stöber,
 //                 Timo Stönner, Jan Varwig, Dafan Zhai
 //
-// This program is free software; you can redistribute it and/or modify
+// This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
-// the Free Software Foundation; either version 2 of the License, or
+// the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
 // This program is distributed in the hope that it will be useful,
@@ -16,9 +16,7 @@
 // GNU General Public License for more details.
 //
 // You should have received a copy of the GNU General Public License along
-// with this program; if not, write to the Free Software Foundation, Inc.,
-// 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
-// The licence can also be found at: http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt
+// with this program. If not, see <http://www.gnu.org/licenses/>.
 //
 // For more information and contact details look at STLNormalSwitchers website:
 //      http://normalswitcher.sourceforge.net/
@@ -40,33 +38,14 @@ namespace STLNormalSwitcher {
 
         #region Fields
 
-        private float[] vertexArray;
-        private float[] normalArray;
-
-        private float[] min;
-        private float[] max;
-        private float scale;
-
+        private TriangleList triangleList = new TriangleList();
         private bool ascii;
 
         #endregion
 
         #region Properties
 
-        /// <value>Gets an array of parsed vertices</value>
-        public float[] VertexArray { get { return vertexArray; } }
-
-        /// <value>Gets an array of normal vectors for the faces or sets it</value>
-        public float[] NormalArray {
-            get { return normalArray; }
-            set { normalArray = value; }
-        }
-
-        /// <value>Gets an array containing the minima of all parsed vertices in the three dimensions</value>
-        public float[] Min { get { return min; } }
-
-        /// <value>Gets the maximum of the differences between the maxima and minima</value>
-        public float Scale { get { return scale; } }
+        public TriangleList TriangleList { get { return triangleList; } }
 
         /// <value>Gets true if the parsed file is an ASCII file</value>
         public bool ASCII { get { return ascii; } }
@@ -80,16 +59,12 @@ namespace STLNormalSwitcher {
         /// </summary>
         /// <param name="file">Stream to parse</param>
         public void Parse(StreamReader file) {
-            min = new float[3] { 0, 0, 0 };
-            max = new float[3] { 0, 0, 0 };
             // First test, if the stream is ASCII or binary
             if (ascii = TestIfASCII(file)) {
                 ParseASCII(file);
-            }
-            else {
+            } else {
                 ParseBinary(file);
             }
-            SetScale();
         }
 
         /// <summary>
@@ -114,8 +89,6 @@ namespace STLNormalSwitcher {
 
             // Set stream back to null
             binReader.BaseStream.Position = 0;
-            List<float> normalList = new List<float>();
-            List<float> vertexList = new List<float>();
             char[] charBuf = new char[80];
 
             // The first 80 bytes are trash
@@ -131,42 +104,37 @@ namespace STLNormalSwitcher {
             }
 
             try {
+
                 // Read the records
                 for (int i = 0; i < count; i++) {
+                    Vertex[] tmp = new Vertex[4] { new Vertex(0, 0, 0), new Vertex(0, 0, 0), new Vertex(0, 0, 0), new Vertex(0, 0, 0) };
 
                     // Normal/vertices
+
+                    // First one is the normal
                     for (int j = 0; j < 3; j++) {
-                        // First one is the normal
-                        normalList.Add(binReader.ReadSingle());
+                        tmp[3][j] = binReader.ReadSingle();
                     }
 
                     // Next three are vertices
-                    for (int k = 0; k < 9; k++) {
-                        vertexList.Add(binReader.ReadSingle());
-                        if (vertexList[vertexList.Count - 1] < min[k % 3]) { min[k % 3] = vertexList[vertexList.Count - 1]; }
-                        else if (vertexList[vertexList.Count - 1] > max[k % 3]) { max[k % 3] = vertexList[vertexList.Count - 1]; }
+                    for (int k = 0; k < 3; k++) {
+                        for (int h = 0; h < 3; h++) {
+                            tmp[k][h] = binReader.ReadSingle();
+                        }
                     }
 
                     // Last two bytes are only to fill up to 50 bytes
                     binReader.Read(charBuf, 0, 2);
+
+                    triangleList.AddTriangle(new Triangle(tmp));
                 }
 
-            }
-            catch {
+            } catch {
                 MessageBox.Show("Parser-Error", "", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-            finally {
+            } finally {
                 binReader.Close();
+                triangleList.Finish();
             }
-
-            if ((vertexList.Count == 0) || (normalList.Count == 0)) {
-                throw new InvalidDataException();
-            }
-            else {
-                this.vertexArray = vertexList.ToArray();
-                this.normalArray = normalList.ToArray();
-            }
-
         }
 
         /// <summary>
@@ -175,9 +143,7 @@ namespace STLNormalSwitcher {
         /// <param name="file">Stream to parse</param>
         private void ParseASCII(StreamReader file) {
             String input = null;
-            int lineCount = 1;
-            List<float> vertexList = new List<float>();
-            List<float> normalList = new List<float>();
+            int count = 0;
 
             NumberFormatInfo numberFormatInfo = new NumberFormatInfo();
             numberFormatInfo.NumberDecimalSeparator = ".";
@@ -185,55 +151,40 @@ namespace STLNormalSwitcher {
             file.BaseStream.Position = 0;
             StreamReader sr = new StreamReader(file.BaseStream);
 
+            Vertex[] tmp = new Vertex[4] { new Vertex(0, 0, 0), new Vertex(0, 0, 0), new Vertex(0, 0, 0), new Vertex(0, 0, 0) };
+
             try {
                 while ((input = sr.ReadLine()) != null) {
                     input = input.Trim();
+                    if (count == 4) {
+                        count = 0;
+                        triangleList.AddTriangle(new Triangle(tmp));
+                        tmp = new Vertex[4] { new Vertex(0, 0, 0), new Vertex(0, 0, 0), new Vertex(0, 0, 0), new Vertex(0, 0, 0) };
+                    }
 
-                    // RemoveEmptyEntities remove empty entities, resulting from more than one whitespace
+                    // RemoveEmptyEntities removes empty entities, resulting from more than one whitespace
                     String[] v = input.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
                     if (v.Length > 0) {
                         if (v[0].ToLower() == "vertex") {
                             // Parse string, NumberStyles.Float secures that different formats can be parsed
                             // such as: "-2.23454e-001" (exponential format)
-                            vertexList.Add(float.Parse(v[1], NumberStyles.Float, numberFormatInfo));
-                            if (vertexList[vertexList.Count - 1] < min[0]) { min[0] = vertexList[vertexList.Count - 1]; }
-                            else if (vertexList[vertexList.Count - 1] > max[0]) { max[0] = vertexList[vertexList.Count - 1]; }
-
-                            vertexList.Add(float.Parse(v[2], NumberStyles.Float, numberFormatInfo));
-                            if (vertexList[vertexList.Count - 1] < min[1]) { min[1] = vertexList[vertexList.Count - 1]; }
-                            else if (vertexList[vertexList.Count - 1] > max[1]) { max[1] = vertexList[vertexList.Count - 1]; }
-
-                            vertexList.Add(float.Parse(v[3], NumberStyles.Float, numberFormatInfo));
-                            if (vertexList[vertexList.Count - 1] < min[2]) { min[2] = vertexList[vertexList.Count - 1]; }
-                            else if (vertexList[vertexList.Count - 1] > max[2]) { max[2] = vertexList[vertexList.Count - 1]; }
-                        }
-                        else if (v[0].ToLower() == "facet") {
-                            float x, y, z;
-                            x = float.Parse(v[2], NumberStyles.Float, numberFormatInfo);
-                            y = float.Parse(v[3], NumberStyles.Float, numberFormatInfo);
-                            z = float.Parse(v[4], NumberStyles.Float, numberFormatInfo);
-
-                            normalList.Add(x);
-                            normalList.Add(y);
-                            normalList.Add(z);
+                            for (int i = 0; i < 3; i++) {
+                                tmp[count - 1][i] = float.Parse(v[i+1], NumberStyles.Float, numberFormatInfo);
+                            }
+                            count++;
+                        } else if (v[0].ToLower() == "facet") {
+                            for (int j = 0; j < 3; j++) {
+                                tmp[3][j] = float.Parse(v[j+2], NumberStyles.Float, numberFormatInfo);
+                            }
+                            count++;
                         }
                     }
-                    lineCount++;
                 }
-            }
-            catch {
+            } catch {
                 MessageBox.Show("Parser-Error", "", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-            finally {
+            } finally {
                 sr.Close();
-            }
-
-            if ((vertexList.Count == 0) || (normalList.Count == 0)) {
-                throw new InvalidDataException();
-            }
-            else {
-                this.vertexArray = vertexList.ToArray();
-                this.normalArray = normalList.ToArray();
+                triangleList.Finish();
             }
         }
 
@@ -252,23 +203,13 @@ namespace STLNormalSwitcher {
                 if (0 != v.Length) {
                     if ("vertex" == v[0].ToLower()) {
                         foundVertex = true;
-                    }
-                    else if ("facet" == v[0].ToLower()) {
+                    } else if ("facet" == v[0].ToLower()) {
                         foundNormal = true;
                     }
                 }
                 if (foundNormal && foundVertex) { return true; }
             }
             return (foundVertex && foundNormal);
-        }
-
-        /// <summary>
-        /// Calculates the maximum of the differences between the maxima and minima.
-        /// </summary>
-        private void SetScale() {
-            scale = max[0] - min[0];
-            if (max[1] - min[1] > scale) { scale = max[1] - min[1]; }
-            if (max[2] - min[2] > scale) { scale = max[2] - min[2]; }
         }
 
         #endregion

@@ -26,32 +26,25 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using System.Collections;
-using System.Windows.Forms;
 
 namespace STLNormalSwitcher {
     /// <summary>
-    /// Allows sorting of the columns of a ListView.
+    /// A Vertex can be either the corner of a Triangle or a normal vector.
     /// </summary>
-    public class ListViewComparer : IComparer {
-
-        #region Fields
-
-        private int col;
-        private SortOrder order;
-
-        #endregion
+    public class Vertex : List<float> {
 
         #region Constructors
 
         /// <summary>
-        /// Sets the column to <paramref name="col"/> and the order to <paramref name="order"/>.
+        /// Creates a new threedimensional vertex.
         /// </summary>
-        /// <param name="col">Column to be sorted</param>
-        /// <param name="order">Order to sort it in</param>
-        public ListViewComparer(int col, SortOrder order) {
-            this.col = col;
-            this.order = order;
+        /// <param name="x">x-coordinate</param>
+        /// <param name="y">y-coordinate</param>
+        /// <param name="z">z-coordinate</param>
+        public Vertex(float x, float y, float z) {
+            this.Add(x);
+            this.Add(y);
+            this.Add(z);
         }
 
         #endregion
@@ -59,22 +52,30 @@ namespace STLNormalSwitcher {
         #region Methods
 
         /// <summary>
-        /// Compares two objects.
+        /// Returns a copy of this Vertex.
         /// </summary>
-        /// <param name="x">Object 1</param>
-        /// <param name="y">Object 2</param>
-        /// <returns>Value indicating the correct order of the two objects</returns>
-        public int Compare(object x, object y) {
-            ListViewItem item1, item2;
-            item1 = (ListViewItem)x;
-            item2 = (ListViewItem)y;
+        /// <returns>Copy of this Vertex</returns>
+        public Vertex Copy() { return new Vertex(this[0], this[1], this[2]); }
 
-            if (this.order == SortOrder.Ascending) {
-                return item1.SubItems[col].Text.CompareTo(item2.SubItems[col].Text);
-            } else {
-                return item2.SubItems[col].Text.CompareTo(item1.SubItems[col].Text);
-            }
+        /// <summary>
+        /// Calculates the distance of this Vertex from the one given by <paramref name="v2"/>
+        /// </summary>
+        /// <param name="v2">A second Vertex</param>
+        /// <returns>Distance between the vertices</returns>
+        public double DistanceFrom(Vertex v2) {
+            double dist = Math.Sqrt(Math.Pow(Math.Abs(this[0] - v2[0]), 2) + Math.Pow(Math.Abs(this[1] - v2[1]), 2) + Math.Pow(Math.Abs(this[2] - v2[2]), 2));
+            return dist;
         }
+
+        /// <summary>
+        /// Returns the Vertex as a string.
+        /// </summary>
+        /// <returns>Vertex as a string</returns>
+        public override string ToString() {
+            string value = "[" + this[0].ToString() + ", " + this[1].ToString() + ", " + this[2].ToString() + "]";
+            return value;
+        }
+
 
         #endregion
     }

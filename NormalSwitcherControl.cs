@@ -5,9 +5,9 @@
 //                 Mandy Kröller, Christian Moritz, Daniel Niggemann, Mathias Stöber,
 //                 Timo Stönner, Jan Varwig, Dafan Zhai
 //
-// This program is free software; you can redistribute it and/or modify
+// This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
-// the Free Software Foundation; either version 2 of the License, or
+// the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
 // This program is distributed in the hope that it will be useful,
@@ -16,9 +16,7 @@
 // GNU General Public License for more details.
 //
 // You should have received a copy of the GNU General Public License along
-// with this program; if not, write to the Free Software Foundation, Inc.,
-// 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
-// The licence can also be found at: http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt
+// with this program. If not, see <http://www.gnu.org/licenses/>.
 //
 // For more information and contact details look at STLNormalSwitchers website:
 //      http://normalswitcher.sourceforge.net/
@@ -67,16 +65,17 @@ namespace STLNormalSwitcher {
         /// <summary>
         /// Initializes the NormalSwitcherControl.
         /// </summary>
-        public NormalSwitcherControl(NormalSwitcherForm owner, float scale) {
+        /// <param name="owner">The NormalSwitcherForm owning this Control</param>
+        public NormalSwitcherControl(NormalSwitcherForm owner) {
             this.InitStyles();
             this.InitContexts();
             this.InitOpenGL();
 
             this.owner = owner;
-            this.scale = scale;
+            this.scale = owner.TriangleList.Scale;
 
             this.picking = false;
-            this.colorDist = 256 * 256 * 256 / (owner.VertexArray.Length / 9 + 2);
+            this.colorDist = 256 * 256 * 256 / (owner.TriangleList.Count + 2);
             this.SetPickingColors();
 
             this.MouseWheel += this.MouseWheelEvent;
@@ -285,9 +284,9 @@ namespace STLNormalSwitcher {
         /// Selected triangles get the color Red.
         /// </summary>
         public void SetColorArray() {
-            this.colorArray = new float[owner.VertexArray.Length];
-            for (int i = 0; i < owner.VertexArray.Length / 9; i++) {
-                if ((owner.CurrentSelection.Count != 0) && (owner.CurrentSelection[0] != -1) && (owner.CurrentSelection.Contains(i))) {
+            this.colorArray = new float[owner.TriangleList.Count * 9];
+            for (int i = 0; i < owner.TriangleList.Count; i++) {
+                if ((owner.CurrentSelection.Count != 0) && (owner.CurrentSelection.Contains(owner.TriangleList[i]))) {
                     colorArray[i * 9] = colorArray[i * 9 + 3] = colorArray[i * 9 + 6] = sColor[0];
                     colorArray[i * 9 + 1] = colorArray[i * 9 + 4] = colorArray[i * 9 + 7] = sColor[1];
                     colorArray[i * 9 + 2] = colorArray[i * 9 + 5] = colorArray[i * 9 + 8] = sColor[2];
@@ -304,14 +303,14 @@ namespace STLNormalSwitcher {
         /// </summary>
         private void DrawSTL() {
             Gl.glLineWidth(1.0f);
-            Gl.glVertexPointer(3, Gl.GL_FLOAT, 0, owner.VertexArray);
-            Gl.glNormalPointer(Gl.GL_FLOAT, 0, owner.NormalArray);
+            Gl.glVertexPointer(3, Gl.GL_FLOAT, 0, owner.TriangleList.VertexArray);
+            Gl.glNormalPointer(Gl.GL_FLOAT, 0, owner.TriangleList.NormalArray);
             if (picking) {
                 Gl.glColorPointer(3, Gl.GL_FLOAT, 0, this.pickingColors);
             } else {
                 Gl.glColorPointer(3, Gl.GL_FLOAT, 0, this.colorArray);
             }
-            Gl.glDrawArrays(Gl.GL_TRIANGLES, 0, owner.VertexArray.Length / 3);
+            Gl.glDrawArrays(Gl.GL_TRIANGLES, 0, owner.TriangleList.Count * 3);
         }
 
         #endregion
@@ -323,9 +322,9 @@ namespace STLNormalSwitcher {
         /// </summary>
         private void SetPickingColors() {
             RGB color;
-            this.pickingColors = new float[owner.VertexArray.Length];
+            this.pickingColors = new float[owner.TriangleList.Count * 9];
 
-            for (int i = 0; i < owner.VertexArray.Length / 9; i++) {
+            for (int i = 0; i < owner.TriangleList.Count; i++) {
                 color = SwitchersHelpers.GetRGBFromInt(i * colorDist);
                 pickingColors[i * 9] = pickingColors[i * 9 + 3] = pickingColors[i * 9 + 6] = color.R;
                 pickingColors[i * 9 + 1] = pickingColors[i * 9 + 4] = pickingColors[i * 9 + 7] = color.G;
@@ -339,6 +338,7 @@ namespace STLNormalSwitcher {
         /// <param name="rect">Contains, in this order,
         /// the X- and Y-coordinates of the lower left corner of the picking rectangle
         /// and its width and height.</param>
+        /// <param name="additive">True, if the selected Triangle is to be added to the selection</param>
         private void PickTriangle(int[] rect, bool additive) {
             Gl.glDisable(Gl.GL_LIGHTING);
             Gl.glDisable(Gl.GL_LIGHT0);
@@ -354,8 +354,7 @@ namespace STLNormalSwitcher {
             Gl.glEnable(Gl.GL_LIGHT0);
             this.picking = false;
 
-
-            owner.PickTriangle(SwitchersHelpers.UniqueSelection(color, colorDist, owner.NormalArray.Length / 3), additive);
+            owner.PickTriangle(SwitchersHelpers.UniqueSelection(color, colorDist, owner.TriangleList.Count * 3), additive);
         }
 
         #endregion

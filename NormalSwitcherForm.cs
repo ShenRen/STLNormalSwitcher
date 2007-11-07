@@ -5,9 +5,9 @@
 //                 Mandy Kröller, Christian Moritz, Daniel Niggemann, Mathias Stöber,
 //                 Timo Stönner, Jan Varwig, Dafan Zhai
 //
-// This program is free software; you can redistribute it and/or modify
+// This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
-// the Free Software Foundation; either version 2 of the License, or
+// the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
 // This program is distributed in the hope that it will be useful,
@@ -16,9 +16,7 @@
 // GNU General Public License for more details.
 //
 // You should have received a copy of the GNU General Public License along
-// with this program; if not, write to the Free Software Foundation, Inc.,
-// 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
-// The licence can also be found at: http://www.gnu.org/licenses/old-licenses/gpl-2.0.txt
+// with this program. If not, see <http://www.gnu.org/licenses/>.
 //
 // For more information and contact details look at STLNormalSwitchers website:
 //      http://normalswitcher.sourceforge.net/
@@ -47,36 +45,29 @@ namespace STLNormalSwitcher {
 
         private String currentFile;
 
-        private float[] vertexArray;
-        private float[] normalArray;
-        private float[] backupNormals;
+        private TriangleList triangleList;
+        private TriangleList backupList;
 
         private int origin;
 
-        private List<List<int>> history = new List<List<int>>();
-        private List<int> currentSelection = new List<int>();
+        private List<List<Triangle>> history = new List<List<Triangle>>();
+        private List<Triangle> currentSelection = new List<Triangle>();
 
         #endregion
 
         #region Properties
 
-        /// <value>Gets the vertexArray or sets it</value>
-        public float[] VertexArray {
-            get { return vertexArray; }
-            set { vertexArray = value; }
-        }
-
-        /// <value>Gets the normalArray or sets it</value>
-        public float[] NormalArray {
-            get { return normalArray; }
-            set { normalArray = value; }
+        /// <value>Gets the TriangleList or sets it</value>
+        public TriangleList TriangleList {
+            get { return triangleList; }
+            set { triangleList = value; }
         }
 
         /// <value>Gets the origin, the z-value to rotate around</value>
         public float Origin { get { return (float)origin; } }
 
         /// <value>Gets the currentSelection</value>
-        public List<int> CurrentSelection { get { return currentSelection; } }
+        public List<Triangle> CurrentSelection { get { return currentSelection; } }
 
         #endregion
 
@@ -106,17 +97,14 @@ namespace STLNormalSwitcher {
             StreamReader reader = new StreamReader(file);
             try {
                 parser.Parse(reader);
-                normalArray = SwitchersHelpers.ExpandNormalArray(parser.NormalArray);
-                vertexArray = SwitchersHelpers.NormalizeVertexArray(parser.VertexArray, parser.Min, parser.Scale);
-                backupNormals = new float[parser.NormalArray.Length];
-                parser.NormalArray.CopyTo(backupNormals, 0);
-                originTrackBar.Minimum = -(int)(parser.Scale / 2);
-                originTrackBar.Maximum = (int)(parser.Scale / 2);
+                triangleList = parser.TriangleList;
+                backupList = triangleList.Copy();
+                originTrackBar.Minimum = -(int)(triangleList.Scale / 2);
+                originTrackBar.Maximum = (int)(triangleList.Scale / 2);
                 originTrackBar.Value = origin = 0;
                 rotationOriginTextBox.Text = origin.ToString();
                 originTrackBar.Visible = true;
                 InitVisualization();
-                visualization.SetColorArray();
 
                 currentFile = file;
                 allButton.Enabled = true;
@@ -137,7 +125,7 @@ namespace STLNormalSwitcher {
         /// Creates a new NormalSwitcherControl and adds it to the NormalSwitcherForm.
         /// </summary>
         private void InitVisualization() {
-            visualization = new NormalSwitcherControl(this, parser.Scale);
+            visualization = new NormalSwitcherControl(this);
             splitContainer2.Panel2.Controls.Add(visualization);
             visualization.Dock = DockStyle.Fill;
         }
@@ -150,26 +138,13 @@ namespace STLNormalSwitcher {
             normalListView.BeginUpdate();
             normalListView.Items.Clear();
             normalListView.Sorting = SortOrder.None;
-            for (int i = 0; i < parser.NormalArray.Length / 3; i++) {
-                normalListView.Items.Add(new ListViewItem(new string[2] { NormalToString(i * 3), TriangleToString(i * 3) }));
+            for (int i = 0; i < triangleList.Count; i++) {
+                normalListView.Items.Add(new ListViewItem(new string[2] { triangleList[i].NormalToString(), triangleList[i].ToString() }));
                 normalListView.Items[i].Tag = i;
             }
             MarkSelectedItems();
             normalListView.EndUpdate();
             visualization.SetColorArray();
-        }
-
-        /// <summary>
-        /// Updates the normalListView. Only the normal vectors in the currentSelection are updated.
-        /// </summary>
-        private void UpdateListView() {
-            normalListView.BeginUpdate();
-            for (int i = 0; i < normalListView.Items.Count; i++) {
-                if (currentSelection.Contains((int)normalListView.Items[i].Tag)) {
-                    normalListView.Items[i].Text = NormalToString((int)normalListView.Items[i].Tag * 3);
-                }
-            }
-            normalListView.EndUpdate();
         }
 
         /// <summary>
@@ -179,7 +154,11 @@ namespace STLNormalSwitcher {
             if (normalListView.SelectedItems.Count >= 1) {
                 MakeCurrentSelection();
                 if (currentSelection.Count > 0) {
-                    history.Add(new List<int>(currentSelection.ToArray()));
+                    List<Triangle> temp = new List<Triangle>();
+                    for (int i = 0; i < currentSelection.Count; i++) {
+                        temp.Add(currentSelection[i].Copy());
+                    }
+                    history.Add(temp);
                 }
             }
         }
@@ -191,7 +170,7 @@ namespace STLNormalSwitcher {
             currentSelection.Clear();
             if (normalListView.SelectedItems.Count >= 1) {
                 for (int j = 0; j < normalListView.SelectedItems.Count; j++) {
-                    currentSelection.Add((int)normalListView.SelectedItems[j].Tag);
+                    currentSelection.Add(triangleList[(int)normalListView.SelectedItems[j].Tag]);
                 }
             }
         }
@@ -203,8 +182,8 @@ namespace STLNormalSwitcher {
         private void MarkSelectedItems() {
             normalListView.SelectedIndexChanged -= NormalListView_SelectedIndexChanged;
             for (int j = 0; j < currentSelection.Count; j++) {
-                if (currentSelection[j] > -1) {
-                    normalListView.SelectedIndices.Add(currentSelection[j]);
+                if (currentSelection[j].Position > -1) {
+                    normalListView.SelectedIndices.Add(currentSelection[j].Position);
                 }
             }
             normalListView.SelectedIndexChanged += NormalListView_SelectedIndexChanged;
@@ -254,47 +233,6 @@ namespace STLNormalSwitcher {
             }
         }
 
-        #region Helpers
-
-        /// <summary>
-        /// Creates a string representing the normal vector from its elements.
-        /// </summary>
-        /// <param name="i">Index of the normal vector</param>
-        /// <returns>String representing the normal vector</returns>
-        private string NormalToString(int i) {
-            string normal = "[" + parser.NormalArray[i] + ", " +
-                parser.NormalArray[i + 1] + ", " +
-                parser.NormalArray[i + 2] + "]";
-            return normal;
-        }
-
-        /// <summary>
-        /// Creates a string representing the triangle by its vertices.
-        /// </summary>
-        /// <param name="i">Index of the normal vector</param>
-        /// <returns>String representing the triangle by its vertices</returns>
-        private string TriangleToString(int i) {
-            string triangle = "{" + VertexToString(i * 3) + " " +
-                VertexToString((i + 1) * 3) + " " +
-                VertexToString((i + 2) * 3) + "}";
-            return triangle;
-
-        }
-
-        /// <summary>
-        /// Creates a string representing the vertex by its elements.
-        /// </summary>
-        /// <param name="i">Index of the vertex</param>
-        /// <returns>String representing the vertex</returns>
-        private string VertexToString(int i) {
-            string vertex = "[" + parser.VertexArray[i] + ", " +
-                parser.VertexArray[i + 1] + ", " +
-                parser.VertexArray[i + 2] + "]";
-            return vertex;
-        }
-
-        #endregion
-
         #endregion
 
         #region Event Handling Stuff
@@ -320,17 +258,15 @@ namespace STLNormalSwitcher {
                 StreamReader reader = new StreamReader(ofd.FileName);
                 try {
                     parser.Parse(reader);
-                    normalArray = SwitchersHelpers.ExpandNormalArray(parser.NormalArray);
-                    vertexArray = SwitchersHelpers.NormalizeVertexArray(parser.VertexArray, parser.Min, parser.Scale);
-                    backupNormals = new float[parser.NormalArray.Length];
-                    parser.NormalArray.CopyTo(backupNormals, 0);
-                    originTrackBar.Minimum = -(int)(parser.Scale / 2);
-                    originTrackBar.Maximum = (int)(parser.Scale / 2);
+
+                    triangleList = parser.TriangleList;
+                    backupList = triangleList.Copy();
+                    originTrackBar.Minimum = -(int)(triangleList.Scale / 2);
+                    originTrackBar.Maximum = (int)(triangleList.Scale / 2);
                     originTrackBar.Value = origin = 0;
                     rotationOriginTextBox.Text = origin.ToString();
                     originTrackBar.Visible = true;
                     InitVisualization();
-                    visualization.SetColorArray();
 
                     currentFile = ofd.FileName;
                     allButton.Enabled = true;
@@ -352,9 +288,9 @@ namespace STLNormalSwitcher {
         /// <param name="e">Standard EventArgs</param>
         private void SaveFile(object sender, EventArgs e) {
             if (parser.ASCII) {
-                SwitchersHelpers.WriteToASCII(this.currentFile, parser.NormalArray, parser.VertexArray);
+                SwitchersHelpers.WriteToASCII(this.currentFile, triangleList);
             } else {
-                SwitchersHelpers.WriteToBinary(this.currentFile, parser.NormalArray, parser.VertexArray);
+                SwitchersHelpers.WriteToBinary(this.currentFile, triangleList);
             }
         }
 
@@ -371,9 +307,9 @@ namespace STLNormalSwitcher {
             sfd.OverwritePrompt = true;
             if (sfd.ShowDialog() == DialogResult.OK) {
                 if (sfd.FilterIndex == 1) {
-                    SwitchersHelpers.WriteToASCII(sfd.FileName, parser.NormalArray, parser.VertexArray);
+                    SwitchersHelpers.WriteToASCII(sfd.FileName, triangleList);
                 } else {
-                    SwitchersHelpers.WriteToBinary(sfd.FileName, parser.NormalArray, parser.VertexArray);
+                    SwitchersHelpers.WriteToBinary(sfd.FileName, triangleList);
                 }
             }
         }
@@ -398,7 +334,7 @@ namespace STLNormalSwitcher {
                 allButton.Enabled = false;
                 undoButton.Enabled = false;
 
-                vertexArray = normalArray = backupNormals = null;
+                triangleList = null;
                 parser = new STLParser();
 
                 normalListView.Items.Clear();
@@ -424,12 +360,8 @@ namespace STLNormalSwitcher {
         private void Undo(object sender, EventArgs e) {
             if (history.Count >= 1) {
                 currentSelection = history[history.Count - 1];
-                if (currentSelection[0] == -1) {
-                    parser.NormalArray = SwitchersHelpers.SwitchAll(parser.NormalArray);
-                    normalArray = SwitchersHelpers.ExpandNormalArray(parser.NormalArray);
-                } else {
-                    parser.NormalArray = SwitchersHelpers.SwitchSelected(parser.NormalArray, currentSelection);
-                    normalArray = SwitchersHelpers.ExpandNormalArray(parser.NormalArray);
+                for (int i = 0; i < currentSelection.Count; i++) {
+                    triangleList[currentSelection[i].Position] = currentSelection[i];
                 }
                 history.RemoveAt(history.Count - 1);
             }
@@ -439,6 +371,8 @@ namespace STLNormalSwitcher {
                 currentSelection.Clear();
                 undoButton.Enabled = false;
             }
+
+            triangleList.CalculateArrays();
             FillListView();
             visualization.Refresh();
         }
@@ -449,8 +383,8 @@ namespace STLNormalSwitcher {
         /// <param name="sender">resetToolStripMenuItem or resetButton</param>
         /// <param name="e">Standard EventArgs</param>
         private void Reset(object sender, EventArgs e) {
-            backupNormals.CopyTo(parser.NormalArray, 0);
-            normalArray = SwitchersHelpers.ExpandNormalArray(parser.NormalArray);
+            triangleList = null;
+            triangleList = backupList.Copy();
             currentSelection.Clear();
             history.Clear();
 
@@ -465,11 +399,12 @@ namespace STLNormalSwitcher {
         /// <param name="sender">switchAllToolStripMenuItem or allButton</param>
         /// <param name="e">Standard EventArgs</param>
         private void SwitchAll(object sender, EventArgs e) {
-            parser.NormalArray = SwitchersHelpers.SwitchAll(parser.NormalArray);
-            normalArray = SwitchersHelpers.ExpandNormalArray(parser.NormalArray);
-
-            currentSelection = new List<int>(new int[1] { -1 });
-            history.Add(currentSelection);
+            List<Triangle> temp = new List<Triangle>();
+            for (int i = 0; i < triangleList.Count; i++) {
+                temp.Add(triangleList[i].Copy());
+            }
+            history.Add(temp);
+            triangleList.SwitchAll();
 
             undoButton.Enabled = true;
             FillListView();
@@ -482,14 +417,12 @@ namespace STLNormalSwitcher {
         /// <param name="sender">switchSelectedToolStripMenuItem or selectedButton</param>
         /// <param name="e">Standard EventArgs</param>
         private void SwitchSelected(object sender, EventArgs e) {
+            MakeHistory();
             if (currentSelection.Count > 0) {
-                parser.NormalArray = SwitchersHelpers.SwitchSelected(parser.NormalArray, currentSelection);
-                normalArray = SwitchersHelpers.ExpandNormalArray(parser.NormalArray);
-
-                MakeHistory();
+                triangleList.SwitchSelected(currentSelection);
 
                 undoButton.Enabled = true;
-                UpdateListView();
+                FillListView();
                 visualization.Refresh();
             }
         }
@@ -545,7 +478,7 @@ namespace STLNormalSwitcher {
         #region normalListView
 
         /// <summary>
-        /// Updates the currentSelection and marks the selected triangles in th NormalSwitcherControl.
+        /// Updates the currentSelection and marks the selected triangles in the NormalSwitcherControl.
         /// </summary>
         /// <param name="sender">normalListView</param>
         /// <param name="e">Standard EventArgs</param>
