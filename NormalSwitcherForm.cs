@@ -114,10 +114,7 @@ namespace STLNormalSwitcher {
                 parser.Parse(reader);
                 triangleList = parser.TriangleList;
                 backupList = triangleList.Copy();
-                originTrackBar.Minimum = -(int)(triangleList.Scale / 2);
-                originTrackBar.Maximum = (int)(triangleList.Scale / 2);
-                originTrackBar.Value = origin = 0;
-                rotationOriginTextBox.Text = origin.ToString();
+                SetOrigin();
                 originTrackBar.Visible = true;
                 InitVisualization();
 
@@ -143,6 +140,16 @@ namespace STLNormalSwitcher {
             visualization = new NormalSwitcherControl(this);
             splitContainer2.Panel2.Controls.Add(visualization);
             visualization.Dock = DockStyle.Fill;
+        }
+
+        /// <summary>
+        /// Sets the origin for rotation.
+        /// </summary>
+        private void SetOrigin() {
+            originTrackBar.Minimum = -(int)(triangleList.Scale / 2);
+            originTrackBar.Maximum = (int)(triangleList.Scale / 2);
+            originTrackBar.Value = origin = 0;
+            rotationOriginTextBox.Text = origin.ToString();
         }
 
         /// <summary>
@@ -348,10 +355,7 @@ namespace STLNormalSwitcher {
 
                     triangleList = parser.TriangleList;
                     backupList = triangleList.Copy();
-                    originTrackBar.Minimum = -(int)(triangleList.Scale / 2);
-                    originTrackBar.Maximum = (int)(triangleList.Scale / 2);
-                    originTrackBar.Value = origin = 0;
-                    rotationOriginTextBox.Text = origin.ToString();
+                    SetOrigin();
                     originTrackBar.Visible = true;
                     InitVisualization();
 
@@ -450,7 +454,7 @@ namespace STLNormalSwitcher {
                 List<Triangle> temp = new List<Triangle>();
                 for (int i = 0; i < currentSelection.Count; i++) {
                     temp.Add(triangleList[currentSelection[i].Position]);
-                    triangleList[currentSelection[i].Position] = currentSelection[i];
+                    triangleList.EditTriangle(currentSelection[i]);
                 }
                 history.RemoveAt(history.Count - 1);
                 future.Add(temp);
@@ -463,6 +467,7 @@ namespace STLNormalSwitcher {
             triangleList.CalculateArrays();
             FillListView();
             MarkSelectedItems();
+            SetOrigin();
             visualization.Refresh();
         }
 
@@ -473,7 +478,7 @@ namespace STLNormalSwitcher {
                 List<Triangle> temp = new List<Triangle>();
                 for (int i = 0; i < currentSelection.Count; i++) {
                     temp.Add(triangleList[currentSelection[i].Position]);
-                    triangleList[currentSelection[i].Position] = currentSelection[i];
+                    triangleList.EditTriangle(currentSelection[i]);
                 }
                 future.RemoveAt(future.Count - 1);
                 history.Add(temp);
@@ -486,6 +491,7 @@ namespace STLNormalSwitcher {
             triangleList.CalculateArrays();
             FillListView();
             MarkSelectedItems();
+            SetOrigin();
             visualization.Refresh();
         }
 
@@ -502,6 +508,7 @@ namespace STLNormalSwitcher {
 
             undoButton.Enabled = false;
             FillListView();
+            SetOrigin();
             visualization.Refresh();
         }
 
@@ -696,7 +703,7 @@ namespace STLNormalSwitcher {
         }
 
         /// <summary>
-        /// Adjusts the Values of the A-Vertex of the Triangle to the Vertex in the aNeighbors ComboBox.
+        /// Adjusts the values of the A-Vertex of the Triangle to the Vertex in the aNeighbors ComboBox.
         /// </summary>
         /// <param name="sender">hookButtonA</param>
         /// <param name="e">Standard EventArgs</param>
@@ -707,7 +714,7 @@ namespace STLNormalSwitcher {
         }
 
         /// <summary>
-        /// Adjusts the Values of the B-Vertex of the Triangle to the Vertex in the bNeighbors ComboBox.
+        /// Adjusts the values of the B-Vertex of the Triangle to the Vertex in the bNeighbors ComboBox.
         /// </summary>
         /// <param name="sender">hookButtonB</param>
         /// <param name="e">Standard EventArgs</param>
@@ -718,7 +725,7 @@ namespace STLNormalSwitcher {
         }
 
         /// <summary>
-        /// Adjusts the Values of the C-Vertex of the Triangle to the Vertex in the cNeighbors ComboBox.
+        /// Adjusts the values of the C-Vertex of the Triangle to the Vertex in the cNeighbors ComboBox.
         /// </summary>
         /// <param name="sender">hookButtonC</param>
         /// <param name="e">Standard EventArgs</param>
@@ -726,6 +733,34 @@ namespace STLNormalSwitcher {
             cX.Text = (cNeighbors.SelectedItem as Vertex)[0].ToString();
             cY.Text = (cNeighbors.SelectedItem as Vertex)[1].ToString();
             cZ.Text = (cNeighbors.SelectedItem as Vertex)[2].ToString();
+        }
+
+        /// <summary>
+        /// Makes the changes to the selected Triangle.
+        /// </summary>
+        /// <param name="sender">acceptButton</param>
+        /// <param name="e">Standard EventArgs</param>
+        private void AcceptButton_Click(object sender, EventArgs e) {
+            try {
+                Vertex a = new Vertex((float)Convert.ToDouble(aX.Text), (float)Convert.ToDouble(aY.Text), (float)Convert.ToDouble(aZ.Text));
+                Vertex b = new Vertex((float)Convert.ToDouble(bX.Text), (float)Convert.ToDouble(bY.Text), (float)Convert.ToDouble(bZ.Text));
+                Vertex c = new Vertex((float)Convert.ToDouble(cX.Text), (float)Convert.ToDouble(cY.Text), (float)Convert.ToDouble(cZ.Text));
+                Triangle tri = new Triangle(a, b, c);
+                tri.Position = currentSelection[0].Position;
+                List<Triangle> temp = new List<Triangle>();
+                temp.Add(currentSelection[0]);
+                history.Add(temp);
+                triangleList.EditTriangle(tri);
+
+                undoButton.Enabled = true;
+
+                SetOrigin();
+                visualization.Refresh();
+            } catch (ArgumentException ex) {
+                MessageBox.Show(ex.Message, "", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            } catch {
+                MessageBox.Show("Make sure all values are floating point numbers!", "", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         #endregion

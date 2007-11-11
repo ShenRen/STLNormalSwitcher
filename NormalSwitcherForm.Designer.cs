@@ -142,7 +142,7 @@ namespace STLNormalSwitcher {
             this.aboutToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(762, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(747, 24);
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -303,6 +303,7 @@ namespace STLNormalSwitcher {
             // splitContainer1
             // 
             this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer1.FixedPanel = System.Windows.Forms.FixedPanel.Panel2;
             this.splitContainer1.IsSplitterFixed = true;
             this.splitContainer1.Location = new System.Drawing.Point(0, 24);
             this.splitContainer1.Name = "splitContainer1";
@@ -315,8 +316,8 @@ namespace STLNormalSwitcher {
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.tabControl1);
-            this.splitContainer1.Size = new System.Drawing.Size(762, 892);
-            this.splitContainer1.SplitterDistance = 552;
+            this.splitContainer1.Size = new System.Drawing.Size(747, 710);
+            this.splitContainer1.SplitterDistance = 458;
             this.splitContainer1.TabIndex = 1;
             // 
             // tableLayoutPanel2
@@ -331,7 +332,7 @@ namespace STLNormalSwitcher {
             this.tableLayoutPanel2.Name = "tableLayoutPanel2";
             this.tableLayoutPanel2.RowCount = 1;
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel2.Size = new System.Drawing.Size(762, 552);
+            this.tableLayoutPanel2.Size = new System.Drawing.Size(747, 458);
             this.tableLayoutPanel2.TabIndex = 0;
             // 
             // tableLayoutPanel1
@@ -362,14 +363,14 @@ namespace STLNormalSwitcher {
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 10F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(130, 546);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(130, 452);
             this.tableLayoutPanel1.TabIndex = 0;
             // 
             // undoButton
             // 
             this.undoButton.Dock = System.Windows.Forms.DockStyle.Fill;
             this.undoButton.Enabled = false;
-            this.undoButton.Location = new System.Drawing.Point(18, 35);
+            this.undoButton.Location = new System.Drawing.Point(18, 26);
             this.undoButton.Name = "undoButton";
             this.undoButton.Size = new System.Drawing.Size(94, 24);
             this.undoButton.TabIndex = 3;
@@ -381,7 +382,7 @@ namespace STLNormalSwitcher {
             // 
             this.rotationOriginTextBox.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.rotationOriginTextBox.Enabled = false;
-            this.rotationOriginTextBox.Location = new System.Drawing.Point(18, 489);
+            this.rotationOriginTextBox.Location = new System.Drawing.Point(18, 405);
             this.rotationOriginTextBox.Name = "rotationOriginTextBox";
             this.rotationOriginTextBox.Size = new System.Drawing.Size(94, 20);
             this.rotationOriginTextBox.TabIndex = 5;
@@ -391,7 +392,7 @@ namespace STLNormalSwitcher {
             // 
             this.label1.AutoSize = true;
             this.label1.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.label1.Location = new System.Drawing.Point(18, 469);
+            this.label1.Location = new System.Drawing.Point(18, 385);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(94, 13);
             this.label1.TabIndex = 4;
@@ -401,7 +402,7 @@ namespace STLNormalSwitcher {
             // 
             this.selectedButton.Dock = System.Windows.Forms.DockStyle.Fill;
             this.selectedButton.Enabled = false;
-            this.selectedButton.Location = new System.Drawing.Point(18, 415);
+            this.selectedButton.Location = new System.Drawing.Point(18, 331);
             this.selectedButton.Name = "selectedButton";
             this.selectedButton.Size = new System.Drawing.Size(94, 24);
             this.selectedButton.TabIndex = 0;
@@ -413,7 +414,7 @@ namespace STLNormalSwitcher {
             // 
             this.allButton.Dock = System.Windows.Forms.DockStyle.Fill;
             this.allButton.Enabled = false;
-            this.allButton.Location = new System.Drawing.Point(18, 385);
+            this.allButton.Location = new System.Drawing.Point(18, 301);
             this.allButton.Name = "allButton";
             this.allButton.Size = new System.Drawing.Size(94, 24);
             this.allButton.TabIndex = 1;
@@ -425,7 +426,7 @@ namespace STLNormalSwitcher {
             // 
             this.resetButton.Dock = System.Windows.Forms.DockStyle.Fill;
             this.resetButton.Enabled = false;
-            this.resetButton.Location = new System.Drawing.Point(18, 95);
+            this.resetButton.Location = new System.Drawing.Point(18, 86);
             this.resetButton.Name = "resetButton";
             this.resetButton.Size = new System.Drawing.Size(94, 24);
             this.resetButton.TabIndex = 2;
@@ -437,7 +438,7 @@ namespace STLNormalSwitcher {
             // 
             this.redoButton.Dock = System.Windows.Forms.DockStyle.Fill;
             this.redoButton.Enabled = false;
-            this.redoButton.Location = new System.Drawing.Point(18, 65);
+            this.redoButton.Location = new System.Drawing.Point(18, 56);
             this.redoButton.Name = "redoButton";
             this.redoButton.Size = new System.Drawing.Size(94, 24);
             this.redoButton.TabIndex = 6;
@@ -456,7 +457,7 @@ namespace STLNormalSwitcher {
             // splitContainer2.Panel1
             // 
             this.splitContainer2.Panel1.Controls.Add(this.originTrackBar);
-            this.splitContainer2.Size = new System.Drawing.Size(620, 546);
+            this.splitContainer2.Size = new System.Drawing.Size(605, 452);
             this.splitContainer2.SplitterDistance = 41;
             this.splitContainer2.TabIndex = 5;
             // 
@@ -467,7 +468,7 @@ namespace STLNormalSwitcher {
             this.originTrackBar.Name = "originTrackBar";
             this.originTrackBar.Orientation = System.Windows.Forms.Orientation.Vertical;
             this.originTrackBar.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.originTrackBar.Size = new System.Drawing.Size(41, 546);
+            this.originTrackBar.Size = new System.Drawing.Size(41, 452);
             this.originTrackBar.TabIndex = 4;
             this.originTrackBar.Visible = false;
             this.originTrackBar.ValueChanged += new System.EventHandler(this.OriginTrackBar_ValueChanged);
@@ -481,7 +482,7 @@ namespace STLNormalSwitcher {
             this.tabControl1.MinimumSize = new System.Drawing.Size(622, 240);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(762, 336);
+            this.tabControl1.Size = new System.Drawing.Size(747, 248);
             this.tabControl1.TabIndex = 0;
             // 
             // tabPage1
@@ -491,7 +492,7 @@ namespace STLNormalSwitcher {
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(774, 291);
+            this.tabPage1.Size = new System.Drawing.Size(754, 310);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "List of Normal Vectors and Triangles";
             this.tabPage1.UseVisualStyleBackColor = true;
@@ -513,7 +514,7 @@ namespace STLNormalSwitcher {
             this.normalListView.Location = new System.Drawing.Point(3, 3);
             this.normalListView.Name = "normalListView";
             this.normalListView.ShowGroups = false;
-            this.normalListView.Size = new System.Drawing.Size(768, 285);
+            this.normalListView.Size = new System.Drawing.Size(748, 304);
             this.normalListView.TabIndex = 2;
             this.normalListView.UseCompatibleStateImageBehavior = false;
             this.normalListView.View = System.Windows.Forms.View.Details;
@@ -547,7 +548,7 @@ namespace STLNormalSwitcher {
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(754, 310);
+            this.tabPage2.Size = new System.Drawing.Size(739, 222);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Edit the First Selected Triangle";
             this.tabPage2.UseVisualStyleBackColor = true;
@@ -580,7 +581,7 @@ namespace STLNormalSwitcher {
             this.tableLayoutPanel3.Controls.Add(this.labelY, 3, 1);
             this.tableLayoutPanel3.Controls.Add(this.labelZ, 4, 1);
             this.tableLayoutPanel3.Controls.Add(this.labelA, 1, 2);
-            this.tableLayoutPanel3.Controls.Add(this.acceptButton, 7, 8);
+            this.tableLayoutPanel3.Controls.Add(this.acceptButton, 7, 7);
             this.tableLayoutPanel3.Controls.Add(this.nextNeighborsTextBox, 6, 1);
             this.tableLayoutPanel3.Controls.Add(this.nextNeighborsButton, 7, 1);
             this.tableLayoutPanel3.Controls.Add(this.hookButtonA, 8, 2);
@@ -597,7 +598,7 @@ namespace STLNormalSwitcher {
             this.tableLayoutPanel3.Location = new System.Drawing.Point(3, 3);
             this.tableLayoutPanel3.MinimumSize = new System.Drawing.Size(608, 208);
             this.tableLayoutPanel3.Name = "tableLayoutPanel3";
-            this.tableLayoutPanel3.RowCount = 9;
+            this.tableLayoutPanel3.RowCount = 8;
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 5F));
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
@@ -605,9 +606,9 @@ namespace STLNormalSwitcher {
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
+            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 40F));
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel3.Size = new System.Drawing.Size(748, 304);
+            this.tableLayoutPanel3.Size = new System.Drawing.Size(733, 216);
             this.tableLayoutPanel3.TabIndex = 0;
             // 
             // cZ
@@ -746,12 +747,13 @@ namespace STLNormalSwitcher {
             // 
             this.acceptButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.acceptButton.Enabled = false;
-            this.acceptButton.Location = new System.Drawing.Point(588, 198);
+            this.acceptButton.Location = new System.Drawing.Point(588, 178);
             this.acceptButton.Name = "acceptButton";
-            this.acceptButton.Size = new System.Drawing.Size(94, 37);
+            this.acceptButton.Size = new System.Drawing.Size(94, 35);
             this.acceptButton.TabIndex = 20;
             this.acceptButton.Text = "Accept";
             this.acceptButton.UseVisualStyleBackColor = true;
+            this.acceptButton.Click += new System.EventHandler(this.AcceptButton_Click);
             // 
             // nextNeighborsTextBox
             // 
@@ -877,12 +879,12 @@ namespace STLNormalSwitcher {
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(762, 916);
+            this.ClientSize = new System.Drawing.Size(747, 734);
             this.Controls.Add(this.splitContainer1);
             this.Controls.Add(this.menuStrip1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.menuStrip1;
-            this.MinimumSize = new System.Drawing.Size(760, 800);
+            this.MinimumSize = new System.Drawing.Size(755, 700);
             this.Name = "NormalSwitcherForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Normal Vector Switcher";

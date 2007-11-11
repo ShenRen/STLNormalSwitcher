@@ -25,7 +25,12 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
 using System.Text;
+using System.Windows.Forms;
+using System.IO;
 
 namespace STLNormalSwitcher {
     /// <summary>
@@ -90,6 +95,7 @@ namespace STLNormalSwitcher {
             this.Add(a);
             this.Add(b);
             this.Add(c);
+            if (!IsTriangle()) { throw new ArgumentException("The selected vertices do not form a triangle!"); }
             this.Add(CalculateNormal());
 
             for (int i = 0; i < this.Count; i++) {
@@ -137,6 +143,36 @@ namespace STLNormalSwitcher {
         }
 
         /// <summary>
+        /// Checks, whether the vertices really form a triangle or are alligned.
+        /// </summary>
+        /// <returns>true, if the vertices form a triangle</returns>
+        private bool IsTriangle() {
+            Vertex ab = new Vertex(this[1][0] - this[0][0], this[1][1] - this[0][1], this[1][2] - this[0][2]);
+            Vertex ac = new Vertex(this[2][0] - this[0][0], this[2][1] - this[0][1], this[2][2] - this[0][2]);
+            float[] factors = new float[3];
+
+            for (int i = 0; i < 3; i++) {
+                factors[i] = ab[i] / ac[i];  
+            }
+
+            if ((float.IsNaN(factors[0]) && float.IsNaN(factors[1]) && float.IsNaN(factors[2])) ||
+            (float.IsNaN(factors[0]) && float.IsNaN(factors[1])) ||
+            (float.IsNaN(factors[0]) && float.IsNaN(factors[2])) ||
+            (float.IsNaN(factors[1]) && float.IsNaN(factors[2]))) {
+                return false;
+            } else if (float.IsNaN(factors[0])) {
+                if (factors[1] == factors[2]) { return false; } else { return true; }
+            } else if (float.IsNaN(factors[1])) {
+                if (factors[0] == factors[2]) { return false; } else { return true; }
+            } else if (float.IsNaN(factors[2])) {
+                if (factors[0] == factors[1]) { return false; } else { return true; }
+            } else {
+                if ((factors[0] == factors[1]) && (factors[1] == factors[2])) { return false; } else { return true; }
+            }
+
+        }
+
+        /// <summary>
         /// Returns the normal vector as a string.
         /// </summary>
         /// <returns>The normal vector as a string</returns>
@@ -158,6 +194,7 @@ namespace STLNormalSwitcher {
                 }
 
                 if (this[2][i] < min[i]) { min[i] = this[2][i]; }
+                if (this[2][i] > max[i]) { max[i] = this[2][i]; }
             }
         }
 

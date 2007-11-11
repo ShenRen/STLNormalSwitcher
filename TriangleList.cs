@@ -80,10 +80,6 @@ namespace STLNormalSwitcher {
         public void AddTriangle(Triangle tri) {
             this.Add(tri);
             tri.Position = this.Count - 1;
-            for (int i = 0; i < 3; i++) {
-                if (tri.Min[i] < min[i]) { min[i] = tri.Min[i]; }
-                if (tri.Max[i] > max[i]) { max[i] = tri.Max[i]; }
-            }
         }
 
 
@@ -144,11 +140,6 @@ namespace STLNormalSwitcher {
         /// <param name="newTriangle"></param>
         public void EditTriangle(Triangle newTriangle) {
             this[newTriangle.Position] = newTriangle;
-            for (int i = 0; i < 3; i++) {
-                if (newTriangle.Min[i] < min[i]) { min[i] = newTriangle.Min[i]; }
-                if (newTriangle.Max[i] < max[i]) { max[i] = newTriangle.Max[i]; }
-            }
-
             Finish();
         }
 
@@ -156,11 +147,28 @@ namespace STLNormalSwitcher {
         /// Calculates the scale as the maximum of the differences between the maxima and minima.
         /// </summary>
         public void Finish() {
+            SetExtrema();
+
             scale = max[0] - min[0];
             if (max[1] - min[1] > scale) { scale = max[1] - min[1]; }
             if (max[2] - min[2] > scale) { scale = max[2] - min[2]; }
 
             CalculateArrays();
+        }
+
+        /// <summary>
+        /// Calculates the Extrema
+        /// </summary>
+        private void SetExtrema() {
+            this.min = new float[3] { 0, 0, 0 };
+            this.max = new float[3] { 0, 0, 0 };
+
+            for (int i = 0; i < this.Count; i++) {
+                for (int j = 0; j < 3; j++) {
+                    if (this[i].Min[j] < min[j]) { min[j] = this[i].Min[j]; }
+                    if (this[i].Max[j] > max[j]) { max[j] = this[i].Max[j]; }
+                }
+            }
         }
 
         /// <summary>
