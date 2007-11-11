@@ -72,6 +72,10 @@ namespace STLNormalSwitcher {
         public Triangle(IEnumerable<Vertex> vertices) {
             this.AddRange(vertices);
 
+            for (int i = 0; i < this.Count; i++) {
+                this[i].Owner = this;
+            }
+
             SetExtrema();
         }
 
@@ -87,6 +91,10 @@ namespace STLNormalSwitcher {
             this.Add(b);
             this.Add(c);
             this.Add(CalculateNormal());
+
+            for (int i = 0; i < this.Count; i++) {
+                this[i].Owner = this;
+            }
 
             SetExtrema();
         }

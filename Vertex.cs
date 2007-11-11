@@ -33,6 +33,25 @@ namespace STLNormalSwitcher {
     /// </summary>
     public class Vertex : List<float> {
 
+        #region Fields
+
+        private Triangle owner;
+
+        #endregion
+
+        #region Properties
+
+        /// <value>Gets the owner or sets it</value>
+        public Triangle Owner {
+            get { return owner; }
+            set { owner = value; }
+        }
+
+        /// <value>Gets the Vertex as a string</value>
+        public string AsString { get { return this.ToString(); } }
+
+        #endregion
+
         #region Constructors
 
         /// <summary>
@@ -58,13 +77,12 @@ namespace STLNormalSwitcher {
         public Vertex Copy() { return new Vertex(this[0], this[1], this[2]); }
 
         /// <summary>
-        /// Calculates the distance of this Vertex from the one given by <paramref name="v2"/>
+        /// Calculates the distance of this Vertex from the Vertex given by <paramref name="v2"/>.
         /// </summary>
-        /// <param name="v2">A second Vertex</param>
-        /// <returns>Distance between the vertices</returns>
+        /// <param name="tri">Another Vertex</param>
+        /// <returns>Distance between the Vertices</returns>
         public double DistanceFrom(Vertex v2) {
-            double dist = Math.Sqrt(Math.Pow(Math.Abs(this[0] - v2[0]), 2) + Math.Pow(Math.Abs(this[1] - v2[1]), 2) + Math.Pow(Math.Abs(this[2] - v2[2]), 2));
-            return dist;
+            return Math.Pow(Math.Abs(this[0] - v2[0]), 2) + Math.Pow(Math.Abs(this[1] - v2[1]), 2) + Math.Pow(Math.Abs(this[2] - v2[2]), 2);
         }
 
         /// <summary>
@@ -76,7 +94,7 @@ namespace STLNormalSwitcher {
             return value;
         }
 
-
         #endregion
+
     }
 }
