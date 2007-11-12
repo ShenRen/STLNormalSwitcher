@@ -92,6 +92,8 @@ namespace STLNormalSwitcher {
             undoButton.EnabledChanged += new EventHandler(Undo_EnabledChanged);
             redoButton.EnabledChanged += new EventHandler(Redo_EnabledChanged);
             allButton.EnabledChanged += new EventHandler(FileCondition_EnabledChanged);
+            acceptButton.EnabledChanged += new EventHandler(AcceptButton_EnabledChanged);
+            hookButtonA.EnabledChanged += new EventHandler(HookButton_EnabledChanged);
         }
 
         /// <summary>
@@ -108,6 +110,8 @@ namespace STLNormalSwitcher {
             undoButton.EnabledChanged += new EventHandler(Undo_EnabledChanged);
             redoButton.EnabledChanged += new EventHandler(Redo_EnabledChanged);
             allButton.EnabledChanged += new EventHandler(FileCondition_EnabledChanged);
+            acceptButton.EnabledChanged += new EventHandler(AcceptButton_EnabledChanged);
+            hookButtonA.EnabledChanged += new EventHandler(HookButton_EnabledChanged);
 
             StreamReader reader = new StreamReader(file);
             try {
@@ -259,7 +263,7 @@ namespace STLNormalSwitcher {
         /// Fills the boxes on the "Edit the First Selected Triangle" Tab.
         /// </summary>
         private void FillTriangleBoxes() {
-            if (normalListView.SelectedIndices.Count >= 1) {
+            if (normalListView.SelectedIndices.Count == 1) {
                 aX.Text = triangleList[(int)normalListView.SelectedItems[0].Tag][0][0].ToString();
                 aY.Text = triangleList[(int)normalListView.SelectedItems[0].Tag][0][1].ToString();
                 aZ.Text = triangleList[(int)normalListView.SelectedItems[0].Tag][0][2].ToString();
@@ -272,20 +276,18 @@ namespace STLNormalSwitcher {
                 normalX.Text = triangleList[(int)normalListView.SelectedItems[0].Tag][3][0].ToString();
                 normalY.Text = triangleList[(int)normalListView.SelectedItems[0].Tag][3][1].ToString();
                 normalZ.Text = triangleList[(int)normalListView.SelectedItems[0].Tag][3][2].ToString();
-                acceptButton.Enabled = nextNeighborsButton.Enabled = true;
+                acceptButton.Enabled = true;
+
             } else {
                 aX.Text = aY.Text = aZ.Text = bX.Text = bY.Text = bZ.Text = cX.Text = cY.Text = cZ.Text =
-                    normalX.Text = normalY.Text = normalZ.Text = "";
-                acceptButton.Enabled = nextNeighborsButton.Enabled =
-                    hookButtonA.Enabled = hookButtonB.Enabled = hookButtonC.Enabled = false;
-                neighborsOfA.Clear();
-                neighborsOfB.Clear();
-                neighborsOfC.Clear();
+                    normalX.Text = normalY.Text = normalZ.Text = nextNeighborsTextBox.Text = "";
+                acceptButton.Enabled = hookButtonA.Enabled = false;
+                aNeighbors.DataSource = bNeighbors.DataSource = cNeighbors.DataSource = null;
             }
         }
 
         /// <summary>
-        /// Fills the Neighbors ListBoxes with <paramref name="number"/> neighbors.
+        /// Fills the Neighbors ComboBoxes with <paramref name="number"/> neighbors.
         /// </summary>
         /// <param name="number">Number of Neighbors</param>
         private void CalculateNeighbors(int number) {
@@ -324,7 +326,7 @@ namespace STLNormalSwitcher {
             bNeighbors.DisplayMember = "AsString";
             cNeighbors.DataSource = neighborsOfC;
             cNeighbors.DisplayMember = "AsString";
-            hookButtonA.Enabled = hookButtonB.Enabled = hookButtonC.Enabled = true;
+            hookButtonA.Enabled = true;
         }
 
         #endregion
@@ -468,10 +470,15 @@ namespace STLNormalSwitcher {
             FillListView();
             MarkSelectedItems();
             SetOrigin();
+            FillTriangleBoxes();
             visualization.Refresh();
         }
 
-
+        /// <summary>
+        /// Reverts the last Undo,
+        /// </summary>
+        /// <param name="sender">redoToolStripMenuItem or redoButton</param>
+        /// <param name="e">Standard EventArgs</param>
         private void Redo(object sender, EventArgs e) {
             if (future.Count >= 1) {
                 currentSelection = future[future.Count - 1];
@@ -492,6 +499,7 @@ namespace STLNormalSwitcher {
             FillListView();
             MarkSelectedItems();
             SetOrigin();
+            FillTriangleBoxes();
             visualization.Refresh();
         }
 
@@ -509,6 +517,7 @@ namespace STLNormalSwitcher {
             undoButton.Enabled = false;
             FillListView();
             SetOrigin();
+            FillTriangleBoxes();
             visualization.Refresh();
         }
 
@@ -559,6 +568,7 @@ namespace STLNormalSwitcher {
             undoButton.Enabled = true;
             FillListView();
             MarkSelectedItems();
+            FillTriangleBoxes();
             visualization.Refresh();
         }
 
@@ -575,6 +585,7 @@ namespace STLNormalSwitcher {
                 undoButton.Enabled = true;
                 FillListView();
                 MarkSelectedItems();
+                FillTriangleBoxes();
                 visualization.Refresh();
             }
         }
@@ -683,7 +694,7 @@ namespace STLNormalSwitcher {
         #region Edit Triangle
 
         /// <summary>
-        /// Initiates the filling of the Neighbors ListBoxes.
+        /// Initiates the filling of the Neighbors ComboBoxes.
         /// </summary>
         /// <param name="sender">nextNeighborsButton</param>
         /// <param name="e">Standard EventArgs</param>
@@ -736,11 +747,20 @@ namespace STLNormalSwitcher {
         }
 
         /// <summary>
+        /// Resets the boxes on the "Edit the First Selected Triangle" Tab.
+        /// </summary>
+        /// <param name="sender">resetTriangleBoxesButton</param>
+        /// <param name="e">Standard EventArgs</param>
+        private void ResetTriangleBoxesButton_Click(object sender, EventArgs e) {
+            FillTriangleBoxes();
+        }
+
+        /// <summary>
         /// Makes the changes to the selected Triangle.
         /// </summary>
-        /// <param name="sender">acceptButton</param>
+        /// <param name="sender">acceptTriangleButton</param>
         /// <param name="e">Standard EventArgs</param>
-        private void AcceptButton_Click(object sender, EventArgs e) {
+        private void AcceptTriangleButton_Click(object sender, EventArgs e) {
             try {
                 Vertex a = new Vertex((float)Convert.ToDouble(aX.Text), (float)Convert.ToDouble(aY.Text), (float)Convert.ToDouble(aZ.Text));
                 Vertex b = new Vertex((float)Convert.ToDouble(bX.Text), (float)Convert.ToDouble(bY.Text), (float)Convert.ToDouble(bZ.Text));
@@ -756,10 +776,76 @@ namespace STLNormalSwitcher {
 
                 SetOrigin();
                 visualization.Refresh();
+                FillTriangleBoxes();
             } catch (ArgumentException ex) {
                 MessageBox.Show(ex.Message, "", MessageBoxButtons.OK, MessageBoxIcon.Error);
             } catch {
                 MessageBox.Show("Make sure all values are floating point numbers!", "", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        /// <summary>
+        /// Makes the changes to the selected Triangle and the normal vector.
+        /// </summary>
+        /// <param name="sender">acceptButton</param>
+        /// <param name="e">Standard EventArgs</param>
+        private void AcceptButton_Click(object sender, EventArgs e) {
+            try {
+                Vertex a = new Vertex((float)Convert.ToDouble(aX.Text), (float)Convert.ToDouble(aY.Text), (float)Convert.ToDouble(aZ.Text));
+                Vertex b = new Vertex((float)Convert.ToDouble(bX.Text), (float)Convert.ToDouble(bY.Text), (float)Convert.ToDouble(bZ.Text));
+                Vertex c = new Vertex((float)Convert.ToDouble(cX.Text), (float)Convert.ToDouble(cY.Text), (float)Convert.ToDouble(cZ.Text));
+                Vertex n = new Vertex((float)Convert.ToDouble(normalX.Text), (float)Convert.ToDouble(normalY.Text), (float)Convert.ToDouble(normalZ.Text));
+                Triangle tri = new Triangle(a, b, c, n);
+                tri.Position = currentSelection[0].Position;
+                List<Triangle> temp = new List<Triangle>();
+                temp.Add(currentSelection[0]);
+                history.Add(temp);
+                triangleList.EditTriangle(tri);
+
+                undoButton.Enabled = true;
+
+                SetOrigin();
+                FillTriangleBoxes();
+                visualization.Refresh();
+            } catch (ArgumentException ex) {
+                MessageBox.Show(ex.Message, "", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            } catch {
+                MessageBox.Show("Make sure all values are floating point numbers!", "", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        /// <summary>
+        /// Enables or disables the Hook-Buttons simultaneously.
+        /// </summary>
+        /// <param name="sender">hookButtonA</param>
+        /// <param name="e">Standard EventArgs</param>
+        private void HookButton_EnabledChanged(object sender, EventArgs e) {
+            hookButtonC.Enabled = hookButtonB.Enabled = hookButtonA.Enabled;
+        }
+
+        /// <summary>
+        /// Enables the acceptButton, the acceptTriangleButton
+        /// and the nextNeighborsButton simultaneously.
+        /// </summary>
+        /// <param name="sender">acceptButton</param>
+        /// <param name="e">Standard EventArgs</param>
+        private void AcceptButton_EnabledChanged(object sender, EventArgs e) {
+            acceptTriangleButton.Enabled = nextNeighborsButton.Enabled = acceptButton.Enabled;
+        }
+
+        /// <summary>
+        /// Marks the neighbor Triangles in the visualization.
+        /// </summary>
+        /// <param name="sender">aNeighbors or bNeighbors or cNeighbors ComboBox</param>
+        /// <param name="e">Standard EventArgs</param>
+        private void Neighbors_SelectedIndexChanged(object sender, EventArgs e) {
+            if ((aNeighbors.SelectedItem != null) && (bNeighbors.SelectedItem != null) && (cNeighbors.SelectedItem != null)) {
+                int[] neighbor = new int[3];
+                neighbor[0] = (aNeighbors.SelectedItem as Vertex).Owner.Position;
+                neighbor[1] = (bNeighbors.SelectedItem as Vertex).Owner.Position;
+                neighbor[2] = (cNeighbors.SelectedItem as Vertex).Owner.Position;
+                visualization.SetNeighborColors(neighbor);
+                visualization.Refresh();
             }
         }
 
@@ -805,7 +891,23 @@ namespace STLNormalSwitcher {
             }
         }
 
-        #endregion
+        /// <summary>
+        /// Adjusts the colorArray depending on the chosen Tab.
+        /// </summary>
+        /// <param name="sender">tabControl1</param>
+        /// <param name="e">Standard TabControlCancelEventArgs</param>
+        private void TabControl1_Selecting(object sender, TabControlCancelEventArgs e) {
+            if (tabControl1.SelectedTab == tabPage1) {
+                // Normal colors
+                visualization.SetColorArray();
+                visualization.Refresh();
+            } else {
+                // Neighbor colors
+                Neighbors_SelectedIndexChanged(sender, e);
+                visualization.Refresh();
+            }
+        }
 
+        #endregion
     }
 }

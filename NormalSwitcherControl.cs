@@ -54,6 +54,9 @@ namespace STLNormalSwitcher {
 
         private float[] uColor = new float[3] { Color.Aqua.R / 255, Color.Aqua.G / 255, Color.Aqua.B / 255 };
         private float[] sColor = new float[3] { Color.Red.R / 255, Color.Red.G / 255, Color.Red.B / 255 };
+        private float[] aColor = new float[3] { Color.Yellow.R / 255, Color.Yellow.G / 255, Color.Yellow.B / 255 };
+        private float[] bColor = new float[3] { 0, 1.0f, 0 };
+        private float[] cColor = new float[3] { 0, 0, 1.0f };
 
         private IntPtr deviceContext = IntPtr.Zero;
         private IntPtr renderContext = IntPtr.Zero;
@@ -290,6 +293,41 @@ namespace STLNormalSwitcher {
                     colorArray[i * 9] = colorArray[i * 9 + 3] = colorArray[i * 9 + 6] = sColor[0];
                     colorArray[i * 9 + 1] = colorArray[i * 9 + 4] = colorArray[i * 9 + 7] = sColor[1];
                     colorArray[i * 9 + 2] = colorArray[i * 9 + 5] = colorArray[i * 9 + 8] = sColor[2];
+                } else {
+                    colorArray[i * 9] = colorArray[i * 9 + 3] = colorArray[i * 9 + 6] = uColor[0];
+                    colorArray[i * 9 + 1] = colorArray[i * 9 + 4] = colorArray[i * 9 + 7] = uColor[1];
+                    colorArray[i * 9 + 2] = colorArray[i * 9 + 5] = colorArray[i * 9 + 8] = uColor[2];
+                }
+            }
+        }
+
+        /// <summary>
+        /// Initializes the colorArray. All vertices of unselected triangles get the color Aqua.
+        /// The first selected triangle gets the color Red.
+        /// The nearest neighbor of the A-Vertex gets the color Yellow.
+        /// The nearest neighbor of the B-Vertex gets the color Green.
+        /// The nearest neighbor of the C-Vertex gets the color Blue.
+        /// </summary>
+        /// <param name="neighbor">An array containing the positions of the neighbors</param>
+        public void SetNeighborColors(int[] neighbor) {
+            this.colorArray = new float[owner.TriangleList.Count * 9];
+            for (int i = 0; i < owner.TriangleList.Count; i++) {
+                if (owner.CurrentSelection[0] == owner.TriangleList[i]) {
+                    colorArray[i * 9] = colorArray[i * 9 + 3] = colorArray[i * 9 + 6] = sColor[0];
+                    colorArray[i * 9 + 1] = colorArray[i * 9 + 4] = colorArray[i * 9 + 7] = sColor[1];
+                    colorArray[i * 9 + 2] = colorArray[i * 9 + 5] = colorArray[i * 9 + 8] = sColor[2];
+                } else if (i == neighbor[0]) {
+                    colorArray[i * 9] = colorArray[i * 9 + 3] = colorArray[i * 9 + 6] = aColor[0];
+                    colorArray[i * 9 + 1] = colorArray[i * 9 + 4] = colorArray[i * 9 + 7] = aColor[1];
+                    colorArray[i * 9 + 2] = colorArray[i * 9 + 5] = colorArray[i * 9 + 8] = aColor[2];
+                } else if (i == neighbor[1]) {
+                    colorArray[i * 9] = colorArray[i * 9 + 3] = colorArray[i * 9 + 6] = bColor[0];
+                    colorArray[i * 9 + 1] = colorArray[i * 9 + 4] = colorArray[i * 9 + 7] = bColor[1];
+                    colorArray[i * 9 + 2] = colorArray[i * 9 + 5] = colorArray[i * 9 + 8] = bColor[2];
+                } else if (i == neighbor[2]) {
+                    colorArray[i * 9] = colorArray[i * 9 + 3] = colorArray[i * 9 + 6] = cColor[0];
+                    colorArray[i * 9 + 1] = colorArray[i * 9 + 4] = colorArray[i * 9 + 7] = cColor[1];
+                    colorArray[i * 9 + 2] = colorArray[i * 9 + 5] = colorArray[i * 9 + 8] = cColor[2];
                 } else {
                     colorArray[i * 9] = colorArray[i * 9 + 3] = colorArray[i * 9 + 6] = uColor[0];
                     colorArray[i * 9 + 1] = colorArray[i * 9 + 4] = colorArray[i * 9 + 7] = uColor[1];

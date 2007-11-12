@@ -105,6 +105,28 @@ namespace STLNormalSwitcher {
             SetExtrema();
         }
 
+        /// <summary>
+        /// This constructor creates a new Triangle from the given corners and
+        /// the normalizes the given normal vector.
+        /// </summary>
+        /// <param name="a">The first corner</param>
+        /// <param name="b">The second corner</param>
+        /// <param name="c">The third corner</param>
+        /// <param name="n">The normal vector</param>
+        public Triangle(Vertex a, Vertex b, Vertex c, Vertex n) {
+            this.Add(a);
+            this.Add(b);
+            this.Add(c);
+            if (!IsTriangle()) { throw new ArgumentException("The selected vertices do not form a triangle!"); }
+            this.Add(n.Normalize());
+
+            for (int i = 0; i < this.Count; i++) {
+                this[i].Owner = this;
+            }
+
+            SetExtrema();
+        }
+
         #endregion
 
         #region Methods
@@ -169,7 +191,6 @@ namespace STLNormalSwitcher {
             } else {
                 if ((factors[0] == factors[1]) && (factors[1] == factors[2])) { return false; } else { return true; }
             }
-
         }
 
         /// <summary>

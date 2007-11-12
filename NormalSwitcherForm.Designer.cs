@@ -106,7 +106,6 @@ namespace STLNormalSwitcher {
             this.labelY = new System.Windows.Forms.Label();
             this.labelZ = new System.Windows.Forms.Label();
             this.labelA = new System.Windows.Forms.Label();
-            this.acceptButton = new System.Windows.Forms.Button();
             this.nextNeighborsTextBox = new System.Windows.Forms.TextBox();
             this.nextNeighborsButton = new System.Windows.Forms.Button();
             this.hookButtonA = new System.Windows.Forms.Button();
@@ -119,6 +118,10 @@ namespace STLNormalSwitcher {
             this.normalY = new System.Windows.Forms.TextBox();
             this.normalX = new System.Windows.Forms.TextBox();
             this.labelNormal = new System.Windows.Forms.Label();
+            this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
+            this.resetTriangleBoxesButton = new System.Windows.Forms.Button();
+            this.acceptTriangleButton = new System.Windows.Forms.Button();
+            this.acceptButton = new System.Windows.Forms.Button();
             this.menuStrip1.SuspendLayout();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -132,6 +135,7 @@ namespace STLNormalSwitcher {
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
             this.tableLayoutPanel3.SuspendLayout();
+            this.flowLayoutPanel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -484,6 +488,7 @@ namespace STLNormalSwitcher {
             this.tabControl1.SelectedIndex = 0;
             this.tabControl1.Size = new System.Drawing.Size(747, 248);
             this.tabControl1.TabIndex = 0;
+            this.tabControl1.Selecting += new System.Windows.Forms.TabControlCancelEventHandler(this.TabControl1_Selecting);
             // 
             // tabPage1
             // 
@@ -492,7 +497,7 @@ namespace STLNormalSwitcher {
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(754, 310);
+            this.tabPage1.Size = new System.Drawing.Size(739, 222);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "List of Normal Vectors and Triangles";
             this.tabPage1.UseVisualStyleBackColor = true;
@@ -514,7 +519,7 @@ namespace STLNormalSwitcher {
             this.normalListView.Location = new System.Drawing.Point(3, 3);
             this.normalListView.Name = "normalListView";
             this.normalListView.ShowGroups = false;
-            this.normalListView.Size = new System.Drawing.Size(748, 304);
+            this.normalListView.Size = new System.Drawing.Size(733, 216);
             this.normalListView.TabIndex = 2;
             this.normalListView.UseCompatibleStateImageBehavior = false;
             this.normalListView.View = System.Windows.Forms.View.Details;
@@ -581,7 +586,6 @@ namespace STLNormalSwitcher {
             this.tableLayoutPanel3.Controls.Add(this.labelY, 3, 1);
             this.tableLayoutPanel3.Controls.Add(this.labelZ, 4, 1);
             this.tableLayoutPanel3.Controls.Add(this.labelA, 1, 2);
-            this.tableLayoutPanel3.Controls.Add(this.acceptButton, 7, 7);
             this.tableLayoutPanel3.Controls.Add(this.nextNeighborsTextBox, 6, 1);
             this.tableLayoutPanel3.Controls.Add(this.nextNeighborsButton, 7, 1);
             this.tableLayoutPanel3.Controls.Add(this.hookButtonA, 8, 2);
@@ -594,6 +598,7 @@ namespace STLNormalSwitcher {
             this.tableLayoutPanel3.Controls.Add(this.normalY, 3, 6);
             this.tableLayoutPanel3.Controls.Add(this.normalX, 2, 6);
             this.tableLayoutPanel3.Controls.Add(this.labelNormal, 1, 6);
+            this.tableLayoutPanel3.Controls.Add(this.flowLayoutPanel1, 5, 7);
             this.tableLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel3.Location = new System.Drawing.Point(3, 3);
             this.tableLayoutPanel3.MinimumSize = new System.Drawing.Size(608, 208);
@@ -743,18 +748,6 @@ namespace STLNormalSwitcher {
             this.labelA.TabIndex = 0;
             this.labelA.Text = "A:";
             // 
-            // acceptButton
-            // 
-            this.acceptButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.acceptButton.Enabled = false;
-            this.acceptButton.Location = new System.Drawing.Point(588, 178);
-            this.acceptButton.Name = "acceptButton";
-            this.acceptButton.Size = new System.Drawing.Size(94, 35);
-            this.acceptButton.TabIndex = 20;
-            this.acceptButton.Text = "Accept";
-            this.acceptButton.UseVisualStyleBackColor = true;
-            this.acceptButton.Click += new System.EventHandler(this.AcceptButton_Click);
-            // 
             // nextNeighborsTextBox
             // 
             this.nextNeighborsTextBox.Dock = System.Windows.Forms.DockStyle.Bottom;
@@ -820,6 +813,7 @@ namespace STLNormalSwitcher {
             this.aNeighbors.Name = "aNeighbors";
             this.aNeighbors.Size = new System.Drawing.Size(244, 21);
             this.aNeighbors.TabIndex = 26;
+            this.aNeighbors.SelectedIndexChanged += new System.EventHandler(this.Neighbors_SelectedIndexChanged);
             // 
             // bNeighbors
             // 
@@ -830,6 +824,7 @@ namespace STLNormalSwitcher {
             this.bNeighbors.Name = "bNeighbors";
             this.bNeighbors.Size = new System.Drawing.Size(244, 21);
             this.bNeighbors.TabIndex = 27;
+            this.bNeighbors.SelectedIndexChanged += new System.EventHandler(this.Neighbors_SelectedIndexChanged);
             // 
             // cNeighbors
             // 
@@ -840,6 +835,7 @@ namespace STLNormalSwitcher {
             this.cNeighbors.Name = "cNeighbors";
             this.cNeighbors.Size = new System.Drawing.Size(244, 21);
             this.cNeighbors.TabIndex = 28;
+            this.cNeighbors.SelectedIndexChanged += new System.EventHandler(this.Neighbors_SelectedIndexChanged);
             // 
             // normalZ
             // 
@@ -875,6 +871,50 @@ namespace STLNormalSwitcher {
             this.labelNormal.TabIndex = 32;
             this.labelNormal.Text = "Normal:";
             // 
+            // flowLayoutPanel1
+            // 
+            this.tableLayoutPanel3.SetColumnSpan(this.flowLayoutPanel1, 4);
+            this.flowLayoutPanel1.Controls.Add(this.resetTriangleBoxesButton);
+            this.flowLayoutPanel1.Controls.Add(this.acceptTriangleButton);
+            this.flowLayoutPanel1.Controls.Add(this.acceptButton);
+            this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.flowLayoutPanel1.Location = new System.Drawing.Point(418, 178);
+            this.flowLayoutPanel1.Name = "flowLayoutPanel1";
+            this.flowLayoutPanel1.Size = new System.Drawing.Size(312, 35);
+            this.flowLayoutPanel1.TabIndex = 33;
+            // 
+            // resetTriangleBoxesButton
+            // 
+            this.resetTriangleBoxesButton.Location = new System.Drawing.Point(3, 3);
+            this.resetTriangleBoxesButton.Name = "resetTriangleBoxesButton";
+            this.resetTriangleBoxesButton.Size = new System.Drawing.Size(44, 30);
+            this.resetTriangleBoxesButton.TabIndex = 34;
+            this.resetTriangleBoxesButton.Text = "Reset";
+            this.resetTriangleBoxesButton.UseVisualStyleBackColor = true;
+            this.resetTriangleBoxesButton.Click += new System.EventHandler(this.ResetTriangleBoxesButton_Click);
+            // 
+            // acceptTriangleButton
+            // 
+            this.acceptTriangleButton.Enabled = false;
+            this.acceptTriangleButton.Location = new System.Drawing.Point(53, 3);
+            this.acceptTriangleButton.Name = "acceptTriangleButton";
+            this.acceptTriangleButton.Size = new System.Drawing.Size(94, 30);
+            this.acceptTriangleButton.TabIndex = 20;
+            this.acceptTriangleButton.Text = "Accept Triangle";
+            this.acceptTriangleButton.UseVisualStyleBackColor = true;
+            this.acceptTriangleButton.Click += new System.EventHandler(this.AcceptTriangleButton_Click);
+            // 
+            // acceptButton
+            // 
+            this.acceptButton.Enabled = false;
+            this.acceptButton.Location = new System.Drawing.Point(153, 3);
+            this.acceptButton.Name = "acceptButton";
+            this.acceptButton.Size = new System.Drawing.Size(155, 30);
+            this.acceptButton.TabIndex = 21;
+            this.acceptButton.Text = "Accept Triangle and Normal";
+            this.acceptButton.UseVisualStyleBackColor = true;
+            this.acceptButton.Click += new System.EventHandler(this.AcceptButton_Click);
+            // 
             // NormalSwitcherForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -907,6 +947,7 @@ namespace STLNormalSwitcher {
             this.tabPage2.ResumeLayout(false);
             this.tableLayoutPanel3.ResumeLayout(false);
             this.tableLayoutPanel3.PerformLayout();
+            this.flowLayoutPanel1.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -965,7 +1006,7 @@ namespace STLNormalSwitcher {
         private System.Windows.Forms.Label labelX;
         private System.Windows.Forms.Label labelY;
         private System.Windows.Forms.Label labelZ;
-        private System.Windows.Forms.Button acceptButton;
+        private System.Windows.Forms.Button acceptTriangleButton;
         private System.Windows.Forms.TextBox nextNeighborsTextBox;
         private System.Windows.Forms.Button nextNeighborsButton;
         private System.Windows.Forms.ToolStripMenuItem clearUndoToolStripMenuItem;
@@ -983,6 +1024,9 @@ namespace STLNormalSwitcher {
         private System.Windows.Forms.TextBox normalY;
         private System.Windows.Forms.TextBox normalX;
         private System.Windows.Forms.Label labelNormal;
+        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
+        private System.Windows.Forms.Button acceptButton;
+        private System.Windows.Forms.Button resetTriangleBoxesButton;
     }
 }
 
