@@ -78,7 +78,6 @@ namespace STLNormalSwitcher {
             this.scale = owner.TriangleList.Scale;
 
             this.picking = false;
-            this.colorDist = 256 * 256 * 256 / (owner.TriangleList.Count + 2);
             this.SetPickingColors();
 
             this.MouseWheel += this.MouseWheelEvent;
@@ -358,8 +357,10 @@ namespace STLNormalSwitcher {
         /// <summary>
         /// Sets a different color for each triangle for picking.
         /// </summary>
-        private void SetPickingColors() {
+        public void SetPickingColors() {
             RGB color;
+
+            this.colorDist = 256 * 256 * 256 / (owner.TriangleList.Count + 2);
             this.pickingColors = new float[owner.TriangleList.Count * 9];
 
             for (int i = 0; i < owner.TriangleList.Count; i++) {

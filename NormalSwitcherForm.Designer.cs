@@ -122,6 +122,40 @@ namespace STLNormalSwitcher {
             this.resetTriangleBoxesButton = new System.Windows.Forms.Button();
             this.acceptTriangleButton = new System.Windows.Forms.Button();
             this.acceptButton = new System.Windows.Forms.Button();
+            this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.tableLayoutPanel4 = new System.Windows.Forms.TableLayoutPanel();
+            this.normalX2 = new System.Windows.Forms.TextBox();
+            this.labelNormal2 = new System.Windows.Forms.Label();
+            this.normalY2 = new System.Windows.Forms.TextBox();
+            this.normalZ2 = new System.Windows.Forms.TextBox();
+            this.addTriangleButton = new System.Windows.Forms.Button();
+            this.addButton = new System.Windows.Forms.Button();
+            this.labelC2 = new System.Windows.Forms.Label();
+            this.cX2 = new System.Windows.Forms.TextBox();
+            this.cY2 = new System.Windows.Forms.TextBox();
+            this.cZ2 = new System.Windows.Forms.TextBox();
+            this.labelB2 = new System.Windows.Forms.Label();
+            this.bX2 = new System.Windows.Forms.TextBox();
+            this.bY2 = new System.Windows.Forms.TextBox();
+            this.bZ2 = new System.Windows.Forms.TextBox();
+            this.aX2 = new System.Windows.Forms.TextBox();
+            this.aY2 = new System.Windows.Forms.TextBox();
+            this.aZ2 = new System.Windows.Forms.TextBox();
+            this.labelZ2 = new System.Windows.Forms.Label();
+            this.labelY2 = new System.Windows.Forms.Label();
+            this.labelX2 = new System.Windows.Forms.Label();
+            this.labelA2 = new System.Windows.Forms.Label();
+            this.triangleComboBox = new System.Windows.Forms.ComboBox();
+            this.labelTriangle = new System.Windows.Forms.Label();
+            this.aVertexHook = new System.Windows.Forms.Button();
+            this.cVertexHook = new System.Windows.Forms.Button();
+            this.bVertexHook = new System.Windows.Forms.Button();
+            this.verticesA = new System.Windows.Forms.ComboBox();
+            this.labelVertex = new System.Windows.Forms.Label();
+            this.triangleCopyButton = new System.Windows.Forms.Button();
+            this.verticesB = new System.Windows.Forms.ComboBox();
+            this.verticesC = new System.Windows.Forms.ComboBox();
+            this.removeButton = new System.Windows.Forms.Button();
             this.menuStrip1.SuspendLayout();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -136,6 +170,8 @@ namespace STLNormalSwitcher {
             this.tabPage2.SuspendLayout();
             this.tableLayoutPanel3.SuspendLayout();
             this.flowLayoutPanel1.SuspendLayout();
+            this.tabPage3.SuspendLayout();
+            this.tableLayoutPanel4.SuspendLayout();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -481,6 +517,7 @@ namespace STLNormalSwitcher {
             // 
             this.tabControl1.Controls.Add(this.tabPage1);
             this.tabControl1.Controls.Add(this.tabPage2);
+            this.tabControl1.Controls.Add(this.tabPage3);
             this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabControl1.Location = new System.Drawing.Point(0, 0);
             this.tabControl1.MinimumSize = new System.Drawing.Size(622, 240);
@@ -915,6 +952,392 @@ namespace STLNormalSwitcher {
             this.acceptButton.UseVisualStyleBackColor = true;
             this.acceptButton.Click += new System.EventHandler(this.AcceptButton_Click);
             // 
+            // tabPage3
+            // 
+            this.tabPage3.BackColor = System.Drawing.Color.Transparent;
+            this.tabPage3.Controls.Add(this.tableLayoutPanel4);
+            this.tabPage3.Location = new System.Drawing.Point(4, 22);
+            this.tabPage3.Name = "tabPage3";
+            this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage3.Size = new System.Drawing.Size(739, 222);
+            this.tabPage3.TabIndex = 2;
+            this.tabPage3.Text = "Add/Remove Triangle";
+            this.tabPage3.UseVisualStyleBackColor = true;
+            // 
+            // tableLayoutPanel4
+            // 
+            this.tableLayoutPanel4.BackColor = System.Drawing.SystemColors.Control;
+            this.tableLayoutPanel4.ColumnCount = 12;
+            this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 5F));
+            this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 50F));
+            this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 120F));
+            this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 120F));
+            this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 120F));
+            this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 5F));
+            this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 110F));
+            this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 75F));
+            this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 50F));
+            this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 50F));
+            this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel4.Controls.Add(this.normalX2, 2, 7);
+            this.tableLayoutPanel4.Controls.Add(this.labelNormal2, 1, 7);
+            this.tableLayoutPanel4.Controls.Add(this.normalY2, 3, 7);
+            this.tableLayoutPanel4.Controls.Add(this.normalZ2, 4, 7);
+            this.tableLayoutPanel4.Controls.Add(this.addTriangleButton, 6, 7);
+            this.tableLayoutPanel4.Controls.Add(this.addButton, 7, 7);
+            this.tableLayoutPanel4.Controls.Add(this.labelC2, 1, 5);
+            this.tableLayoutPanel4.Controls.Add(this.cX2, 2, 5);
+            this.tableLayoutPanel4.Controls.Add(this.cY2, 3, 5);
+            this.tableLayoutPanel4.Controls.Add(this.cZ2, 4, 5);
+            this.tableLayoutPanel4.Controls.Add(this.labelB2, 1, 4);
+            this.tableLayoutPanel4.Controls.Add(this.bX2, 2, 4);
+            this.tableLayoutPanel4.Controls.Add(this.bY2, 3, 4);
+            this.tableLayoutPanel4.Controls.Add(this.bZ2, 4, 4);
+            this.tableLayoutPanel4.Controls.Add(this.aX2, 2, 3);
+            this.tableLayoutPanel4.Controls.Add(this.aY2, 3, 3);
+            this.tableLayoutPanel4.Controls.Add(this.aZ2, 4, 3);
+            this.tableLayoutPanel4.Controls.Add(this.labelZ2, 4, 2);
+            this.tableLayoutPanel4.Controls.Add(this.labelY2, 3, 2);
+            this.tableLayoutPanel4.Controls.Add(this.labelX2, 2, 2);
+            this.tableLayoutPanel4.Controls.Add(this.labelA2, 1, 3);
+            this.tableLayoutPanel4.Controls.Add(this.triangleComboBox, 3, 1);
+            this.tableLayoutPanel4.Controls.Add(this.labelTriangle, 2, 1);
+            this.tableLayoutPanel4.Controls.Add(this.aVertexHook, 10, 3);
+            this.tableLayoutPanel4.Controls.Add(this.cVertexHook, 10, 5);
+            this.tableLayoutPanel4.Controls.Add(this.bVertexHook, 10, 4);
+            this.tableLayoutPanel4.Controls.Add(this.verticesA, 6, 3);
+            this.tableLayoutPanel4.Controls.Add(this.labelVertex, 6, 2);
+            this.tableLayoutPanel4.Controls.Add(this.triangleCopyButton, 8, 1);
+            this.tableLayoutPanel4.Controls.Add(this.verticesB, 6, 4);
+            this.tableLayoutPanel4.Controls.Add(this.verticesC, 6, 5);
+            this.tableLayoutPanel4.Controls.Add(this.removeButton, 9, 1);
+            this.tableLayoutPanel4.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel4.Location = new System.Drawing.Point(3, 3);
+            this.tableLayoutPanel4.MinimumSize = new System.Drawing.Size(608, 208);
+            this.tableLayoutPanel4.Name = "tableLayoutPanel4";
+            this.tableLayoutPanel4.RowCount = 9;
+            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 5F));
+            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
+            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
+            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
+            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
+            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
+            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 15F));
+            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
+            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 15F));
+            this.tableLayoutPanel4.Size = new System.Drawing.Size(733, 216);
+            this.tableLayoutPanel4.TabIndex = 1;
+            // 
+            // normalX2
+            // 
+            this.normalX2.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.normalX2.Location = new System.Drawing.Point(58, 177);
+            this.normalX2.Name = "normalX2";
+            this.normalX2.Size = new System.Drawing.Size(114, 20);
+            this.normalX2.TabIndex = 31;
+            // 
+            // labelNormal2
+            // 
+            this.labelNormal2.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.labelNormal2.AutoSize = true;
+            this.labelNormal2.Location = new System.Drawing.Point(8, 187);
+            this.labelNormal2.Name = "labelNormal2";
+            this.labelNormal2.Size = new System.Drawing.Size(43, 13);
+            this.labelNormal2.TabIndex = 32;
+            this.labelNormal2.Text = "Normal:";
+            // 
+            // normalY2
+            // 
+            this.normalY2.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.normalY2.Location = new System.Drawing.Point(178, 177);
+            this.normalY2.Name = "normalY2";
+            this.normalY2.Size = new System.Drawing.Size(114, 20);
+            this.normalY2.TabIndex = 30;
+            // 
+            // normalZ2
+            // 
+            this.normalZ2.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.normalZ2.Location = new System.Drawing.Point(298, 177);
+            this.normalZ2.Name = "normalZ2";
+            this.normalZ2.Size = new System.Drawing.Size(114, 20);
+            this.normalZ2.TabIndex = 29;
+            // 
+            // addTriangleButton
+            // 
+            this.addTriangleButton.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.addTriangleButton.Location = new System.Drawing.Point(423, 173);
+            this.addTriangleButton.Name = "addTriangleButton";
+            this.tableLayoutPanel4.SetRowSpan(this.addTriangleButton, 2);
+            this.addTriangleButton.Size = new System.Drawing.Size(104, 40);
+            this.addTriangleButton.TabIndex = 20;
+            this.addTriangleButton.Text = "Add Triangle";
+            this.addTriangleButton.UseVisualStyleBackColor = true;
+            this.addTriangleButton.Click += new System.EventHandler(this.AddTriangleButton_Click);
+            // 
+            // addButton
+            // 
+            this.tableLayoutPanel4.SetColumnSpan(this.addButton, 4);
+            this.addButton.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.addButton.Location = new System.Drawing.Point(533, 173);
+            this.addButton.Name = "addButton";
+            this.tableLayoutPanel4.SetRowSpan(this.addButton, 2);
+            this.addButton.Size = new System.Drawing.Size(189, 40);
+            this.addButton.TabIndex = 21;
+            this.addButton.Text = "Add Triangle with Normal";
+            this.addButton.UseVisualStyleBackColor = true;
+            this.addButton.Click += new System.EventHandler(this.AddButton_Click);
+            // 
+            // labelC2
+            // 
+            this.labelC2.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.labelC2.AutoSize = true;
+            this.labelC2.Location = new System.Drawing.Point(21, 142);
+            this.labelC2.Name = "labelC2";
+            this.labelC2.Size = new System.Drawing.Size(17, 13);
+            this.labelC2.TabIndex = 2;
+            this.labelC2.Text = "C:";
+            // 
+            // cX2
+            // 
+            this.cX2.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.cX2.Location = new System.Drawing.Point(58, 132);
+            this.cX2.Name = "cX2";
+            this.cX2.Size = new System.Drawing.Size(114, 20);
+            this.cX2.TabIndex = 9;
+            // 
+            // cY2
+            // 
+            this.cY2.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.cY2.Location = new System.Drawing.Point(178, 132);
+            this.cY2.Name = "cY2";
+            this.cY2.Size = new System.Drawing.Size(114, 20);
+            this.cY2.TabIndex = 11;
+            // 
+            // cZ2
+            // 
+            this.cZ2.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.cZ2.Location = new System.Drawing.Point(298, 132);
+            this.cZ2.Name = "cZ2";
+            this.cZ2.Size = new System.Drawing.Size(114, 20);
+            this.cZ2.TabIndex = 10;
+            // 
+            // labelB2
+            // 
+            this.labelB2.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.labelB2.AutoSize = true;
+            this.labelB2.Location = new System.Drawing.Point(21, 112);
+            this.labelB2.Name = "labelB2";
+            this.labelB2.Size = new System.Drawing.Size(17, 13);
+            this.labelB2.TabIndex = 1;
+            this.labelB2.Text = "B:";
+            // 
+            // bX2
+            // 
+            this.bX2.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.bX2.Location = new System.Drawing.Point(58, 102);
+            this.bX2.Name = "bX2";
+            this.bX2.Size = new System.Drawing.Size(114, 20);
+            this.bX2.TabIndex = 6;
+            // 
+            // bY2
+            // 
+            this.bY2.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.bY2.Location = new System.Drawing.Point(178, 102);
+            this.bY2.Name = "bY2";
+            this.bY2.Size = new System.Drawing.Size(114, 20);
+            this.bY2.TabIndex = 7;
+            // 
+            // bZ2
+            // 
+            this.bZ2.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.bZ2.Location = new System.Drawing.Point(298, 102);
+            this.bZ2.Name = "bZ2";
+            this.bZ2.Size = new System.Drawing.Size(114, 20);
+            this.bZ2.TabIndex = 8;
+            // 
+            // aX2
+            // 
+            this.aX2.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.aX2.Location = new System.Drawing.Point(58, 72);
+            this.aX2.Name = "aX2";
+            this.aX2.Size = new System.Drawing.Size(114, 20);
+            this.aX2.TabIndex = 3;
+            // 
+            // aY2
+            // 
+            this.aY2.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.aY2.Location = new System.Drawing.Point(178, 72);
+            this.aY2.Name = "aY2";
+            this.aY2.Size = new System.Drawing.Size(114, 20);
+            this.aY2.TabIndex = 4;
+            // 
+            // aZ2
+            // 
+            this.aZ2.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.aZ2.Location = new System.Drawing.Point(298, 72);
+            this.aZ2.Name = "aZ2";
+            this.aZ2.Size = new System.Drawing.Size(114, 20);
+            this.aZ2.TabIndex = 5;
+            // 
+            // labelZ2
+            // 
+            this.labelZ2.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.labelZ2.AutoSize = true;
+            this.labelZ2.Location = new System.Drawing.Point(348, 52);
+            this.labelZ2.Name = "labelZ2";
+            this.labelZ2.Size = new System.Drawing.Size(14, 13);
+            this.labelZ2.TabIndex = 14;
+            this.labelZ2.Text = "Z";
+            // 
+            // labelY2
+            // 
+            this.labelY2.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.labelY2.AutoSize = true;
+            this.labelY2.Location = new System.Drawing.Point(226, 52);
+            this.labelY2.Name = "labelY2";
+            this.labelY2.Size = new System.Drawing.Size(17, 13);
+            this.labelY2.TabIndex = 13;
+            this.labelY2.Text = " Y";
+            // 
+            // labelX2
+            // 
+            this.labelX2.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.labelX2.AutoSize = true;
+            this.labelX2.Location = new System.Drawing.Point(108, 52);
+            this.labelX2.Name = "labelX2";
+            this.labelX2.Size = new System.Drawing.Size(14, 13);
+            this.labelX2.TabIndex = 12;
+            this.labelX2.Text = "X";
+            // 
+            // labelA2
+            // 
+            this.labelA2.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.labelA2.AutoSize = true;
+            this.labelA2.Location = new System.Drawing.Point(21, 82);
+            this.labelA2.Name = "labelA2";
+            this.labelA2.Size = new System.Drawing.Size(17, 13);
+            this.labelA2.TabIndex = 0;
+            this.labelA2.Text = "A:";
+            // 
+            // triangleComboBox
+            // 
+            this.tableLayoutPanel4.SetColumnSpan(this.triangleComboBox, 5);
+            this.triangleComboBox.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.triangleComboBox.FormattingEnabled = true;
+            this.triangleComboBox.Location = new System.Drawing.Point(178, 11);
+            this.triangleComboBox.Name = "triangleComboBox";
+            this.triangleComboBox.Size = new System.Drawing.Size(424, 21);
+            this.triangleComboBox.TabIndex = 35;
+            this.triangleComboBox.SelectedIndexChanged += new System.EventHandler(this.TriangleComboBox_SelectedIndexChanged);
+            // 
+            // labelTriangle
+            // 
+            this.labelTriangle.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.labelTriangle.AutoSize = true;
+            this.labelTriangle.Location = new System.Drawing.Point(68, 22);
+            this.labelTriangle.Name = "labelTriangle";
+            this.labelTriangle.Size = new System.Drawing.Size(93, 13);
+            this.labelTriangle.TabIndex = 34;
+            this.labelTriangle.Text = "Selected Triangle:";
+            // 
+            // aVertexHook
+            // 
+            this.aVertexHook.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.aVertexHook.Location = new System.Drawing.Point(678, 68);
+            this.aVertexHook.Name = "aVertexHook";
+            this.aVertexHook.Size = new System.Drawing.Size(44, 24);
+            this.aVertexHook.TabIndex = 23;
+            this.aVertexHook.Text = "Hook";
+            this.aVertexHook.UseVisualStyleBackColor = true;
+            this.aVertexHook.Click += new System.EventHandler(this.AVertexHook_Click);
+            // 
+            // cVertexHook
+            // 
+            this.cVertexHook.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.cVertexHook.Location = new System.Drawing.Point(678, 128);
+            this.cVertexHook.Name = "cVertexHook";
+            this.cVertexHook.Size = new System.Drawing.Size(44, 24);
+            this.cVertexHook.TabIndex = 25;
+            this.cVertexHook.Text = "Hook";
+            this.cVertexHook.UseVisualStyleBackColor = true;
+            this.cVertexHook.Click += new System.EventHandler(this.CVertexHook_Click);
+            // 
+            // bVertexHook
+            // 
+            this.bVertexHook.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.bVertexHook.Location = new System.Drawing.Point(678, 98);
+            this.bVertexHook.Name = "bVertexHook";
+            this.bVertexHook.Size = new System.Drawing.Size(44, 24);
+            this.bVertexHook.TabIndex = 24;
+            this.bVertexHook.Text = "Hook";
+            this.bVertexHook.UseVisualStyleBackColor = true;
+            this.bVertexHook.Click += new System.EventHandler(this.BVertexHook_Click);
+            // 
+            // verticesA
+            // 
+            this.tableLayoutPanel4.SetColumnSpan(this.verticesA, 4);
+            this.verticesA.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.verticesA.FormattingEnabled = true;
+            this.verticesA.Location = new System.Drawing.Point(423, 71);
+            this.verticesA.Name = "verticesA";
+            this.verticesA.Size = new System.Drawing.Size(249, 21);
+            this.verticesA.TabIndex = 26;
+            // 
+            // labelVertex
+            // 
+            this.labelVertex.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.labelVertex.AutoSize = true;
+            this.tableLayoutPanel4.SetColumnSpan(this.labelVertex, 4);
+            this.labelVertex.Location = new System.Drawing.Point(527, 52);
+            this.labelVertex.Name = "labelVertex";
+            this.labelVertex.Size = new System.Drawing.Size(40, 13);
+            this.labelVertex.TabIndex = 33;
+            this.labelVertex.Text = "Vertex:";
+            // 
+            // triangleCopyButton
+            // 
+            this.triangleCopyButton.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.triangleCopyButton.Location = new System.Drawing.Point(608, 8);
+            this.triangleCopyButton.Name = "triangleCopyButton";
+            this.triangleCopyButton.Size = new System.Drawing.Size(44, 24);
+            this.triangleCopyButton.TabIndex = 36;
+            this.triangleCopyButton.Text = "Copy";
+            this.triangleCopyButton.UseVisualStyleBackColor = true;
+            this.triangleCopyButton.Click += new System.EventHandler(this.TriangleCopyButton_Click);
+            // 
+            // verticesB
+            // 
+            this.tableLayoutPanel4.SetColumnSpan(this.verticesB, 4);
+            this.verticesB.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.verticesB.FormattingEnabled = true;
+            this.verticesB.Location = new System.Drawing.Point(423, 101);
+            this.verticesB.Name = "verticesB";
+            this.verticesB.Size = new System.Drawing.Size(249, 21);
+            this.verticesB.TabIndex = 38;
+            // 
+            // verticesC
+            // 
+            this.tableLayoutPanel4.SetColumnSpan(this.verticesC, 4);
+            this.verticesC.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.verticesC.FormattingEnabled = true;
+            this.verticesC.Location = new System.Drawing.Point(423, 131);
+            this.verticesC.Name = "verticesC";
+            this.verticesC.Size = new System.Drawing.Size(249, 21);
+            this.verticesC.TabIndex = 39;
+            // 
+            // removeButton
+            // 
+            this.tableLayoutPanel4.SetColumnSpan(this.removeButton, 2);
+            this.removeButton.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.removeButton.Location = new System.Drawing.Point(658, 8);
+            this.removeButton.Name = "removeButton";
+            this.removeButton.Size = new System.Drawing.Size(64, 24);
+            this.removeButton.TabIndex = 40;
+            this.removeButton.Text = "Remove";
+            this.removeButton.UseVisualStyleBackColor = true;
+            this.removeButton.Click += new System.EventHandler(this.RemoveButton_Click);
+            // 
             // NormalSwitcherForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -948,6 +1371,9 @@ namespace STLNormalSwitcher {
             this.tableLayoutPanel3.ResumeLayout(false);
             this.tableLayoutPanel3.PerformLayout();
             this.flowLayoutPanel1.ResumeLayout(false);
+            this.tabPage3.ResumeLayout(false);
+            this.tableLayoutPanel4.ResumeLayout(false);
+            this.tableLayoutPanel4.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1027,6 +1453,40 @@ namespace STLNormalSwitcher {
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
         private System.Windows.Forms.Button acceptButton;
         private System.Windows.Forms.Button resetTriangleBoxesButton;
+        private System.Windows.Forms.TabPage tabPage3;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel4;
+        private System.Windows.Forms.TextBox cZ2;
+        private System.Windows.Forms.TextBox cY2;
+        private System.Windows.Forms.TextBox cX2;
+        private System.Windows.Forms.Label labelC2;
+        private System.Windows.Forms.TextBox bZ2;
+        private System.Windows.Forms.TextBox bY2;
+        private System.Windows.Forms.TextBox bX2;
+        private System.Windows.Forms.Label labelB2;
+        private System.Windows.Forms.TextBox aX2;
+        private System.Windows.Forms.TextBox aY2;
+        private System.Windows.Forms.TextBox aZ2;
+        private System.Windows.Forms.Label labelX2;
+        private System.Windows.Forms.Label labelY2;
+        private System.Windows.Forms.Label labelZ2;
+        private System.Windows.Forms.Label labelA2;
+        private System.Windows.Forms.Button aVertexHook;
+        private System.Windows.Forms.Button bVertexHook;
+        private System.Windows.Forms.Button cVertexHook;
+        private System.Windows.Forms.ComboBox verticesA;
+        private System.Windows.Forms.TextBox normalZ2;
+        private System.Windows.Forms.TextBox normalY2;
+        private System.Windows.Forms.TextBox normalX2;
+        private System.Windows.Forms.Label labelNormal2;
+        private System.Windows.Forms.Button addTriangleButton;
+        private System.Windows.Forms.Button addButton;
+        private System.Windows.Forms.Label labelVertex;
+        private System.Windows.Forms.Label labelTriangle;
+        private System.Windows.Forms.ComboBox triangleComboBox;
+        private System.Windows.Forms.Button triangleCopyButton;
+        private System.Windows.Forms.ComboBox verticesB;
+        private System.Windows.Forms.ComboBox verticesC;
+        private System.Windows.Forms.Button removeButton;
     }
 }
 

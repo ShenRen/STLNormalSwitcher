@@ -42,6 +42,7 @@ namespace STLNormalSwitcher {
         private float scale;
         private float[] vertexArray;
         private float[] normalArray;
+        private List<Vertex> vertices = new List<Vertex>();
 
         #endregion
 
@@ -52,6 +53,9 @@ namespace STLNormalSwitcher {
 
         /// <value>Gets the normal vectors of all triangles expanded to all corners as an array</value>
         public float[] NormalArray { get { return normalArray; } }
+
+        /// <value>Gets a list of all vertices of all Triangles</value>
+        public List<Vertex> Vertices { get { return vertices; } }
 
         /// <value>Gets the scale used for drawing</value>
         public float Scale { get { return scale; } }
@@ -144,6 +148,23 @@ namespace STLNormalSwitcher {
         }
 
         /// <summary>
+        /// Fills "vertices" with all vertices from all Triangles,
+        /// every Vertex is in the list only once.
+        /// </summary>
+        public void FillVertexList() {
+            Vertex temp;
+            vertices.Clear();
+            for (int i = 0; i < this.Count; i++) {
+                for (int j = 0; j < 3; j++) {
+                    temp = this[i][j].Copy();
+                    if (!vertices.Contains(temp)) {
+                        vertices.Add(temp);
+                    }
+                }
+            }
+        }
+
+        /// <summary>
         /// Calculates the scale as the maximum of the differences between the maxima and minima.
         /// </summary>
         public void Finish() {
@@ -154,6 +175,18 @@ namespace STLNormalSwitcher {
             if (max[2] - min[2] > scale) { scale = max[2] - min[2]; }
 
             CalculateArrays();
+            FillVertexList();
+        }
+
+        /// <summary>
+        /// Sets the position of each Triangle to the correct position in this list.
+        /// </summary>
+        public void SetPositions() {
+            for (int i = 0; i < this.Count; i++) {
+                this[i].Position = i;
+            }
+
+            Finish();
         }
 
         /// <summary>

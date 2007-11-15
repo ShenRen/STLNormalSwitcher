@@ -109,6 +109,25 @@ namespace STLNormalSwitcher {
             return value;
         }
 
+        /// <summary>
+        /// Compares this Vertex to a give object.
+        /// Two vertices are equal, when their values are the same,
+        /// they can have different owners.
+        /// </summary>
+        /// <param name="obj">An other Vertex</param>
+        /// <returns>true, if obj == this</returns>
+        public override bool Equals(object obj) {
+            if (obj is Vertex) {
+                if ((this[0] == (obj as Vertex)[0]) && (this[1] == (obj as Vertex)[1]) && (this[1] == (obj as Vertex)[1])) {
+                    return true;
+                } else { return false; }
+            } else { return base.Equals(obj); }
+        }
+
+        public override int GetHashCode() {
+            return base.GetHashCode();
+        }
+
         #endregion
 
     }

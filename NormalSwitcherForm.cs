@@ -171,6 +171,14 @@ namespace STLNormalSwitcher {
             MarkSelectedItems();
             normalListView.EndUpdate();
             visualization.SetColorArray();
+
+            // ComboBoxes on the "Add/Remove Triangle"-Tab
+            triangleComboBox.DataSource = null;
+            triangleComboBox.DataSource = triangleList;
+            triangleComboBox.DisplayMember = "AsString";
+            verticesA.DataSource = verticesB.DataSource = verticesC.DataSource = null;
+            verticesA.DataSource = verticesB.DataSource = verticesC.DataSource = triangleList.Vertices;
+            verticesA.DisplayMember = verticesB.DisplayMember = verticesC.DisplayMember = "AsString";
         }
 
         /// <summary>
@@ -207,6 +215,7 @@ namespace STLNormalSwitcher {
         /// </summary>
         private void MarkSelectedItems() {
             normalListView.SelectedIndexChanged -= NormalListView_SelectedIndexChanged;
+            normalListView.SelectedIndices.Clear();
             for (int j = 0; j < currentSelection.Count; j++) {
                 if (currentSelection[j].Position > -1) {
                     normalListView.SelectedIndices.Add(currentSelection[j].Position);
@@ -215,6 +224,7 @@ namespace STLNormalSwitcher {
             normalListView.SelectedIndexChanged += NormalListView_SelectedIndexChanged;
             if (normalListView.SelectedItems.Count > 0) {
                 normalListView.TopItem = normalListView.SelectedItems[0];
+                triangleComboBox.SelectedIndex = currentSelection[0].Position;
             }
         }
 
@@ -256,6 +266,9 @@ namespace STLNormalSwitcher {
                 normalListView.TopItem = normalListView.SelectedItems[0];
             } else {
                 normalListView.TopItem = normalListView.Items[0];
+            }
+            if ((selected.Count > 0) && (tabControl1.SelectedTab == tabPage3)) {
+                triangleComboBox.SelectedIndex = selected[0];
             }
         }
 
@@ -342,36 +355,38 @@ namespace STLNormalSwitcher {
         /// <param name="sender">openToolStripMenuItem</param>
         /// <param name="e">Standard EventArgs</param>
         private void OpenFile(object sender, EventArgs e) {
-            CloseFile(sender, e);
+            try {
+                CloseFile(sender, e);
 
-            OpenFileDialog ofd = new OpenFileDialog();
-            ofd.CheckFileExists = true;
-            ofd.DefaultExt = "stl";
-            ofd.Filter = "STL Files (*.stl)|*.stl";
-            ofd.Multiselect = false;
-            ofd.Title = "Open STL-file";
-            if (ofd.ShowDialog() == DialogResult.OK) {
-                StreamReader reader = new StreamReader(ofd.FileName);
-                try {
-                    parser.Parse(reader);
+                OpenFileDialog ofd = new OpenFileDialog();
+                ofd.CheckFileExists = true;
+                ofd.DefaultExt = "stl";
+                ofd.Filter = "STL Files (*.stl)|*.stl";
+                ofd.Multiselect = false;
+                ofd.Title = "Open STL-file";
+                if (ofd.ShowDialog() == DialogResult.OK) {
+                    StreamReader reader = new StreamReader(ofd.FileName);
+                    try {
+                        parser.Parse(reader);
 
-                    triangleList = parser.TriangleList;
-                    backupList = triangleList.Copy();
-                    SetOrigin();
-                    originTrackBar.Visible = true;
-                    InitVisualization();
+                        triangleList = parser.TriangleList;
+                        backupList = triangleList.Copy();
+                        SetOrigin();
+                        originTrackBar.Visible = true;
+                        InitVisualization();
 
-                    currentFile = ofd.FileName;
-                    allButton.Enabled = true;
+                        currentFile = ofd.FileName;
+                        allButton.Enabled = true;
 
-                    FillListView();
-                } catch (Exception exception) {
-                    MessageBox.Show(exception.Message, "Error");
-                } finally {
-                    reader.Close();
+                        FillListView();
+                    } catch (Exception exception) {
+                        MessageBox.Show(exception.Message, "Error");
+                    } finally {
+                        reader.Close();
+                    }
                 }
-            }
-            ofd.Dispose();
+                ofd.Dispose();
+            } catch { }
         }
 
         /// <summary>
@@ -380,10 +395,14 @@ namespace STLNormalSwitcher {
         /// <param name="sender">saveToolStripMenuItem</param>
         /// <param name="e">Standard EventArgs</param>
         private void SaveFile(object sender, EventArgs e) {
-            if (parser.ASCII) {
-                SwitchersHelpers.WriteToASCII(this.currentFile, triangleList);
+            if (triangleList.Count == 0) {
+                MessageBox.Show("You need at least one triangle to save!", "", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             } else {
-                SwitchersHelpers.WriteToBinary(this.currentFile, triangleList);
+                if (parser.ASCII) {
+                    SwitchersHelpers.WriteToASCII(this.currentFile, triangleList);
+                } else {
+                    SwitchersHelpers.WriteToBinary(this.currentFile, triangleList);
+                }
             }
         }
 
@@ -393,16 +412,20 @@ namespace STLNormalSwitcher {
         /// <param name="sender">saveAsToolStripMenuItem</param>
         /// <param name="e">Standard EventArgs</param>
         private void SaveAs(object sender, EventArgs e) {
-            SaveFileDialog sfd = new SaveFileDialog();
-            sfd.AddExtension = true;
-            sfd.DefaultExt = "stl";
-            sfd.Filter = "ASCII STL File (*.stl)|*.stl|Binary STL File (*.stl)|*.stl";
-            sfd.OverwritePrompt = true;
-            if (sfd.ShowDialog() == DialogResult.OK) {
-                if (sfd.FilterIndex == 1) {
-                    SwitchersHelpers.WriteToASCII(sfd.FileName, triangleList);
-                } else {
-                    SwitchersHelpers.WriteToBinary(sfd.FileName, triangleList);
+            if (triangleList.Count == 0) {
+                MessageBox.Show("You need at least one triangle to save!", "", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            } else {
+                SaveFileDialog sfd = new SaveFileDialog();
+                sfd.AddExtension = true;
+                sfd.DefaultExt = "stl";
+                sfd.Filter = "ASCII STL File (*.stl)|*.stl|Binary STL File (*.stl)|*.stl";
+                sfd.OverwritePrompt = true;
+                if (sfd.ShowDialog() == DialogResult.OK) {
+                    if (sfd.FilterIndex == 1) {
+                        SwitchersHelpers.WriteToASCII(sfd.FileName, triangleList);
+                    } else {
+                        SwitchersHelpers.WriteToBinary(sfd.FileName, triangleList);
+                    }
                 }
             }
         }
@@ -415,7 +438,11 @@ namespace STLNormalSwitcher {
         private void CloseFile(object sender, EventArgs e) {
             if (currentFile != "") {
                 if ((undoButton.Enabled) && (MessageBox.Show("Do you want to save your changes?", "", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)) {
-                    this.SaveAs(sender, e);
+                    if ((triangleList.Count == 0) && (MessageBox.Show("You need at least one triangle to save!", "", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning) == DialogResult.Cancel)) {
+                        throw new Exception();
+                    } else if (triangleList.Count > 0) {
+                        this.SaveAs(sender, e);
+                    }
                 }
 
                 splitContainer2.Panel2.Controls.Clear();
@@ -430,6 +457,7 @@ namespace STLNormalSwitcher {
                 triangleList = backupList = null;
                 parser = new STLParser();
 
+                tabControl1.SelectedIndex = 0;
                 normalListView.Items.Clear();
                 normalListView.Items.Add(new ListViewItem("Select a File!"));
                 normalListView.Items[0].Tag = -2;
@@ -714,7 +742,8 @@ namespace STLNormalSwitcher {
         }
 
         /// <summary>
-        /// Adjusts the values of the A-Vertex of the Triangle to the Vertex in the aNeighbors ComboBox.
+        /// Adjusts the values of the A-Vertex of the Triangle on the
+        /// "Edit the First Selected Triangle"-Tab to the Vertex in the aNeighbors ComboBox.
         /// </summary>
         /// <param name="sender">hookButtonA</param>
         /// <param name="e">Standard EventArgs</param>
@@ -725,7 +754,8 @@ namespace STLNormalSwitcher {
         }
 
         /// <summary>
-        /// Adjusts the values of the B-Vertex of the Triangle to the Vertex in the bNeighbors ComboBox.
+        /// Adjusts the values of the B-Vertex of the Triangle on the
+        /// "Edit the First Selected Triangle"-Tab to the Vertex in the bNeighbors ComboBox.
         /// </summary>
         /// <param name="sender">hookButtonB</param>
         /// <param name="e">Standard EventArgs</param>
@@ -736,7 +766,8 @@ namespace STLNormalSwitcher {
         }
 
         /// <summary>
-        /// Adjusts the values of the C-Vertex of the Triangle to the Vertex in the cNeighbors ComboBox.
+        /// Adjusts the values of the C-Vertex of the Triangle on the
+        /// "Edit the First Selected Triangle"-Tab to the Vertex in the cNeighbors ComboBox.
         /// </summary>
         /// <param name="sender">hookButtonC</param>
         /// <param name="e">Standard EventArgs</param>
@@ -747,7 +778,7 @@ namespace STLNormalSwitcher {
         }
 
         /// <summary>
-        /// Resets the boxes on the "Edit the First Selected Triangle" Tab.
+        /// Resets the boxes on the "Edit the First Selected Triangle"-Tab.
         /// </summary>
         /// <param name="sender">resetTriangleBoxesButton</param>
         /// <param name="e">Standard EventArgs</param>
@@ -772,11 +803,13 @@ namespace STLNormalSwitcher {
                 history.Add(temp);
                 triangleList.EditTriangle(tri);
 
+                currentSelection.Clear();
+                currentSelection.Add(tri);
                 undoButton.Enabled = true;
-
                 SetOrigin();
-                visualization.Refresh();
                 FillTriangleBoxes();
+                FillListView();
+                visualization.Refresh();
             } catch (ArgumentException ex) {
                 MessageBox.Show(ex.Message, "", MessageBoxButtons.OK, MessageBoxIcon.Error);
             } catch {
@@ -802,10 +835,12 @@ namespace STLNormalSwitcher {
                 history.Add(temp);
                 triangleList.EditTriangle(tri);
 
+                currentSelection.Clear();
+                currentSelection.Add(tri);
                 undoButton.Enabled = true;
-
                 SetOrigin();
                 FillTriangleBoxes();
+                FillListView();
                 visualization.Refresh();
             } catch (ArgumentException ex) {
                 MessageBox.Show(ex.Message, "", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -851,6 +886,133 @@ namespace STLNormalSwitcher {
 
         #endregion
 
+        #region Add/Remove Triangle
+
+        /// <summary>
+        /// Copies the values of the selected Triangle to the TextBoxes
+        /// on the "Add/Remove Triangle"-Tab.
+        /// </summary>
+        /// <param name="sender">triangleCopyButton</param>
+        /// <param name="e">Standard EventArgs</param>
+        private void TriangleCopyButton_Click(object sender, EventArgs e) {
+            aX2.Text = (triangleComboBox.SelectedItem as Triangle)[0][0].ToString();
+            aY2.Text = (triangleComboBox.SelectedItem as Triangle)[0][1].ToString();
+            aZ2.Text = (triangleComboBox.SelectedItem as Triangle)[0][2].ToString();
+            bX2.Text = (triangleComboBox.SelectedItem as Triangle)[1][0].ToString();
+            bY2.Text = (triangleComboBox.SelectedItem as Triangle)[1][1].ToString();
+            bZ2.Text = (triangleComboBox.SelectedItem as Triangle)[1][2].ToString();
+            cX2.Text = (triangleComboBox.SelectedItem as Triangle)[2][0].ToString();
+            cY2.Text = (triangleComboBox.SelectedItem as Triangle)[2][1].ToString();
+            cZ2.Text = (triangleComboBox.SelectedItem as Triangle)[2][2].ToString();
+            normalX2.Text = (triangleComboBox.SelectedItem as Triangle)[3][0].ToString();
+            normalY2.Text = (triangleComboBox.SelectedItem as Triangle)[3][1].ToString();
+            normalZ2.Text = (triangleComboBox.SelectedItem as Triangle)[3][2].ToString();
+        }
+
+        /// <summary>
+        /// Marks the Triangle selected in the triangleComboBox in the visualization
+        /// and the normalListView.
+        /// </summary>
+        /// <param name="sender">triangleComboBox</param>
+        /// <param name="e">Standard EventArgs</param>
+        private void TriangleComboBox_SelectedIndexChanged(object sender, EventArgs e) {
+            currentSelection.Clear();
+            currentSelection.Add(triangleComboBox.SelectedItem as Triangle);
+            if (currentSelection[0] != null) {
+                MarkSelectedItems();
+                visualization.SetColorArray();
+                visualization.Refresh();
+            }
+        }
+
+        /// <summary>
+        /// Add the new Triangle to the triangleList, with the normal vector calculated by the CalculateNormal() method.
+        /// </summary>
+        /// <param name="sender">addTriangleButton</param>
+        /// <param name="e">Standard EventArgs</param>
+        private void AddTriangleButton_Click(object sender, EventArgs e) {
+            try {
+                Vertex a = new Vertex((float)Convert.ToDouble(aX2.Text), (float)Convert.ToDouble(aY2.Text), (float)Convert.ToDouble(aZ2.Text));
+                Vertex b = new Vertex((float)Convert.ToDouble(bX2.Text), (float)Convert.ToDouble(bY2.Text), (float)Convert.ToDouble(bZ2.Text));
+                Vertex c = new Vertex((float)Convert.ToDouble(cX2.Text), (float)Convert.ToDouble(cY2.Text), (float)Convert.ToDouble(cZ2.Text));
+                Triangle tri = new Triangle(a, b, c);
+                triangleList.AddTriangle(tri);
+                triangleList.Finish();
+
+                SetOrigin();
+                FillListView();
+                visualization.SetPickingColors();
+                visualization.Refresh();
+            } catch (ArgumentException ex) {
+                MessageBox.Show(ex.Message, "", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            } catch {
+                MessageBox.Show("Make sure all values are floating point numbers!", "", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        /// <summary>
+        /// Add the new Triangle to the triangleList, with the given normal vector.
+        /// </summary>
+        /// <param name="sender">addButton</param>
+        /// <param name="e">Standard EventArgs</param>
+        private void AddButton_Click(object sender, EventArgs e) {
+            try {
+                Vertex a = new Vertex((float)Convert.ToDouble(aX2.Text), (float)Convert.ToDouble(aY2.Text), (float)Convert.ToDouble(aZ2.Text));
+                Vertex b = new Vertex((float)Convert.ToDouble(bX2.Text), (float)Convert.ToDouble(bY2.Text), (float)Convert.ToDouble(bZ2.Text));
+                Vertex c = new Vertex((float)Convert.ToDouble(cX2.Text), (float)Convert.ToDouble(cY2.Text), (float)Convert.ToDouble(cZ2.Text));
+                Vertex n = new Vertex((float)Convert.ToDouble(normalX2.Text), (float)Convert.ToDouble(normalY2.Text), (float)Convert.ToDouble(normalZ2.Text));
+                Triangle tri = new Triangle(a, b, c, n);
+                triangleList.AddTriangle(tri);
+                triangleList.Finish();
+
+                SetOrigin();
+                FillListView();
+
+                visualization.SetPickingColors();
+                visualization.Refresh();
+            } catch (ArgumentException ex) {
+                MessageBox.Show(ex.Message, "", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            } catch {
+                MessageBox.Show("Make sure all values are floating point numbers!", "", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+
+        private void RemoveButton_Click(object sender, EventArgs e) {
+            triangleList.RemoveAt((triangleComboBox.SelectedItem as Triangle).Position);
+            triangleList.SetPositions();
+            currentSelection.Clear();
+
+            SetOrigin();
+            FillListView();
+            visualization.SetPickingColors();
+            if (triangleComboBox.Items.Count > 0) {
+                triangleComboBox.SelectedIndex = 0;
+            } else {
+                visualization.Refresh();
+            }
+        }
+
+        private void AVertexHook_Click(object sender, EventArgs e) {
+            aX2.Text = (verticesA.SelectedItem as Vertex)[0].ToString();
+            aY2.Text = (verticesA.SelectedItem as Vertex)[1].ToString();
+            aZ2.Text = (verticesA.SelectedItem as Vertex)[2].ToString();
+        }
+
+        private void BVertexHook_Click(object sender, EventArgs e) {
+            bX2.Text = (verticesB.SelectedItem as Vertex)[0].ToString();
+            bY2.Text = (verticesB.SelectedItem as Vertex)[1].ToString();
+            bZ2.Text = (verticesB.SelectedItem as Vertex)[2].ToString();
+        }
+
+        private void CVertexHook_Click(object sender, EventArgs e) {
+            cX2.Text = (verticesC.SelectedItem as Vertex)[0].ToString();
+            cY2.Text = (verticesC.SelectedItem as Vertex)[1].ToString();
+            cZ2.Text = (verticesC.SelectedItem as Vertex)[2].ToString();
+        }
+
+        #endregion
+
         /// <summary>
         /// Updates the rotationOriginTextBox and the origin,
         /// when the value of the originTrackBar is changed and refreshes the NormalSwitcherControl.
@@ -883,7 +1045,7 @@ namespace STLNormalSwitcher {
         /// <param name="sender">FormClosing event</param>
         /// <param name="e">Standard FormClosingEventArgs</param>
         private void NormalSwitcherForm_FormClosing(object sender, FormClosingEventArgs e) {
-            if ((currentFile != null) && (MessageBox.Show("Do you want to save your changes?", "", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)) {
+            if ((currentFile != "") && (MessageBox.Show("Do you want to save your changes?", "", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)) {
                 this.SaveAs(sender, e);
             }
             if (visualization != null) {
@@ -897,15 +1059,28 @@ namespace STLNormalSwitcher {
         /// <param name="sender">tabControl1</param>
         /// <param name="e">Standard TabControlCancelEventArgs</param>
         private void TabControl1_Selecting(object sender, TabControlCancelEventArgs e) {
-            if (tabControl1.SelectedTab == tabPage1) {
-                // Normal colors
-                visualization.SetColorArray();
-                visualization.Refresh();
-            } else {
-                // Neighbor colors
-                Neighbors_SelectedIndexChanged(sender, e);
-                visualization.Refresh();
-            }
+            if (currentFile != "") {
+                if (tabControl1.SelectedTab == tabPage1) {
+                    // Normal colors
+                    visualization.SetColorArray();
+                    visualization.Refresh();
+                } else if (tabControl1.SelectedTab == tabPage2) {
+                    // Neighbor colors
+                    Neighbors_SelectedIndexChanged(sender, e);
+                    visualization.Refresh();
+                } else {
+                    // Normal colors, only the first Triangle is selected
+                    if (currentSelection.Count > 0) {
+                        if (triangleComboBox.SelectedIndex == currentSelection[0].Position) {
+                            currentSelection.Clear();
+                            currentSelection.Add(triangleComboBox.SelectedItem as Triangle);
+                            MarkSelectedItems();
+                            visualization.SetColorArray();
+                            visualization.Refresh();
+                        } else { triangleComboBox.SelectedIndex = currentSelection[0].Position; }
+                    } else { triangleComboBox.SelectedIndex = 0; }
+                }
+            } else { tabControl1.SelectedTab = tabPage1; }
         }
 
         #endregion

@@ -52,6 +52,9 @@ namespace STLNormalSwitcher {
 
         #region Properties
 
+        /// <value>Gets the Triangle as a string</value>
+        public string AsString { get { return this.ToString(); } }
+
         /// <value>Gets the maximum coordinates</value>
         public float[] Max { get { return max; } }
 
@@ -143,7 +146,7 @@ namespace STLNormalSwitcher {
 
             double factor = 0;
             for (int i = 0; i < 3; i++) {
-                n[i] -= this[0][i];
+                n[i] = this[0][i] - n[i];
                 factor += n[i] * n[i];
             }
             factor = Math.Sqrt(factor);
