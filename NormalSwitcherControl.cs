@@ -33,6 +33,7 @@ using System.IO;
 using System.Drawing.Imaging;
 using Tao.OpenGl;
 using Tao.Platform.Windows;
+using Tao.FreeGlut;
 
 namespace STLNormalSwitcher {
     /// <summary>
@@ -348,6 +349,37 @@ namespace STLNormalSwitcher {
                 Gl.glColorPointer(3, Gl.GL_FLOAT, 0, this.colorArray);
             }
             Gl.glDrawArrays(Gl.GL_TRIANGLES, 0, owner.TriangleList.Count * 3);
+
+            if (owner.DrawVertices) {
+                Glu.GLUquadric quadobj = Glu.gluNewQuadric();
+                Glu.gluQuadricDrawStyle(quadobj, Glu.GLU_FILL);
+
+                Gl.glColor3fv(aColor);
+                Gl.glPushMatrix();
+                Gl.glTranslatef(owner.TriangleList.VertexArray[owner.AVertex[0] * 9 + owner.AVertex[1] * 3],
+                    owner.TriangleList.VertexArray[owner.AVertex[0] * 9 + owner.AVertex[1] * 3 + 1],
+                    owner.TriangleList.VertexArray[owner.AVertex[0] * 9 + owner.AVertex[1] * 3 + 2]);
+                Glu.gluSphere(quadobj, 3, 10, 10);
+                Gl.glPopMatrix();
+
+                Gl.glColor3fv(bColor);
+                Gl.glPushMatrix();
+                Gl.glTranslatef(owner.TriangleList.VertexArray[owner.BVertex[0] * 9 + owner.BVertex[1] * 3],
+                    owner.TriangleList.VertexArray[owner.BVertex[0] * 9 + owner.BVertex[1] * 3 + 1],
+                    owner.TriangleList.VertexArray[owner.BVertex[0] * 9 + owner.BVertex[1] * 3 + 2]);
+                Glu.gluSphere(quadobj, 3, 10, 10);
+                Gl.glPopMatrix();
+
+                Gl.glColor3fv(cColor);
+                Gl.glPushMatrix();
+                Gl.glTranslatef(owner.TriangleList.VertexArray[owner.CVertex[0] * 9 + owner.CVertex[1] * 3],
+                    owner.TriangleList.VertexArray[owner.CVertex[0] * 9 + owner.CVertex[1] * 3 + 1],
+                    owner.TriangleList.VertexArray[owner.CVertex[0] * 9 + owner.CVertex[1] * 3 + 2]);
+                Glu.gluSphere(quadobj, 3, 10, 10);
+                Gl.glPopMatrix();
+
+                Glu.gluDeleteQuadric(quadobj);
+            }
         }
 
         #endregion

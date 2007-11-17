@@ -55,7 +55,7 @@ namespace STLNormalSwitcher {
         public float[] NormalArray { get { return normalArray; } }
 
         /// <value>Gets a list of all vertices of all Triangles</value>
-        public List<Vertex> Vertices { get { return vertices; } }
+        public Vertex[] Vertices { get { return vertices.ToArray(); } }
 
         /// <value>Gets the scale used for drawing</value>
         public float Scale { get { return scale; } }
@@ -152,13 +152,11 @@ namespace STLNormalSwitcher {
         /// every Vertex is in the list only once.
         /// </summary>
         public void FillVertexList() {
-            Vertex temp;
             vertices.Clear();
             for (int i = 0; i < this.Count; i++) {
                 for (int j = 0; j < 3; j++) {
-                    temp = this[i][j].Copy();
-                    if (!vertices.Contains(temp)) {
-                        vertices.Add(temp);
+                    if (!vertices.Contains(this[i][j])) {
+                        vertices.Add(this[i][j]);
                     }
                 }
             }

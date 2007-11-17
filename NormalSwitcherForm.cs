@@ -49,10 +49,15 @@ namespace STLNormalSwitcher {
         private TriangleList backupList;
 
         private int origin;
+        private int[] aVertex = new int[2];
+        private int[] bVertex = new int[2];
+        private int[] cVertex = new int[2];
+        private bool changed = false;
+        private bool drawVertices = false;
 
-        private List<List<Triangle>> history = new List<List<Triangle>>();
-        private List<List<Triangle>> future = new List<List<Triangle>>();
-        private List<Triangle> currentSelection = new List<Triangle>();
+        private List<Event> history = new List<Event>();
+        private List<Event> future = new List<Event>();
+        private Event currentSelection = new Event();
 
         private List<Vertex> neighborsOfA = new List<Vertex>();
         private List<Vertex> neighborsOfB = new List<Vertex>();
@@ -72,7 +77,15 @@ namespace STLNormalSwitcher {
         public float Origin { get { return (float)origin; } }
 
         /// <value>Gets the currentSelection</value>
-        public List<Triangle> CurrentSelection { get { return currentSelection; } }
+        public Event CurrentSelection { get { return currentSelection; } }
+
+        public bool DrawVertices { get { return drawVertices; } }
+
+        public int[] AVertex { get { return aVertex; } }
+
+        public int[] BVertex { get { return bVertex; } }
+
+        public int[] CVertex { get { return cVertex; } }
 
         #endregion
 
@@ -177,24 +190,21 @@ namespace STLNormalSwitcher {
             triangleComboBox.DataSource = triangleList;
             triangleComboBox.DisplayMember = "AsString";
             verticesA.DataSource = verticesB.DataSource = verticesC.DataSource = null;
-            verticesA.DataSource = verticesB.DataSource = verticesC.DataSource = triangleList.Vertices;
-            verticesA.DisplayMember = verticesB.DisplayMember = verticesC.DisplayMember = "AsString";
-        }
-
-        /// <summary>
-        /// Creates a new currentSelection and adds it to the history.
-        /// </summary>
-        private void MakeHistory() {
-            if (normalListView.SelectedItems.Count >= 1) {
-                MakeCurrentSelection();
-                if (currentSelection.Count > 0) {
-                    List<Triangle> temp = new List<Triangle>();
-                    for (int i = 0; i < currentSelection.Count; i++) {
-                        temp.Add(currentSelection[i].Copy());
-                    }
-                    history.Add(temp);
-                }
-            }
+            verticesA.DataSource = triangleList.Vertices;
+            verticesB.DataSource = triangleList.Vertices;
+            verticesC.DataSource = triangleList.Vertices;
+            verticesA.DisplayMember = "AsString";
+            verticesB.DisplayMember = "AsString";
+            verticesC.DisplayMember = "AsString";
+            verticesA.SelectedItem = (triangleComboBox.SelectedItem as Triangle)[0];
+            verticesB.SelectedItem = (triangleComboBox.SelectedItem as Triangle)[1];
+            verticesC.SelectedItem = (triangleComboBox.SelectedItem as Triangle)[2];
+            aVertex[0] = triangleList.IndexOf((verticesA.SelectedItem as Vertex).Owner);
+            aVertex[1] = (verticesA.SelectedItem as Vertex).Owner.IndexOf(verticesA.SelectedItem as Vertex);
+            bVertex[0] = triangleList.IndexOf((verticesB.SelectedItem as Vertex).Owner);
+            bVertex[1] = (verticesB.SelectedItem as Vertex).Owner.IndexOf(verticesB.SelectedItem as Vertex);
+            cVertex[0] = triangleList.IndexOf((verticesC.SelectedItem as Vertex).Owner);
+            cVertex[1] = (verticesC.SelectedItem as Vertex).Owner.IndexOf(verticesC.SelectedItem as Vertex);
         }
 
         /// <summary>
@@ -437,7 +447,7 @@ namespace STLNormalSwitcher {
         /// <param name="e">Standard EventArgs</param>
         private void CloseFile(object sender, EventArgs e) {
             if (currentFile != "") {
-                if ((undoButton.Enabled) && (MessageBox.Show("Do you want to save your changes?", "", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)) {
+                if ((changed) && (MessageBox.Show("Do you want to save your changes?", "", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)) {
                     if ((triangleList.Count == 0) && (MessageBox.Show("You need at least one triangle to save!", "", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning) == DialogResult.Cancel)) {
                         throw new Exception();
                     } else if (triangleList.Count > 0) {
@@ -456,6 +466,7 @@ namespace STLNormalSwitcher {
 
                 triangleList = backupList = null;
                 parser = new STLParser();
+                changed = false;
 
                 tabControl1.SelectedIndex = 0;
                 normalListView.Items.Clear();
@@ -481,9 +492,8 @@ namespace STLNormalSwitcher {
         private void Undo(object sender, EventArgs e) {
             if (history.Count >= 1) {
                 currentSelection = history[history.Count - 1];
-                List<Triangle> temp = new List<Triangle>();
+                Event temp = currentSelection.Copy();
                 for (int i = 0; i < currentSelection.Count; i++) {
-                    temp.Add(triangleList[currentSelection[i].Position]);
                     triangleList.EditTriangle(currentSelection[i]);
                 }
                 history.RemoveAt(history.Count - 1);
@@ -510,14 +520,14 @@ namespace STLNormalSwitcher {
         private void Redo(object sender, EventArgs e) {
             if (future.Count >= 1) {
                 currentSelection = future[future.Count - 1];
-                List<Triangle> temp = new List<Triangle>();
+                Event temp = currentSelection.Copy();
                 for (int i = 0; i < currentSelection.Count; i++) {
-                    temp.Add(triangleList[currentSelection[i].Position]);
                     triangleList.EditTriangle(currentSelection[i]);
                 }
                 future.RemoveAt(future.Count - 1);
                 history.Add(temp);
                 undoButton.Enabled = true;
+                changed = true;
             }
             if (future.Count == 0) {
                 redoButton.Enabled = false;
@@ -543,6 +553,7 @@ namespace STLNormalSwitcher {
             history.Clear();
 
             undoButton.Enabled = false;
+            changed = false;
             FillListView();
             SetOrigin();
             FillTriangleBoxes();
@@ -586,14 +597,16 @@ namespace STLNormalSwitcher {
         /// <param name="sender">switchAllToolStripMenuItem or allButton</param>
         /// <param name="e">Standard EventArgs</param>
         private void SwitchAll(object sender, EventArgs e) {
-            List<Triangle> temp = new List<Triangle>();
+            Event temp = new Event();
             for (int i = 0; i < triangleList.Count; i++) {
                 temp.Add(triangleList[i].Copy());
             }
+            temp.eventType = Event.EventType.Switch;
             history.Add(temp);
             triangleList.SwitchAll();
 
             undoButton.Enabled = true;
+            changed = true;
             FillListView();
             MarkSelectedItems();
             FillTriangleBoxes();
@@ -606,11 +619,23 @@ namespace STLNormalSwitcher {
         /// <param name="sender">switchSelectedToolStripMenuItem or selectedButton</param>
         /// <param name="e">Standard EventArgs</param>
         private void SwitchSelected(object sender, EventArgs e) {
-            MakeHistory();
+            if (normalListView.SelectedItems.Count >= 1) {
+                MakeCurrentSelection();
+                if (currentSelection.Count > 0) {
+                    Event temp = new Event();
+                    for (int i = 0; i < currentSelection.Count; i++) {
+                        temp.Add(currentSelection[i].Copy());
+                    }
+                    temp.eventType = Event.EventType.Switch;
+                    history.Add(temp);
+                }
+            }
+
             if (currentSelection.Count > 0) {
                 triangleList.SwitchSelected(currentSelection);
 
                 undoButton.Enabled = true;
+                changed = true;
                 FillListView();
                 MarkSelectedItems();
                 FillTriangleBoxes();
@@ -798,14 +823,16 @@ namespace STLNormalSwitcher {
                 Vertex c = new Vertex((float)Convert.ToDouble(cX.Text), (float)Convert.ToDouble(cY.Text), (float)Convert.ToDouble(cZ.Text));
                 Triangle tri = new Triangle(a, b, c);
                 tri.Position = currentSelection[0].Position;
-                List<Triangle> temp = new List<Triangle>();
+                Event temp = new Event();
                 temp.Add(currentSelection[0]);
+                temp.eventType = Event.EventType.Edit;
                 history.Add(temp);
                 triangleList.EditTriangle(tri);
 
                 currentSelection.Clear();
                 currentSelection.Add(tri);
                 undoButton.Enabled = true;
+                changed = true;
                 SetOrigin();
                 FillTriangleBoxes();
                 FillListView();
@@ -830,14 +857,16 @@ namespace STLNormalSwitcher {
                 Vertex n = new Vertex((float)Convert.ToDouble(normalX.Text), (float)Convert.ToDouble(normalY.Text), (float)Convert.ToDouble(normalZ.Text));
                 Triangle tri = new Triangle(a, b, c, n);
                 tri.Position = currentSelection[0].Position;
-                List<Triangle> temp = new List<Triangle>();
+                Event temp = new Event();
                 temp.Add(currentSelection[0]);
+                temp.eventType = Event.EventType.Edit;
                 history.Add(temp);
                 triangleList.EditTriangle(tri);
 
                 currentSelection.Clear();
                 currentSelection.Add(tri);
                 undoButton.Enabled = true;
+                changed = true;
                 SetOrigin();
                 FillTriangleBoxes();
                 FillListView();
@@ -919,6 +948,9 @@ namespace STLNormalSwitcher {
             currentSelection.Clear();
             currentSelection.Add(triangleComboBox.SelectedItem as Triangle);
             if (currentSelection[0] != null) {
+                verticesA.SelectedItem = (triangleComboBox.SelectedItem as Triangle)[0];
+                verticesB.SelectedItem = (triangleComboBox.SelectedItem as Triangle)[1];
+                verticesC.SelectedItem = (triangleComboBox.SelectedItem as Triangle)[2];
                 MarkSelectedItems();
                 visualization.SetColorArray();
                 visualization.Refresh();
@@ -936,9 +968,14 @@ namespace STLNormalSwitcher {
                 Vertex b = new Vertex((float)Convert.ToDouble(bX2.Text), (float)Convert.ToDouble(bY2.Text), (float)Convert.ToDouble(bZ2.Text));
                 Vertex c = new Vertex((float)Convert.ToDouble(cX2.Text), (float)Convert.ToDouble(cY2.Text), (float)Convert.ToDouble(cZ2.Text));
                 Triangle tri = new Triangle(a, b, c);
+                Event temp = new Event();
+                temp.Add(currentSelection[0]);
+                temp.eventType = Event.EventType.Add;
+                history.Add(temp);
                 triangleList.AddTriangle(tri);
                 triangleList.Finish();
 
+                changed = true;
                 SetOrigin();
                 FillListView();
                 visualization.SetPickingColors();
@@ -962,12 +999,16 @@ namespace STLNormalSwitcher {
                 Vertex c = new Vertex((float)Convert.ToDouble(cX2.Text), (float)Convert.ToDouble(cY2.Text), (float)Convert.ToDouble(cZ2.Text));
                 Vertex n = new Vertex((float)Convert.ToDouble(normalX2.Text), (float)Convert.ToDouble(normalY2.Text), (float)Convert.ToDouble(normalZ2.Text));
                 Triangle tri = new Triangle(a, b, c, n);
+                Event temp = new Event();
+                temp.Add(currentSelection[0]);
+                temp.eventType = Event.EventType.Add;
+                history.Add(temp);
                 triangleList.AddTriangle(tri);
                 triangleList.Finish();
 
+                changed = true;
                 SetOrigin();
                 FillListView();
-
                 visualization.SetPickingColors();
                 visualization.Refresh();
             } catch (ArgumentException ex) {
@@ -977,12 +1018,21 @@ namespace STLNormalSwitcher {
             }
         }
 
-
+        /// <summary>
+        /// Removes the selected Triangle from the triangleList.
+        /// </summary>
+        /// <param name="sender">removeButton</param>
+        /// <param name="e">Standard EventArgs</param>
         private void RemoveButton_Click(object sender, EventArgs e) {
+            Event temp = new Event();
+            temp.Add((triangleComboBox.SelectedItem as Triangle));
+            temp.eventType = Event.EventType.Add;
+            history.Add(temp);
             triangleList.RemoveAt((triangleComboBox.SelectedItem as Triangle).Position);
             triangleList.SetPositions();
             currentSelection.Clear();
 
+            changed = true;
             SetOrigin();
             FillListView();
             visualization.SetPickingColors();
@@ -993,22 +1043,59 @@ namespace STLNormalSwitcher {
             }
         }
 
+        /// <summary>
+        /// Adjusts the values of the A-Vertex of the Triangle on the
+        /// "Add/Remove Triangle"-Tab to the Vertex in the verticesA ComboBox.
+        /// </summary>
+        /// <param name="sender">aVertexHook</param>
+        /// <param name="e">Standard EventArgs</param>
         private void AVertexHook_Click(object sender, EventArgs e) {
             aX2.Text = (verticesA.SelectedItem as Vertex)[0].ToString();
             aY2.Text = (verticesA.SelectedItem as Vertex)[1].ToString();
             aZ2.Text = (verticesA.SelectedItem as Vertex)[2].ToString();
         }
 
+        /// <summary>
+        /// Adjusts the values of the B-Vertex of the Triangle on the
+        /// "Add/Remove Triangle"-Tab to the Vertex in the verticesB ComboBox.
+        /// </summary>
+        /// <param name="sender">bVertexHook</param>
+        /// <param name="e">Standard EventArgs</param>
         private void BVertexHook_Click(object sender, EventArgs e) {
             bX2.Text = (verticesB.SelectedItem as Vertex)[0].ToString();
             bY2.Text = (verticesB.SelectedItem as Vertex)[1].ToString();
             bZ2.Text = (verticesB.SelectedItem as Vertex)[2].ToString();
         }
 
+        /// <summary>
+        /// Adjusts the values of the C-Vertex of the Triangle on the
+        /// "Add/Remove Triangle"-Tab to the Vertex in the verticesC ComboBox.
+        /// </summary>
+        /// <param name="sender">cVertexHook</param>
+        /// <param name="e">Standard EventArgs</param>
         private void CVertexHook_Click(object sender, EventArgs e) {
             cX2.Text = (verticesC.SelectedItem as Vertex)[0].ToString();
             cY2.Text = (verticesC.SelectedItem as Vertex)[1].ToString();
             cZ2.Text = (verticesC.SelectedItem as Vertex)[2].ToString();
+        }
+
+
+        private void VerticesA_SelectedIndexChanged(object sender, EventArgs e) {
+            aVertex[0] = triangleList.IndexOf((verticesA.SelectedItem as Vertex).Owner);
+            aVertex[1] = (verticesA.SelectedItem as Vertex).Owner.IndexOf(verticesA.SelectedItem as Vertex);
+            visualization.Refresh();
+        }
+
+        private void VerticesB_SelectedIndexChanged(object sender, EventArgs e) {
+            bVertex[0] = triangleList.IndexOf((verticesB.SelectedItem as Vertex).Owner);
+            bVertex[1] = (verticesB.SelectedItem as Vertex).Owner.IndexOf(verticesB.SelectedItem as Vertex);
+            visualization.Refresh();
+        }
+
+        private void VerticesC_SelectedIndexChanged(object sender, EventArgs e) {
+            cVertex[0] = triangleList.IndexOf((verticesC.SelectedItem as Vertex).Owner);
+            cVertex[1] = (verticesC.SelectedItem as Vertex).Owner.IndexOf(verticesC.SelectedItem as Vertex);
+            visualization.Refresh();
         }
 
         #endregion
@@ -1062,14 +1149,17 @@ namespace STLNormalSwitcher {
             if (currentFile != "") {
                 if (tabControl1.SelectedTab == tabPage1) {
                     // Normal colors
+                    drawVertices = false;
                     visualization.SetColorArray();
                     visualization.Refresh();
                 } else if (tabControl1.SelectedTab == tabPage2) {
                     // Neighbor colors
+                    drawVertices = false;
                     Neighbors_SelectedIndexChanged(sender, e);
                     visualization.Refresh();
                 } else {
                     // Normal colors, only the first Triangle is selected
+                    drawVertices = true;
                     if (currentSelection.Count > 0) {
                         if (triangleComboBox.SelectedIndex == currentSelection[0].Position) {
                             currentSelection.Clear();
@@ -1084,5 +1174,6 @@ namespace STLNormalSwitcher {
         }
 
         #endregion
+
     }
 }

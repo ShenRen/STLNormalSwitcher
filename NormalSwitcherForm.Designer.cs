@@ -111,9 +111,6 @@ namespace STLNormalSwitcher {
             this.hookButtonA = new System.Windows.Forms.Button();
             this.hookButtonB = new System.Windows.Forms.Button();
             this.hookButtonC = new System.Windows.Forms.Button();
-            this.aNeighbors = new System.Windows.Forms.ComboBox();
-            this.bNeighbors = new System.Windows.Forms.ComboBox();
-            this.cNeighbors = new System.Windows.Forms.ComboBox();
             this.normalZ = new System.Windows.Forms.TextBox();
             this.normalY = new System.Windows.Forms.TextBox();
             this.normalX = new System.Windows.Forms.TextBox();
@@ -122,6 +119,12 @@ namespace STLNormalSwitcher {
             this.resetTriangleBoxesButton = new System.Windows.Forms.Button();
             this.acceptTriangleButton = new System.Windows.Forms.Button();
             this.acceptButton = new System.Windows.Forms.Button();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.aNeighbors = new System.Windows.Forms.ComboBox();
+            this.panel2 = new System.Windows.Forms.Panel();
+            this.bNeighbors = new System.Windows.Forms.ComboBox();
+            this.panel3 = new System.Windows.Forms.Panel();
+            this.cNeighbors = new System.Windows.Forms.ComboBox();
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.tableLayoutPanel4 = new System.Windows.Forms.TableLayoutPanel();
             this.normalX2 = new System.Windows.Forms.TextBox();
@@ -150,12 +153,15 @@ namespace STLNormalSwitcher {
             this.aVertexHook = new System.Windows.Forms.Button();
             this.cVertexHook = new System.Windows.Forms.Button();
             this.bVertexHook = new System.Windows.Forms.Button();
-            this.verticesA = new System.Windows.Forms.ComboBox();
             this.labelVertex = new System.Windows.Forms.Label();
             this.triangleCopyButton = new System.Windows.Forms.Button();
-            this.verticesB = new System.Windows.Forms.ComboBox();
-            this.verticesC = new System.Windows.Forms.ComboBox();
             this.removeButton = new System.Windows.Forms.Button();
+            this.panel4 = new System.Windows.Forms.Panel();
+            this.verticesA = new System.Windows.Forms.ComboBox();
+            this.panel5 = new System.Windows.Forms.Panel();
+            this.verticesB = new System.Windows.Forms.ComboBox();
+            this.panel6 = new System.Windows.Forms.Panel();
+            this.verticesC = new System.Windows.Forms.ComboBox();
             this.menuStrip1.SuspendLayout();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -170,8 +176,14 @@ namespace STLNormalSwitcher {
             this.tabPage2.SuspendLayout();
             this.tableLayoutPanel3.SuspendLayout();
             this.flowLayoutPanel1.SuspendLayout();
+            this.panel1.SuspendLayout();
+            this.panel2.SuspendLayout();
+            this.panel3.SuspendLayout();
             this.tabPage3.SuspendLayout();
             this.tableLayoutPanel4.SuspendLayout();
+            this.panel4.SuspendLayout();
+            this.panel5.SuspendLayout();
+            this.panel6.SuspendLayout();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -628,14 +640,14 @@ namespace STLNormalSwitcher {
             this.tableLayoutPanel3.Controls.Add(this.hookButtonA, 8, 2);
             this.tableLayoutPanel3.Controls.Add(this.hookButtonB, 8, 3);
             this.tableLayoutPanel3.Controls.Add(this.hookButtonC, 8, 4);
-            this.tableLayoutPanel3.Controls.Add(this.aNeighbors, 6, 2);
-            this.tableLayoutPanel3.Controls.Add(this.bNeighbors, 6, 3);
-            this.tableLayoutPanel3.Controls.Add(this.cNeighbors, 6, 4);
             this.tableLayoutPanel3.Controls.Add(this.normalZ, 4, 6);
             this.tableLayoutPanel3.Controls.Add(this.normalY, 3, 6);
             this.tableLayoutPanel3.Controls.Add(this.normalX, 2, 6);
             this.tableLayoutPanel3.Controls.Add(this.labelNormal, 1, 6);
             this.tableLayoutPanel3.Controls.Add(this.flowLayoutPanel1, 5, 7);
+            this.tableLayoutPanel3.Controls.Add(this.panel1, 6, 2);
+            this.tableLayoutPanel3.Controls.Add(this.panel2, 6, 3);
+            this.tableLayoutPanel3.Controls.Add(this.panel3, 6, 4);
             this.tableLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel3.Location = new System.Drawing.Point(3, 3);
             this.tableLayoutPanel3.MinimumSize = new System.Drawing.Size(608, 208);
@@ -841,39 +853,6 @@ namespace STLNormalSwitcher {
             this.hookButtonC.UseVisualStyleBackColor = true;
             this.hookButtonC.Click += new System.EventHandler(this.HookButtonC_Click);
             // 
-            // aNeighbors
-            // 
-            this.tableLayoutPanel3.SetColumnSpan(this.aNeighbors, 2);
-            this.aNeighbors.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.aNeighbors.FormattingEnabled = true;
-            this.aNeighbors.Location = new System.Drawing.Point(438, 41);
-            this.aNeighbors.Name = "aNeighbors";
-            this.aNeighbors.Size = new System.Drawing.Size(244, 21);
-            this.aNeighbors.TabIndex = 26;
-            this.aNeighbors.SelectedIndexChanged += new System.EventHandler(this.Neighbors_SelectedIndexChanged);
-            // 
-            // bNeighbors
-            // 
-            this.tableLayoutPanel3.SetColumnSpan(this.bNeighbors, 2);
-            this.bNeighbors.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.bNeighbors.FormattingEnabled = true;
-            this.bNeighbors.Location = new System.Drawing.Point(438, 71);
-            this.bNeighbors.Name = "bNeighbors";
-            this.bNeighbors.Size = new System.Drawing.Size(244, 21);
-            this.bNeighbors.TabIndex = 27;
-            this.bNeighbors.SelectedIndexChanged += new System.EventHandler(this.Neighbors_SelectedIndexChanged);
-            // 
-            // cNeighbors
-            // 
-            this.tableLayoutPanel3.SetColumnSpan(this.cNeighbors, 2);
-            this.cNeighbors.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.cNeighbors.FormattingEnabled = true;
-            this.cNeighbors.Location = new System.Drawing.Point(438, 101);
-            this.cNeighbors.Name = "cNeighbors";
-            this.cNeighbors.Size = new System.Drawing.Size(244, 21);
-            this.cNeighbors.TabIndex = 28;
-            this.cNeighbors.SelectedIndexChanged += new System.EventHandler(this.Neighbors_SelectedIndexChanged);
-            // 
             // normalZ
             // 
             this.normalZ.Dock = System.Windows.Forms.DockStyle.Bottom;
@@ -952,6 +931,72 @@ namespace STLNormalSwitcher {
             this.acceptButton.UseVisualStyleBackColor = true;
             this.acceptButton.Click += new System.EventHandler(this.AcceptButton_Click);
             // 
+            // panel1
+            // 
+            this.panel1.BackColor = System.Drawing.Color.Yellow;
+            this.tableLayoutPanel3.SetColumnSpan(this.panel1, 2);
+            this.panel1.Controls.Add(this.aNeighbors);
+            this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel1.Location = new System.Drawing.Point(438, 38);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(244, 24);
+            this.panel1.TabIndex = 34;
+            // 
+            // aNeighbors
+            // 
+            this.aNeighbors.BackColor = System.Drawing.SystemColors.Window;
+            this.aNeighbors.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.aNeighbors.FormattingEnabled = true;
+            this.aNeighbors.Location = new System.Drawing.Point(0, 3);
+            this.aNeighbors.Name = "aNeighbors";
+            this.aNeighbors.Size = new System.Drawing.Size(244, 21);
+            this.aNeighbors.TabIndex = 26;
+            this.aNeighbors.SelectedIndexChanged += new System.EventHandler(this.Neighbors_SelectedIndexChanged);
+            // 
+            // panel2
+            // 
+            this.panel2.BackColor = System.Drawing.Color.Lime;
+            this.tableLayoutPanel3.SetColumnSpan(this.panel2, 2);
+            this.panel2.Controls.Add(this.bNeighbors);
+            this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel2.Location = new System.Drawing.Point(438, 68);
+            this.panel2.Name = "panel2";
+            this.panel2.Size = new System.Drawing.Size(244, 24);
+            this.panel2.TabIndex = 35;
+            // 
+            // bNeighbors
+            // 
+            this.bNeighbors.BackColor = System.Drawing.SystemColors.Window;
+            this.bNeighbors.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.bNeighbors.FormattingEnabled = true;
+            this.bNeighbors.Location = new System.Drawing.Point(0, 3);
+            this.bNeighbors.Name = "bNeighbors";
+            this.bNeighbors.Size = new System.Drawing.Size(244, 21);
+            this.bNeighbors.TabIndex = 27;
+            this.bNeighbors.SelectedIndexChanged += new System.EventHandler(this.Neighbors_SelectedIndexChanged);
+            // 
+            // panel3
+            // 
+            this.panel3.BackColor = System.Drawing.Color.Blue;
+            this.tableLayoutPanel3.SetColumnSpan(this.panel3, 2);
+            this.panel3.Controls.Add(this.cNeighbors);
+            this.panel3.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel3.Location = new System.Drawing.Point(438, 98);
+            this.panel3.Name = "panel3";
+            this.panel3.Size = new System.Drawing.Size(244, 24);
+            this.panel3.TabIndex = 36;
+            // 
+            // cNeighbors
+            // 
+            this.cNeighbors.BackColor = System.Drawing.SystemColors.Window;
+            this.cNeighbors.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.cNeighbors.FormattingEnabled = true;
+            this.cNeighbors.Location = new System.Drawing.Point(0, 3);
+            this.cNeighbors.Name = "cNeighbors";
+            this.cNeighbors.Size = new System.Drawing.Size(244, 21);
+            this.cNeighbors.TabIndex = 28;
+            this.cNeighbors.SelectedIndexChanged += new System.EventHandler(this.Neighbors_SelectedIndexChanged);
+            // 
             // tabPage3
             // 
             this.tabPage3.BackColor = System.Drawing.Color.Transparent;
@@ -1006,12 +1051,12 @@ namespace STLNormalSwitcher {
             this.tableLayoutPanel4.Controls.Add(this.aVertexHook, 10, 3);
             this.tableLayoutPanel4.Controls.Add(this.cVertexHook, 10, 5);
             this.tableLayoutPanel4.Controls.Add(this.bVertexHook, 10, 4);
-            this.tableLayoutPanel4.Controls.Add(this.verticesA, 6, 3);
             this.tableLayoutPanel4.Controls.Add(this.labelVertex, 6, 2);
             this.tableLayoutPanel4.Controls.Add(this.triangleCopyButton, 8, 1);
-            this.tableLayoutPanel4.Controls.Add(this.verticesB, 6, 4);
-            this.tableLayoutPanel4.Controls.Add(this.verticesC, 6, 5);
             this.tableLayoutPanel4.Controls.Add(this.removeButton, 9, 1);
+            this.tableLayoutPanel4.Controls.Add(this.panel4, 6, 3);
+            this.tableLayoutPanel4.Controls.Add(this.panel5, 6, 4);
+            this.tableLayoutPanel4.Controls.Add(this.panel6, 6, 5);
             this.tableLayoutPanel4.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel4.Location = new System.Drawing.Point(3, 3);
             this.tableLayoutPanel4.MinimumSize = new System.Drawing.Size(608, 208);
@@ -1274,16 +1319,6 @@ namespace STLNormalSwitcher {
             this.bVertexHook.UseVisualStyleBackColor = true;
             this.bVertexHook.Click += new System.EventHandler(this.BVertexHook_Click);
             // 
-            // verticesA
-            // 
-            this.tableLayoutPanel4.SetColumnSpan(this.verticesA, 4);
-            this.verticesA.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.verticesA.FormattingEnabled = true;
-            this.verticesA.Location = new System.Drawing.Point(423, 71);
-            this.verticesA.Name = "verticesA";
-            this.verticesA.Size = new System.Drawing.Size(249, 21);
-            this.verticesA.TabIndex = 26;
-            // 
             // labelVertex
             // 
             this.labelVertex.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
@@ -1306,26 +1341,6 @@ namespace STLNormalSwitcher {
             this.triangleCopyButton.UseVisualStyleBackColor = true;
             this.triangleCopyButton.Click += new System.EventHandler(this.TriangleCopyButton_Click);
             // 
-            // verticesB
-            // 
-            this.tableLayoutPanel4.SetColumnSpan(this.verticesB, 4);
-            this.verticesB.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.verticesB.FormattingEnabled = true;
-            this.verticesB.Location = new System.Drawing.Point(423, 101);
-            this.verticesB.Name = "verticesB";
-            this.verticesB.Size = new System.Drawing.Size(249, 21);
-            this.verticesB.TabIndex = 38;
-            // 
-            // verticesC
-            // 
-            this.tableLayoutPanel4.SetColumnSpan(this.verticesC, 4);
-            this.verticesC.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.verticesC.FormattingEnabled = true;
-            this.verticesC.Location = new System.Drawing.Point(423, 131);
-            this.verticesC.Name = "verticesC";
-            this.verticesC.Size = new System.Drawing.Size(249, 21);
-            this.verticesC.TabIndex = 39;
-            // 
             // removeButton
             // 
             this.tableLayoutPanel4.SetColumnSpan(this.removeButton, 2);
@@ -1337,6 +1352,69 @@ namespace STLNormalSwitcher {
             this.removeButton.Text = "Remove";
             this.removeButton.UseVisualStyleBackColor = true;
             this.removeButton.Click += new System.EventHandler(this.RemoveButton_Click);
+            // 
+            // panel4
+            // 
+            this.panel4.BackColor = System.Drawing.Color.Yellow;
+            this.tableLayoutPanel4.SetColumnSpan(this.panel4, 4);
+            this.panel4.Controls.Add(this.verticesA);
+            this.panel4.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel4.Location = new System.Drawing.Point(423, 68);
+            this.panel4.Name = "panel4";
+            this.panel4.Size = new System.Drawing.Size(249, 24);
+            this.panel4.TabIndex = 41;
+            // 
+            // verticesA
+            // 
+            this.verticesA.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.verticesA.FormattingEnabled = true;
+            this.verticesA.Location = new System.Drawing.Point(0, 3);
+            this.verticesA.Name = "verticesA";
+            this.verticesA.Size = new System.Drawing.Size(249, 21);
+            this.verticesA.TabIndex = 26;
+            this.verticesA.SelectedIndexChanged += new System.EventHandler(this.VerticesA_SelectedIndexChanged);
+            // 
+            // panel5
+            // 
+            this.panel5.BackColor = System.Drawing.Color.Lime;
+            this.tableLayoutPanel4.SetColumnSpan(this.panel5, 4);
+            this.panel5.Controls.Add(this.verticesB);
+            this.panel5.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel5.Location = new System.Drawing.Point(423, 98);
+            this.panel5.Name = "panel5";
+            this.panel5.Size = new System.Drawing.Size(249, 24);
+            this.panel5.TabIndex = 42;
+            // 
+            // verticesB
+            // 
+            this.verticesB.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.verticesB.FormattingEnabled = true;
+            this.verticesB.Location = new System.Drawing.Point(0, 3);
+            this.verticesB.Name = "verticesB";
+            this.verticesB.Size = new System.Drawing.Size(249, 21);
+            this.verticesB.TabIndex = 38;
+            this.verticesB.SelectedIndexChanged += new System.EventHandler(this.VerticesB_SelectedIndexChanged);
+            // 
+            // panel6
+            // 
+            this.panel6.BackColor = System.Drawing.Color.Blue;
+            this.tableLayoutPanel4.SetColumnSpan(this.panel6, 4);
+            this.panel6.Controls.Add(this.verticesC);
+            this.panel6.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel6.Location = new System.Drawing.Point(423, 128);
+            this.panel6.Name = "panel6";
+            this.panel6.Size = new System.Drawing.Size(249, 24);
+            this.panel6.TabIndex = 43;
+            // 
+            // verticesC
+            // 
+            this.verticesC.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.verticesC.FormattingEnabled = true;
+            this.verticesC.Location = new System.Drawing.Point(0, 3);
+            this.verticesC.Name = "verticesC";
+            this.verticesC.Size = new System.Drawing.Size(249, 21);
+            this.verticesC.TabIndex = 39;
+            this.verticesC.SelectedIndexChanged += new System.EventHandler(this.VerticesC_SelectedIndexChanged);
             // 
             // NormalSwitcherForm
             // 
@@ -1371,9 +1449,15 @@ namespace STLNormalSwitcher {
             this.tableLayoutPanel3.ResumeLayout(false);
             this.tableLayoutPanel3.PerformLayout();
             this.flowLayoutPanel1.ResumeLayout(false);
+            this.panel1.ResumeLayout(false);
+            this.panel2.ResumeLayout(false);
+            this.panel3.ResumeLayout(false);
             this.tabPage3.ResumeLayout(false);
             this.tableLayoutPanel4.ResumeLayout(false);
             this.tableLayoutPanel4.PerformLayout();
+            this.panel4.ResumeLayout(false);
+            this.panel5.ResumeLayout(false);
+            this.panel6.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1487,6 +1571,12 @@ namespace STLNormalSwitcher {
         private System.Windows.Forms.ComboBox verticesB;
         private System.Windows.Forms.ComboBox verticesC;
         private System.Windows.Forms.Button removeButton;
+        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.Panel panel2;
+        private System.Windows.Forms.Panel panel3;
+        private System.Windows.Forms.Panel panel4;
+        private System.Windows.Forms.Panel panel5;
+        private System.Windows.Forms.Panel panel6;
     }
 }
 
