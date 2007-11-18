@@ -15,12 +15,6 @@
     {
         "Entry"
         {
-        "MsmKey" = "8:_25FBFFAFF69F433893D6D21D2AD3DF0B"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_33EDDF3684EE1567FABD06FB37D1CD2A"
         "OwnerKey" = "8:_E9C748750C0F4A0C8D6F6C9502563A47"
         "MsmSig" = "8:_UNDEFINED"
@@ -39,13 +33,25 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_944AAC2EE2E248BF9B05BD66E949B0A8"
+        "MsmKey" = "8:_68270213A89CDBCF8A18497A29E59C48"
+        "OwnerKey" = "8:_E9C748750C0F4A0C8D6F6C9502563A47"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_72284B1B2FE04F6E9DE606AEA6F34FE7"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_A8A38192B63C410B8139902C36FB0AF4"
+        "MsmKey" = "8:_77D37DB8145541D49722537852A4B218"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_944AAC2EE2E248BF9B05BD66E949B0A8"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -83,6 +89,12 @@
         {
         "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_33EDDF3684EE1567FABD06FB37D1CD2A"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_68270213A89CDBCF8A18497A29E59C48"
         "MsmSig" = "8:_UNDEFINED"
         }
     }
@@ -170,26 +182,6 @@
         }
         "File"
         {
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_25FBFFAFF69F433893D6D21D2AD3DF0B"
-            {
-            "SourcePath" = "8:licence.rtf"
-            "TargetName" = "8:licence.rtf"
-            "Tag" = "8:"
-            "Folder" = "8:_7B75DC36768F4237B069D0880DEFD87A"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
             "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_33EDDF3684EE1567FABD06FB37D1CD2A"
             {
             "AssemblyRegister" = "3:1"
@@ -252,10 +244,41 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_944AAC2EE2E248BF9B05BD66E949B0A8"
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_68270213A89CDBCF8A18497A29E59C48"
             {
-            "SourcePath" = "8:switchersmall.ico"
-            "TargetName" = "8:switchersmall.ico"
+            "AssemblyRegister" = "3:1"
+            "AssemblyIsInGAC" = "11:FALSE"
+            "AssemblyAsmDisplayName" = "8:Tao.FreeGlut, Version=2.4.0.1, Culture=neutral, PublicKeyToken=6e602a6ad6c0d06d, processorArchitecture=MSIL"
+                "ScatterAssemblies"
+                {
+                    "_68270213A89CDBCF8A18497A29E59C48"
+                    {
+                    "Name" = "8:Tao.FreeGlut.dll"
+                    "Attributes" = "3:512"
+                    }
+                }
+            "SourcePath" = "8:Tao.FreeGlut.dll"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_7B75DC36768F4237B069D0880DEFD87A"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_72284B1B2FE04F6E9DE606AEA6F34FE7"
+            {
+            "SourcePath" = "8:TAOlicense.rtf"
+            "TargetName" = "8:TAOlicense.rtf"
             "Tag" = "8:"
             "Folder" = "8:_7B75DC36768F4237B069D0880DEFD87A"
             "Condition" = "8:"
@@ -272,10 +295,30 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_A8A38192B63C410B8139902C36FB0AF4"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_77D37DB8145541D49722537852A4B218"
             {
-            "SourcePath" = "8:TAOlicence.rtf"
-            "TargetName" = "8:TAOlicence.rtf"
+            "SourcePath" = "8:license.rtf"
+            "TargetName" = "8:license.rtf"
+            "Tag" = "8:"
+            "Folder" = "8:_7B75DC36768F4237B069D0880DEFD87A"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_944AAC2EE2E248BF9B05BD66E949B0A8"
+            {
+            "SourcePath" = "8:switchersmall.ico"
+            "TargetName" = "8:switchersmall.ico"
             "Tag" = "8:"
             "Folder" = "8:_7B75DC36768F4237B069D0880DEFD87A"
             "Condition" = "8:"
@@ -422,7 +465,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:STLNormalSwitcher"
         "ProductCode" = "8:{DD920BFF-2777-4271-95C2-2DA9220A0AA3}"
-        "PackageCode" = "8:{4D77D5C6-19B1-4757-8C28-66DCF16CF389}"
+        "PackageCode" = "8:{85D28B69-CE15-4D7A-8D7D-54CEA56DA5E4}"
         "UpgradeCode" = "8:{C8932FCF-B2F2-4C36-9126-95AE0CC7B0D0}"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
@@ -670,7 +713,7 @@
                             "ContextData" = "8:"
                             "Attributes" = "3:0"
                             "Setting" = "3:2"
-                            "Value" = "8:_A8A38192B63C410B8139902C36FB0AF4"
+                            "Value" = "8:_72284B1B2FE04F6E9DE606AEA6F34FE7"
                             "UsePlugInResources" = "11:TRUE"
                             }
                             "Sunken"
@@ -761,7 +804,7 @@
                             "ContextData" = "8:"
                             "Attributes" = "3:0"
                             "Setting" = "3:2"
-                            "Value" = "8:_25FBFFAFF69F433893D6D21D2AD3DF0B"
+                            "Value" = "8:_77D37DB8145541D49722537852A4B218"
                             "UsePlugInResources" = "11:TRUE"
                             }
                             "Sunken"
@@ -1015,7 +1058,7 @@
                             "ContextData" = "8:"
                             "Attributes" = "3:0"
                             "Setting" = "3:2"
-                            "Value" = "8:_25FBFFAFF69F433893D6D21D2AD3DF0B"
+                            "Value" = "8:_77D37DB8145541D49722537852A4B218"
                             "UsePlugInResources" = "11:TRUE"
                             }
                             "Sunken"
@@ -1110,7 +1153,7 @@
                             "ContextData" = "8:"
                             "Attributes" = "3:0"
                             "Setting" = "3:2"
-                            "Value" = "8:_A8A38192B63C410B8139902C36FB0AF4"
+                            "Value" = "8:_72284B1B2FE04F6E9DE606AEA6F34FE7"
                             "UsePlugInResources" = "11:TRUE"
                             }
                             "Sunken"

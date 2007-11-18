@@ -48,7 +48,12 @@ namespace STLNormalSwitcher {
         /// Der Inhalt der Methode darf nicht mit dem Code-Editor geändert werden.
         /// </summary>
         private void InitializeComponent() {
-            System.Windows.Forms.ListViewItem listViewItem1 = new System.Windows.Forms.ListViewItem("Select a File!");
+            System.Windows.Forms.ListViewItem listViewItem1 = new System.Windows.Forms.ListViewItem(new string[] {
+            "Select a File!",
+            "Select a File!",
+            "Select a File!",
+            "Select a File!",
+            "Select a File!"}, -1);
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(NormalSwitcherForm));
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -60,12 +65,8 @@ namespace STLNormalSwitcher {
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.workToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.undoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.redoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.resetToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.clearHistoryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.clearUndoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.clearRedoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.clearUndoRedoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.switchAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.switchSelectedToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -75,11 +76,11 @@ namespace STLNormalSwitcher {
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.undoButton = new System.Windows.Forms.Button();
             this.rotationOriginTextBox = new System.Windows.Forms.TextBox();
-            this.label1 = new System.Windows.Forms.Label();
+            this.labelOrigin = new System.Windows.Forms.Label();
             this.selectedButton = new System.Windows.Forms.Button();
             this.allButton = new System.Windows.Forms.Button();
             this.resetButton = new System.Windows.Forms.Button();
-            this.redoButton = new System.Windows.Forms.Button();
+            this.clearHistoryButton = new System.Windows.Forms.Button();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.originTrackBar = new System.Windows.Forms.TrackBar();
             this.tabControl1 = new System.Windows.Forms.TabControl();
@@ -258,7 +259,6 @@ namespace STLNormalSwitcher {
             // 
             this.workToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.undoToolStripMenuItem,
-            this.redoToolStripMenuItem,
             this.resetToolStripMenuItem,
             this.clearHistoryToolStripMenuItem,
             this.toolStripSeparator2,
@@ -276,14 +276,6 @@ namespace STLNormalSwitcher {
             this.undoToolStripMenuItem.Text = "&Undo";
             this.undoToolStripMenuItem.Click += new System.EventHandler(this.Undo);
             // 
-            // redoToolStripMenuItem
-            // 
-            this.redoToolStripMenuItem.Enabled = false;
-            this.redoToolStripMenuItem.Name = "redoToolStripMenuItem";
-            this.redoToolStripMenuItem.Size = new System.Drawing.Size(160, 22);
-            this.redoToolStripMenuItem.Text = "Re&do";
-            this.redoToolStripMenuItem.Click += new System.EventHandler(this.Redo);
-            // 
             // resetToolStripMenuItem
             // 
             this.resetToolStripMenuItem.Enabled = false;
@@ -294,35 +286,11 @@ namespace STLNormalSwitcher {
             // 
             // clearHistoryToolStripMenuItem
             // 
-            this.clearHistoryToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.clearUndoToolStripMenuItem,
-            this.clearRedoToolStripMenuItem,
-            this.clearUndoRedoToolStripMenuItem});
             this.clearHistoryToolStripMenuItem.Enabled = false;
             this.clearHistoryToolStripMenuItem.Name = "clearHistoryToolStripMenuItem";
             this.clearHistoryToolStripMenuItem.Size = new System.Drawing.Size(160, 22);
-            this.clearHistoryToolStripMenuItem.Text = "&Clear ...";
-            // 
-            // clearUndoToolStripMenuItem
-            // 
-            this.clearUndoToolStripMenuItem.Name = "clearUndoToolStripMenuItem";
-            this.clearUndoToolStripMenuItem.Size = new System.Drawing.Size(193, 22);
-            this.clearUndoToolStripMenuItem.Text = "... Undo List";
-            this.clearUndoToolStripMenuItem.Click += new System.EventHandler(this.ClearUndoToolStripMenuItem_Click);
-            // 
-            // clearRedoToolStripMenuItem
-            // 
-            this.clearRedoToolStripMenuItem.Name = "clearRedoToolStripMenuItem";
-            this.clearRedoToolStripMenuItem.Size = new System.Drawing.Size(193, 22);
-            this.clearRedoToolStripMenuItem.Text = "... Redo List";
-            this.clearRedoToolStripMenuItem.Click += new System.EventHandler(this.ClearRedoToolStripMenuItem_Click);
-            // 
-            // clearUndoRedoToolStripMenuItem
-            // 
-            this.clearUndoRedoToolStripMenuItem.Name = "clearUndoRedoToolStripMenuItem";
-            this.clearUndoRedoToolStripMenuItem.Size = new System.Drawing.Size(193, 22);
-            this.clearUndoRedoToolStripMenuItem.Text = "... Undo and Redo List";
-            this.clearUndoRedoToolStripMenuItem.Click += new System.EventHandler(this.ClearUndoRedoToolStripMenuItem_Click);
+            this.clearHistoryToolStripMenuItem.Text = "&Clear History";
+            this.clearHistoryToolStripMenuItem.Click += new System.EventHandler(this.ClearHistoryToolStripMenuItem_Click);
             // 
             // toolStripSeparator2
             // 
@@ -395,11 +363,11 @@ namespace STLNormalSwitcher {
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutPanel1.Controls.Add(this.undoButton, 1, 1);
             this.tableLayoutPanel1.Controls.Add(this.rotationOriginTextBox, 1, 9);
-            this.tableLayoutPanel1.Controls.Add(this.label1, 1, 8);
+            this.tableLayoutPanel1.Controls.Add(this.labelOrigin, 1, 8);
             this.tableLayoutPanel1.Controls.Add(this.selectedButton, 1, 6);
             this.tableLayoutPanel1.Controls.Add(this.allButton, 1, 5);
             this.tableLayoutPanel1.Controls.Add(this.resetButton, 1, 3);
-            this.tableLayoutPanel1.Controls.Add(this.redoButton, 1, 2);
+            this.tableLayoutPanel1.Controls.Add(this.clearHistoryButton, 1, 2);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel1.Location = new System.Drawing.Point(3, 3);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
@@ -440,15 +408,15 @@ namespace STLNormalSwitcher {
             this.rotationOriginTextBox.TabIndex = 5;
             this.rotationOriginTextBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.RotationOriginTextBox_KeyPress);
             // 
-            // label1
+            // labelOrigin
             // 
-            this.label1.AutoSize = true;
-            this.label1.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.label1.Location = new System.Drawing.Point(18, 385);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(94, 13);
-            this.label1.TabIndex = 4;
-            this.label1.Text = "Rotation origin:";
+            this.labelOrigin.AutoSize = true;
+            this.labelOrigin.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.labelOrigin.Location = new System.Drawing.Point(18, 385);
+            this.labelOrigin.Name = "labelOrigin";
+            this.labelOrigin.Size = new System.Drawing.Size(94, 13);
+            this.labelOrigin.TabIndex = 4;
+            this.labelOrigin.Text = "Rotation origin:";
             // 
             // selectedButton
             // 
@@ -486,17 +454,17 @@ namespace STLNormalSwitcher {
             this.resetButton.UseVisualStyleBackColor = true;
             this.resetButton.Click += new System.EventHandler(this.Reset);
             // 
-            // redoButton
+            // clearHistoryButton
             // 
-            this.redoButton.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.redoButton.Enabled = false;
-            this.redoButton.Location = new System.Drawing.Point(18, 56);
-            this.redoButton.Name = "redoButton";
-            this.redoButton.Size = new System.Drawing.Size(94, 24);
-            this.redoButton.TabIndex = 6;
-            this.redoButton.Text = "Redo";
-            this.redoButton.UseVisualStyleBackColor = true;
-            this.redoButton.Click += new System.EventHandler(this.Redo);
+            this.clearHistoryButton.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.clearHistoryButton.Enabled = false;
+            this.clearHistoryButton.Location = new System.Drawing.Point(18, 56);
+            this.clearHistoryButton.Name = "clearHistoryButton";
+            this.clearHistoryButton.Size = new System.Drawing.Size(94, 24);
+            this.clearHistoryButton.TabIndex = 6;
+            this.clearHistoryButton.Text = "Clear History";
+            this.clearHistoryButton.UseVisualStyleBackColor = true;
+            this.clearHistoryButton.Click += new System.EventHandler(this.ClearHistoryToolStripMenuItem_Click);
             // 
             // splitContainer2
             // 
@@ -1491,12 +1459,10 @@ namespace STLNormalSwitcher {
         private System.Windows.Forms.TrackBar originTrackBar;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
         private System.Windows.Forms.SplitContainer splitContainer2;
-        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label labelOrigin;
         private System.Windows.Forms.TextBox rotationOriginTextBox;
         private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem clearHistoryToolStripMenuItem;
-        private System.Windows.Forms.Button redoButton;
-        private System.Windows.Forms.ToolStripMenuItem redoToolStripMenuItem;
         private System.Windows.Forms.TabControl tabControl1;
         private System.Windows.Forms.TabPage tabPage1;
         private System.Windows.Forms.TabPage tabPage2;
@@ -1519,9 +1485,6 @@ namespace STLNormalSwitcher {
         private System.Windows.Forms.Button acceptTriangleButton;
         private System.Windows.Forms.TextBox nextNeighborsTextBox;
         private System.Windows.Forms.Button nextNeighborsButton;
-        private System.Windows.Forms.ToolStripMenuItem clearUndoToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem clearRedoToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem clearUndoRedoToolStripMenuItem;
         private System.Windows.Forms.Button hookButtonA;
         private System.Windows.Forms.Button hookButtonB;
         private System.Windows.Forms.Button hookButtonC;
@@ -1577,6 +1540,7 @@ namespace STLNormalSwitcher {
         private System.Windows.Forms.Panel panel4;
         private System.Windows.Forms.Panel panel5;
         private System.Windows.Forms.Panel panel6;
+        private System.Windows.Forms.Button clearHistoryButton;
     }
 }
 

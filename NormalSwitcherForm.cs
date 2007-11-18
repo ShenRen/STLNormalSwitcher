@@ -54,9 +54,9 @@ namespace STLNormalSwitcher {
         private int[] cVertex = new int[2];
         private bool changed = false;
         private bool drawVertices = false;
+        private bool fresh = true;
 
         private List<Event> history = new List<Event>();
-        private List<Event> future = new List<Event>();
         private Event currentSelection = new Event();
 
         private List<Vertex> neighborsOfA = new List<Vertex>();
@@ -81,6 +81,8 @@ namespace STLNormalSwitcher {
 
         public bool DrawVertices { get { return drawVertices; } }
 
+        public bool Fresh { get { return fresh; } }
+
         public int[] AVertex { get { return aVertex; } }
 
         public int[] BVertex { get { return bVertex; } }
@@ -103,7 +105,6 @@ namespace STLNormalSwitcher {
                 (this.Width - 30) / 4;
 
             undoButton.EnabledChanged += new EventHandler(Undo_EnabledChanged);
-            redoButton.EnabledChanged += new EventHandler(Redo_EnabledChanged);
             allButton.EnabledChanged += new EventHandler(FileCondition_EnabledChanged);
             acceptButton.EnabledChanged += new EventHandler(AcceptButton_EnabledChanged);
             hookButtonA.EnabledChanged += new EventHandler(HookButton_EnabledChanged);
@@ -121,7 +122,6 @@ namespace STLNormalSwitcher {
                 (this.Width - 30) / 4;
 
             undoButton.EnabledChanged += new EventHandler(Undo_EnabledChanged);
-            redoButton.EnabledChanged += new EventHandler(Redo_EnabledChanged);
             allButton.EnabledChanged += new EventHandler(FileCondition_EnabledChanged);
             acceptButton.EnabledChanged += new EventHandler(AcceptButton_EnabledChanged);
             hookButtonA.EnabledChanged += new EventHandler(HookButton_EnabledChanged);
@@ -138,7 +138,7 @@ namespace STLNormalSwitcher {
                 currentFile = file;
                 allButton.Enabled = true;
 
-                FillListView();
+                FillTab();
             } catch (Exception exception) {
                 MessageBox.Show(exception.Message, "Error");
             } finally {
@@ -169,42 +169,71 @@ namespace STLNormalSwitcher {
             rotationOriginTextBox.Text = origin.ToString();
         }
 
-        /// <summary>
-        /// Fills the normalListView. The normal vectors are in the first column and the
-        /// corresponding triangles are in the second column.
-        /// </summary>
-        private void FillListView() {
-            normalListView.BeginUpdate();
-            normalListView.Items.Clear();
-            normalListView.Sorting = SortOrder.None;
-            for (int i = 0; i < triangleList.Count; i++) {
-                normalListView.Items.Add(new ListViewItem(new string[4] { triangleList[i].NormalToString(), triangleList[i][0].ToString(), triangleList[i][1].ToString(), triangleList[i][2].ToString() }));
-                normalListView.Items[i].Tag = i;
-            }
-            MarkSelectedItems();
-            normalListView.EndUpdate();
-            visualization.SetColorArray();
+        private void FillTab() {
+            if (tabControl1.SelectedTab == tabPage1) {
+                drawVertices = false;
+                normalListView.BeginUpdate();
+                normalListView.Items.Clear();
+                normalListView.Sorting = SortOrder.None;
+                for (int i = 0; i < triangleList.Count; i++) {
+                    normalListView.Items.Add(new ListViewItem(new string[4] { triangleList[i].NormalToString(), triangleList[i][0].ToString(), triangleList[i][1].ToString(), triangleList[i][2].ToString() }));
+                    normalListView.Items[i].Tag = i;
+                }
 
-            // ComboBoxes on the "Add/Remove Triangle"-Tab
-            triangleComboBox.DataSource = null;
-            triangleComboBox.DataSource = triangleList;
-            triangleComboBox.DisplayMember = "AsString";
-            verticesA.DataSource = verticesB.DataSource = verticesC.DataSource = null;
-            verticesA.DataSource = triangleList.Vertices;
-            verticesB.DataSource = triangleList.Vertices;
-            verticesC.DataSource = triangleList.Vertices;
-            verticesA.DisplayMember = "AsString";
-            verticesB.DisplayMember = "AsString";
-            verticesC.DisplayMember = "AsString";
-            verticesA.SelectedItem = (triangleComboBox.SelectedItem as Triangle)[0];
-            verticesB.SelectedItem = (triangleComboBox.SelectedItem as Triangle)[1];
-            verticesC.SelectedItem = (triangleComboBox.SelectedItem as Triangle)[2];
-            aVertex[0] = triangleList.IndexOf((verticesA.SelectedItem as Vertex).Owner);
-            aVertex[1] = (verticesA.SelectedItem as Vertex).Owner.IndexOf(verticesA.SelectedItem as Vertex);
-            bVertex[0] = triangleList.IndexOf((verticesB.SelectedItem as Vertex).Owner);
-            bVertex[1] = (verticesB.SelectedItem as Vertex).Owner.IndexOf(verticesB.SelectedItem as Vertex);
-            cVertex[0] = triangleList.IndexOf((verticesC.SelectedItem as Vertex).Owner);
-            cVertex[1] = (verticesC.SelectedItem as Vertex).Owner.IndexOf(verticesC.SelectedItem as Vertex);
+                normalListView.SelectedIndexChanged -= NormalListView_SelectedIndexChanged;
+                normalListView.SelectedIndices.Clear();
+                for (int j = 0; j < currentSelection.Count; j++) {
+                    if (currentSelection[j].Position > -1) {
+                        normalListView.SelectedIndices.Add(currentSelection[j].Position);
+                    }
+                }
+                normalListView.SelectedIndexChanged += NormalListView_SelectedIndexChanged;
+                if (normalListView.SelectedItems.Count > 0) {
+                    normalListView.TopItem = normalListView.SelectedItems[0];
+                    triangleComboBox.SelectedIndex = currentSelection[0].Position;
+                }
+
+                normalListView.EndUpdate();
+                visualization.SetColorArray();
+            } else if (tabControl1.SelectedTab == tabPage2) {
+                drawVertices = false;
+                if (normalListView.SelectedIndices.Count == 1) {
+                    aX.Text = triangleList[(int)normalListView.SelectedItems[0].Tag][0][0].ToString();
+                    aY.Text = triangleList[(int)normalListView.SelectedItems[0].Tag][0][1].ToString();
+                    aZ.Text = triangleList[(int)normalListView.SelectedItems[0].Tag][0][2].ToString();
+                    bX.Text = triangleList[(int)normalListView.SelectedItems[0].Tag][1][0].ToString();
+                    bY.Text = triangleList[(int)normalListView.SelectedItems[0].Tag][1][1].ToString();
+                    bZ.Text = triangleList[(int)normalListView.SelectedItems[0].Tag][1][2].ToString();
+                    cX.Text = triangleList[(int)normalListView.SelectedItems[0].Tag][2][0].ToString();
+                    cY.Text = triangleList[(int)normalListView.SelectedItems[0].Tag][2][1].ToString();
+                    cZ.Text = triangleList[(int)normalListView.SelectedItems[0].Tag][2][2].ToString();
+                    normalX.Text = triangleList[(int)normalListView.SelectedItems[0].Tag][3][0].ToString();
+                    normalY.Text = triangleList[(int)normalListView.SelectedItems[0].Tag][3][1].ToString();
+                    normalZ.Text = triangleList[(int)normalListView.SelectedItems[0].Tag][3][2].ToString();
+                    acceptButton.Enabled = true;
+                } else {
+                    aX.Text = aY.Text = aZ.Text = bX.Text = bY.Text = bZ.Text = cX.Text = cY.Text = cZ.Text =
+                        normalX.Text = normalY.Text = normalZ.Text = nextNeighborsTextBox.Text = "";
+                    acceptButton.Enabled = hookButtonA.Enabled = false;
+                    aNeighbors.DataSource = bNeighbors.DataSource = cNeighbors.DataSource = null;
+                }
+            } else {
+                drawVertices = true;
+
+                triangleComboBox.SelectedIndexChanged -= TriangleComboBox_SelectedIndexChanged;
+                triangleComboBox.DataSource = null;
+                triangleComboBox.DataSource = triangleList;
+                triangleComboBox.DisplayMember = "AsString";
+                triangleComboBox.SelectedIndexChanged += TriangleComboBox_SelectedIndexChanged;
+
+                if (currentSelection.Count > 0) {
+                    if (triangleComboBox.SelectedIndex == currentSelection[0].Position) {
+                        currentSelection.Clear();
+                        currentSelection.Add(triangleComboBox.SelectedItem as Triangle);
+                        visualization.SetColorArray();
+                    } else { triangleComboBox.SelectedIndex = currentSelection[0].Position; }
+                } else { triangleComboBox.SelectedIndex = 0; }
+            }
         }
 
         /// <summary>
@@ -224,18 +253,7 @@ namespace STLNormalSwitcher {
         /// jumps to the first selected item.
         /// </summary>
         private void MarkSelectedItems() {
-            normalListView.SelectedIndexChanged -= NormalListView_SelectedIndexChanged;
-            normalListView.SelectedIndices.Clear();
-            for (int j = 0; j < currentSelection.Count; j++) {
-                if (currentSelection[j].Position > -1) {
-                    normalListView.SelectedIndices.Add(currentSelection[j].Position);
-                }
-            }
-            normalListView.SelectedIndexChanged += NormalListView_SelectedIndexChanged;
-            if (normalListView.SelectedItems.Count > 0) {
-                normalListView.TopItem = normalListView.SelectedItems[0];
-                triangleComboBox.SelectedIndex = currentSelection[0].Position;
-            }
+            
         }
 
         /// <summary>
@@ -279,33 +297,6 @@ namespace STLNormalSwitcher {
             }
             if ((selected.Count > 0) && (tabControl1.SelectedTab == tabPage3)) {
                 triangleComboBox.SelectedIndex = selected[0];
-            }
-        }
-
-        /// <summary>
-        /// Fills the boxes on the "Edit the First Selected Triangle" Tab.
-        /// </summary>
-        private void FillTriangleBoxes() {
-            if (normalListView.SelectedIndices.Count == 1) {
-                aX.Text = triangleList[(int)normalListView.SelectedItems[0].Tag][0][0].ToString();
-                aY.Text = triangleList[(int)normalListView.SelectedItems[0].Tag][0][1].ToString();
-                aZ.Text = triangleList[(int)normalListView.SelectedItems[0].Tag][0][2].ToString();
-                bX.Text = triangleList[(int)normalListView.SelectedItems[0].Tag][1][0].ToString();
-                bY.Text = triangleList[(int)normalListView.SelectedItems[0].Tag][1][1].ToString();
-                bZ.Text = triangleList[(int)normalListView.SelectedItems[0].Tag][1][2].ToString();
-                cX.Text = triangleList[(int)normalListView.SelectedItems[0].Tag][2][0].ToString();
-                cY.Text = triangleList[(int)normalListView.SelectedItems[0].Tag][2][1].ToString();
-                cZ.Text = triangleList[(int)normalListView.SelectedItems[0].Tag][2][2].ToString();
-                normalX.Text = triangleList[(int)normalListView.SelectedItems[0].Tag][3][0].ToString();
-                normalY.Text = triangleList[(int)normalListView.SelectedItems[0].Tag][3][1].ToString();
-                normalZ.Text = triangleList[(int)normalListView.SelectedItems[0].Tag][3][2].ToString();
-                acceptButton.Enabled = true;
-
-            } else {
-                aX.Text = aY.Text = aZ.Text = bX.Text = bY.Text = bZ.Text = cX.Text = cY.Text = cZ.Text =
-                    normalX.Text = normalY.Text = normalZ.Text = nextNeighborsTextBox.Text = "";
-                acceptButton.Enabled = hookButtonA.Enabled = false;
-                aNeighbors.DataSource = bNeighbors.DataSource = cNeighbors.DataSource = null;
             }
         }
 
@@ -388,7 +379,7 @@ namespace STLNormalSwitcher {
                         currentFile = ofd.FileName;
                         allButton.Enabled = true;
 
-                        FillListView();
+                        FillTab();
                     } catch (Exception exception) {
                         MessageBox.Show(exception.Message, "Error");
                     } finally {
@@ -447,7 +438,7 @@ namespace STLNormalSwitcher {
         /// <param name="e">Standard EventArgs</param>
         private void CloseFile(object sender, EventArgs e) {
             if (currentFile != "") {
-                if ((changed) && (MessageBox.Show("Do you want to save your changes?", "", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)) {
+                if (changed && (MessageBox.Show("Do you want to save your changes?", "", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)) {
                     if ((triangleList.Count == 0) && (MessageBox.Show("You need at least one triangle to save!", "", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning) == DialogResult.Cancel)) {
                         throw new Exception();
                     } else if (triangleList.Count > 0) {
@@ -470,7 +461,7 @@ namespace STLNormalSwitcher {
 
                 tabControl1.SelectedIndex = 0;
                 normalListView.Items.Clear();
-                normalListView.Items.Add(new ListViewItem("Select a File!"));
+                normalListView.Items.Add(new ListViewItem(new string[4] { "Select a File!", "Select a File!", "Select a File!", "Select a File!" }));
                 normalListView.Items[0].Tag = -2;
             }
         }
@@ -492,52 +483,30 @@ namespace STLNormalSwitcher {
         private void Undo(object sender, EventArgs e) {
             if (history.Count >= 1) {
                 currentSelection = history[history.Count - 1];
-                Event temp = currentSelection.Copy();
-                for (int i = 0; i < currentSelection.Count; i++) {
-                    triangleList.EditTriangle(currentSelection[i]);
+                if (currentSelection.eventType == Event.EventType.SwitchAll) {
+                    triangleList.SwitchAll();
+                } else if (currentSelection.eventType == Event.EventType.Edit) {
+                    for (int i = 0; i < currentSelection.Count; i++) {
+                        triangleList.EditTriangle(currentSelection[i]);
+                    }
+                } else if (currentSelection.eventType == Event.EventType.Add) {
+                    triangleList.RemoveAt(currentSelection[0].Position);
+                    triangleList.Finish();
+                    triangleList.SetPositions();
+                } else {
+                    triangleList.Insert(currentSelection[0].Position, currentSelection[0]);
+                    triangleList.Finish();
+                    triangleList.SetPositions();
                 }
                 history.RemoveAt(history.Count - 1);
-                future.Add(temp);
-                redoButton.Enabled = true;
             }
             if (history.Count == 0) {
                 undoButton.Enabled = false;
             }
 
             triangleList.CalculateArrays();
-            FillListView();
-            MarkSelectedItems();
+            FillTab();
             SetOrigin();
-            FillTriangleBoxes();
-            visualization.Refresh();
-        }
-
-        /// <summary>
-        /// Reverts the last Undo,
-        /// </summary>
-        /// <param name="sender">redoToolStripMenuItem or redoButton</param>
-        /// <param name="e">Standard EventArgs</param>
-        private void Redo(object sender, EventArgs e) {
-            if (future.Count >= 1) {
-                currentSelection = future[future.Count - 1];
-                Event temp = currentSelection.Copy();
-                for (int i = 0; i < currentSelection.Count; i++) {
-                    triangleList.EditTriangle(currentSelection[i]);
-                }
-                future.RemoveAt(future.Count - 1);
-                history.Add(temp);
-                undoButton.Enabled = true;
-                changed = true;
-            }
-            if (future.Count == 0) {
-                redoButton.Enabled = false;
-            }
-
-            triangleList.CalculateArrays();
-            FillListView();
-            MarkSelectedItems();
-            SetOrigin();
-            FillTriangleBoxes();
             visualization.Refresh();
         }
 
@@ -554,42 +523,21 @@ namespace STLNormalSwitcher {
 
             undoButton.Enabled = false;
             changed = false;
-            FillListView();
+            FillTab();
             SetOrigin();
-            FillTriangleBoxes();
             visualization.Refresh();
         }
 
         /// <summary>
         /// Clears the history to free memory.
         /// </summary>
-        /// <param name="sender">clearUndoToolStripMenuItem</param>
+        /// <param name="sender">clearHistoryToolStripMenuItem</param>
         /// <param name="e">Standard EventArgs</param>
-        private void ClearUndoToolStripMenuItem_Click(object sender, EventArgs e) {
+        private void ClearHistoryToolStripMenuItem_Click(object sender, EventArgs e) {
             history.Clear();
             undoButton.Enabled = false;
         }
 
-        /// <summary>
-        /// Clears the future to free memory.
-        /// </summary>
-        /// <param name="sender">clearRedoToolStripMenuItem</param>
-        /// <param name="e">Standard EventArgs</param>
-        private void ClearRedoToolStripMenuItem_Click(object sender, EventArgs e) {
-            future.Clear();
-            redoButton.Enabled = false;
-        }
-
-        /// <summary>
-        /// Clears the history and future to free memory.
-        /// </summary>
-        /// <param name="sender">clearUndoRedoToolStripMenuItem</param>
-        /// <param name="e">Standard EventArgs</param>
-        private void ClearUndoRedoToolStripMenuItem_Click(object sender, EventArgs e) {
-            history.Clear();
-            future.Clear();
-            redoButton.Enabled = undoButton.Enabled = false;
-        }
 
         /// <summary>
         /// Switches all normal vectors.
@@ -597,19 +545,13 @@ namespace STLNormalSwitcher {
         /// <param name="sender">switchAllToolStripMenuItem or allButton</param>
         /// <param name="e">Standard EventArgs</param>
         private void SwitchAll(object sender, EventArgs e) {
-            Event temp = new Event();
-            for (int i = 0; i < triangleList.Count; i++) {
-                temp.Add(triangleList[i].Copy());
-            }
-            temp.eventType = Event.EventType.Switch;
+            Event temp = new Event(Event.EventType.SwitchAll);
             history.Add(temp);
             triangleList.SwitchAll();
 
             undoButton.Enabled = true;
             changed = true;
-            FillListView();
-            MarkSelectedItems();
-            FillTriangleBoxes();
+            FillTab();
             visualization.Refresh();
         }
 
@@ -622,11 +564,10 @@ namespace STLNormalSwitcher {
             if (normalListView.SelectedItems.Count >= 1) {
                 MakeCurrentSelection();
                 if (currentSelection.Count > 0) {
-                    Event temp = new Event();
+                    Event temp = new Event(Event.EventType.Edit);
                     for (int i = 0; i < currentSelection.Count; i++) {
                         temp.Add(currentSelection[i].Copy());
                     }
-                    temp.eventType = Event.EventType.Switch;
                     history.Add(temp);
                 }
             }
@@ -636,9 +577,7 @@ namespace STLNormalSwitcher {
 
                 undoButton.Enabled = true;
                 changed = true;
-                FillListView();
-                MarkSelectedItems();
-                FillTriangleBoxes();
+                FillTab();
                 visualization.Refresh();
             }
         }
@@ -665,15 +604,6 @@ namespace STLNormalSwitcher {
         }
 
         /// <summary>
-        /// The redoToolStripMenuItem and the redoButton are enabled and disabled at the same time.
-        /// </summary>
-        /// <param name="sender">undoButton</param>
-        /// <param name="e">Standard EventArgs</param>
-        private void Redo_EnabledChanged(object sender, EventArgs e) {
-            redoToolStripMenuItem.Enabled = redoButton.Enabled;
-        }
-
-        /// <summary>
         /// The closeToolStripMenuItem, the saveToolStripMenuItem, the saveAsToolStripMenuItem,
         /// the switchAllToolStripMenuItem, the switchSelectedToolStripMenuItem, the selectedButton,
         /// the rotationOriginTextBox, the resetButton, the resetToolStripMenuItem
@@ -692,6 +622,7 @@ namespace STLNormalSwitcher {
                 resetButton.Enabled =
                 resetToolStripMenuItem.Enabled =
                 clearHistoryToolStripMenuItem.Enabled =
+                clearHistoryButton.Enabled =
                 allButton.Enabled;
         }
 
@@ -708,7 +639,6 @@ namespace STLNormalSwitcher {
         /// <param name="e">Standard EventArgs</param>
         private void NormalListView_SelectedIndexChanged(object sender, EventArgs e) {
             MakeCurrentSelection();
-            FillTriangleBoxes();
             visualization.SetColorArray();
             visualization.Refresh();
         }
@@ -808,7 +738,7 @@ namespace STLNormalSwitcher {
         /// <param name="sender">resetTriangleBoxesButton</param>
         /// <param name="e">Standard EventArgs</param>
         private void ResetTriangleBoxesButton_Click(object sender, EventArgs e) {
-            FillTriangleBoxes();
+            FillTab();
         }
 
         /// <summary>
@@ -823,9 +753,7 @@ namespace STLNormalSwitcher {
                 Vertex c = new Vertex((float)Convert.ToDouble(cX.Text), (float)Convert.ToDouble(cY.Text), (float)Convert.ToDouble(cZ.Text));
                 Triangle tri = new Triangle(a, b, c);
                 tri.Position = currentSelection[0].Position;
-                Event temp = new Event();
-                temp.Add(currentSelection[0]);
-                temp.eventType = Event.EventType.Edit;
+                Event temp = new Event(currentSelection[0], Event.EventType.Edit);
                 history.Add(temp);
                 triangleList.EditTriangle(tri);
 
@@ -834,8 +762,7 @@ namespace STLNormalSwitcher {
                 undoButton.Enabled = true;
                 changed = true;
                 SetOrigin();
-                FillTriangleBoxes();
-                FillListView();
+                FillTab();
                 visualization.Refresh();
             } catch (ArgumentException ex) {
                 MessageBox.Show(ex.Message, "", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -857,9 +784,7 @@ namespace STLNormalSwitcher {
                 Vertex n = new Vertex((float)Convert.ToDouble(normalX.Text), (float)Convert.ToDouble(normalY.Text), (float)Convert.ToDouble(normalZ.Text));
                 Triangle tri = new Triangle(a, b, c, n);
                 tri.Position = currentSelection[0].Position;
-                Event temp = new Event();
-                temp.Add(currentSelection[0]);
-                temp.eventType = Event.EventType.Edit;
+                Event temp = new Event(currentSelection[0], Event.EventType.Edit);
                 history.Add(temp);
                 triangleList.EditTriangle(tri);
 
@@ -868,8 +793,7 @@ namespace STLNormalSwitcher {
                 undoButton.Enabled = true;
                 changed = true;
                 SetOrigin();
-                FillTriangleBoxes();
-                FillListView();
+                FillTab();
                 visualization.Refresh();
             } catch (ArgumentException ex) {
                 MessageBox.Show(ex.Message, "", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -948,11 +872,25 @@ namespace STLNormalSwitcher {
             currentSelection.Clear();
             currentSelection.Add(triangleComboBox.SelectedItem as Triangle);
             if (currentSelection[0] != null) {
+                fresh = false;
+                verticesA.DataSource = verticesB.DataSource = verticesC.DataSource = null;
+                verticesA.DataSource = triangleList.Vertices;
+                verticesB.DataSource = triangleList.Vertices;
+                verticesC.DataSource = triangleList.Vertices;
+                verticesA.DisplayMember = "AsString";
+                verticesB.DisplayMember = "AsString";
+                verticesC.DisplayMember = "AsString";
                 verticesA.SelectedItem = (triangleComboBox.SelectedItem as Triangle)[0];
                 verticesB.SelectedItem = (triangleComboBox.SelectedItem as Triangle)[1];
                 verticesC.SelectedItem = (triangleComboBox.SelectedItem as Triangle)[2];
-                MarkSelectedItems();
+                aVertex[0] = triangleList.IndexOf((verticesA.SelectedItem as Vertex).Owner);
+                aVertex[1] = (verticesA.SelectedItem as Vertex).Owner.IndexOf(verticesA.SelectedItem as Vertex);
+                bVertex[0] = triangleList.IndexOf((verticesB.SelectedItem as Vertex).Owner);
+                bVertex[1] = (verticesB.SelectedItem as Vertex).Owner.IndexOf(verticesB.SelectedItem as Vertex);
+                cVertex[0] = triangleList.IndexOf((verticesC.SelectedItem as Vertex).Owner);
+                cVertex[1] = (verticesC.SelectedItem as Vertex).Owner.IndexOf(verticesC.SelectedItem as Vertex);
                 visualization.SetColorArray();
+                fresh = true;
                 visualization.Refresh();
             }
         }
@@ -968,16 +906,15 @@ namespace STLNormalSwitcher {
                 Vertex b = new Vertex((float)Convert.ToDouble(bX2.Text), (float)Convert.ToDouble(bY2.Text), (float)Convert.ToDouble(bZ2.Text));
                 Vertex c = new Vertex((float)Convert.ToDouble(cX2.Text), (float)Convert.ToDouble(cY2.Text), (float)Convert.ToDouble(cZ2.Text));
                 Triangle tri = new Triangle(a, b, c);
-                Event temp = new Event();
-                temp.Add(currentSelection[0]);
-                temp.eventType = Event.EventType.Add;
+                Event temp = new Event(currentSelection[0], Event.EventType.Add);
                 history.Add(temp);
                 triangleList.AddTriangle(tri);
                 triangleList.Finish();
 
+                undoButton.Enabled = true;
                 changed = true;
                 SetOrigin();
-                FillListView();
+                FillTab();
                 visualization.SetPickingColors();
                 visualization.Refresh();
             } catch (ArgumentException ex) {
@@ -999,16 +936,15 @@ namespace STLNormalSwitcher {
                 Vertex c = new Vertex((float)Convert.ToDouble(cX2.Text), (float)Convert.ToDouble(cY2.Text), (float)Convert.ToDouble(cZ2.Text));
                 Vertex n = new Vertex((float)Convert.ToDouble(normalX2.Text), (float)Convert.ToDouble(normalY2.Text), (float)Convert.ToDouble(normalZ2.Text));
                 Triangle tri = new Triangle(a, b, c, n);
-                Event temp = new Event();
-                temp.Add(currentSelection[0]);
-                temp.eventType = Event.EventType.Add;
+                Event temp = new Event(currentSelection[0], Event.EventType.Add);
                 history.Add(temp);
                 triangleList.AddTriangle(tri);
                 triangleList.Finish();
 
+                undoButton.Enabled = true;
                 changed = true;
                 SetOrigin();
-                FillListView();
+                FillTab();
                 visualization.SetPickingColors();
                 visualization.Refresh();
             } catch (ArgumentException ex) {
@@ -1024,23 +960,26 @@ namespace STLNormalSwitcher {
         /// <param name="sender">removeButton</param>
         /// <param name="e">Standard EventArgs</param>
         private void RemoveButton_Click(object sender, EventArgs e) {
-            Event temp = new Event();
-            temp.Add((triangleComboBox.SelectedItem as Triangle));
-            temp.eventType = Event.EventType.Add;
+            fresh = false;
+            Event temp = new Event((triangleComboBox.SelectedItem as Triangle), Event.EventType.Remove);
             history.Add(temp);
             triangleList.RemoveAt((triangleComboBox.SelectedItem as Triangle).Position);
+            triangleList.Finish();
             triangleList.SetPositions();
             currentSelection.Clear();
 
+            undoButton.Enabled = true;
             changed = true;
             SetOrigin();
-            FillListView();
+            FillTab();
             visualization.SetPickingColors();
             if (triangleComboBox.Items.Count > 0) {
                 triangleComboBox.SelectedIndex = 0;
             } else {
-                visualization.Refresh();
+                drawVertices = false;
             }
+            fresh = true;
+            visualization.Refresh();
         }
 
         /// <summary>
@@ -1081,21 +1020,27 @@ namespace STLNormalSwitcher {
 
 
         private void VerticesA_SelectedIndexChanged(object sender, EventArgs e) {
-            aVertex[0] = triangleList.IndexOf((verticesA.SelectedItem as Vertex).Owner);
-            aVertex[1] = (verticesA.SelectedItem as Vertex).Owner.IndexOf(verticesA.SelectedItem as Vertex);
-            visualization.Refresh();
+            if (verticesA.SelectedItem != null) {
+                aVertex[0] = (verticesA.SelectedItem as Vertex).Owner.Position;
+                aVertex[1] = (verticesA.SelectedItem as Vertex).Owner.IndexOf(verticesA.SelectedItem as Vertex);
+                visualization.Refresh();
+            }
         }
 
         private void VerticesB_SelectedIndexChanged(object sender, EventArgs e) {
-            bVertex[0] = triangleList.IndexOf((verticesB.SelectedItem as Vertex).Owner);
-            bVertex[1] = (verticesB.SelectedItem as Vertex).Owner.IndexOf(verticesB.SelectedItem as Vertex);
-            visualization.Refresh();
+            if (verticesB.SelectedItem != null) {
+                bVertex[0] = (verticesB.SelectedItem as Vertex).Owner.Position;
+                bVertex[1] = (verticesB.SelectedItem as Vertex).Owner.IndexOf(verticesB.SelectedItem as Vertex);
+                visualization.Refresh();
+            }
         }
 
         private void VerticesC_SelectedIndexChanged(object sender, EventArgs e) {
-            cVertex[0] = triangleList.IndexOf((verticesC.SelectedItem as Vertex).Owner);
-            cVertex[1] = (verticesC.SelectedItem as Vertex).Owner.IndexOf(verticesC.SelectedItem as Vertex);
-            visualization.Refresh();
+            if (verticesC.SelectedItem != null) {
+                cVertex[0] = (verticesC.SelectedItem as Vertex).Owner.Position;
+                cVertex[1] = (verticesC.SelectedItem as Vertex).Owner.IndexOf(verticesC.SelectedItem as Vertex);
+                visualization.Refresh();
+            }
         }
 
         #endregion
@@ -1132,7 +1077,7 @@ namespace STLNormalSwitcher {
         /// <param name="sender">FormClosing event</param>
         /// <param name="e">Standard FormClosingEventArgs</param>
         private void NormalSwitcherForm_FormClosing(object sender, FormClosingEventArgs e) {
-            if ((currentFile != "") && (MessageBox.Show("Do you want to save your changes?", "", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)) {
+            if (changed && (MessageBox.Show("Do you want to save your changes?", "", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)) {
                 this.SaveAs(sender, e);
             }
             if (visualization != null) {
@@ -1147,29 +1092,14 @@ namespace STLNormalSwitcher {
         /// <param name="e">Standard TabControlCancelEventArgs</param>
         private void TabControl1_Selecting(object sender, TabControlCancelEventArgs e) {
             if (currentFile != "") {
-                if (tabControl1.SelectedTab == tabPage1) {
-                    // Normal colors
-                    drawVertices = false;
-                    visualization.SetColorArray();
-                    visualization.Refresh();
-                } else if (tabControl1.SelectedTab == tabPage2) {
+                fresh = false;
+                FillTab();
+                if (tabControl1.SelectedTab == tabPage2) {
                     // Neighbor colors
-                    drawVertices = false;
                     Neighbors_SelectedIndexChanged(sender, e);
-                    visualization.Refresh();
-                } else {
-                    // Normal colors, only the first Triangle is selected
-                    drawVertices = true;
-                    if (currentSelection.Count > 0) {
-                        if (triangleComboBox.SelectedIndex == currentSelection[0].Position) {
-                            currentSelection.Clear();
-                            currentSelection.Add(triangleComboBox.SelectedItem as Triangle);
-                            MarkSelectedItems();
-                            visualization.SetColorArray();
-                            visualization.Refresh();
-                        } else { triangleComboBox.SelectedIndex = currentSelection[0].Position; }
-                    } else { triangleComboBox.SelectedIndex = 0; }
                 }
+                fresh = true;
+                visualization.Refresh();
             } else { tabControl1.SelectedTab = tabPage1; }
         }
 

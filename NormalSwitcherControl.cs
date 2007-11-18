@@ -350,6 +350,7 @@ namespace STLNormalSwitcher {
             }
             Gl.glDrawArrays(Gl.GL_TRIANGLES, 0, owner.TriangleList.Count * 3);
 
+            // Draws the vertices of one selected Triangle as spheres.
             if (owner.DrawVertices) {
                 Glu.GLUquadric quadobj = Glu.gluNewQuadric();
                 Glu.gluQuadricDrawStyle(quadobj, Glu.GLU_FILL);
@@ -429,6 +430,13 @@ namespace STLNormalSwitcher {
         }
 
         #endregion
+
+        /// <summary>
+        /// Only refreshes the Control, when the Fresh-flag is set.
+        /// </summary>
+        public override void Refresh() {
+            if (owner.Fresh) { base.Refresh(); }
+        }
 
         #endregion
 

@@ -55,7 +55,7 @@ namespace STLNormalSwitcher {
             this.labelCopyright = new System.Windows.Forms.Label();
             this.labelCompanyName = new System.Windows.Forms.Label();
             this.textBoxDescription = new System.Windows.Forms.TextBox();
-            this.licenceLabel = new System.Windows.Forms.Label();
+            this.licenseLabel = new System.Windows.Forms.Label();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.tableLayoutPanel.SuspendLayout();
             this.SuspendLayout();
@@ -71,7 +71,7 @@ namespace STLNormalSwitcher {
             this.tableLayoutPanel.Controls.Add(this.labelCopyright, 0, 2);
             this.tableLayoutPanel.Controls.Add(this.labelCompanyName, 0, 3);
             this.tableLayoutPanel.Controls.Add(this.textBoxDescription, 0, 4);
-            this.tableLayoutPanel.Controls.Add(this.licenceLabel, 1, 0);
+            this.tableLayoutPanel.Controls.Add(this.licenseLabel, 1, 0);
             this.tableLayoutPanel.Controls.Add(this.textBox1, 1, 1);
             this.tableLayoutPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel.Location = new System.Drawing.Point(9, 9);
@@ -158,15 +158,15 @@ namespace STLNormalSwitcher {
             this.textBoxDescription.TabStop = false;
             this.textBoxDescription.Text = "Description";
             // 
-            // licenceLabel
+            // licenseLabel
             // 
-            this.licenceLabel.AutoSize = true;
-            this.licenceLabel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.licenceLabel.Location = new System.Drawing.Point(195, 0);
-            this.licenceLabel.Name = "licenceLabel";
-            this.licenceLabel.Size = new System.Drawing.Size(442, 26);
-            this.licenceLabel.TabIndex = 25;
-            this.licenceLabel.Text = "Licence:";
+            this.licenseLabel.AutoSize = true;
+            this.licenseLabel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.licenseLabel.Location = new System.Drawing.Point(195, 0);
+            this.licenseLabel.Name = "licenseLabel";
+            this.licenseLabel.Size = new System.Drawing.Size(442, 26);
+            this.licenseLabel.TabIndex = 25;
+            this.licenseLabel.Text = "License:";
             // 
             // textBox1
             // 
@@ -213,7 +213,7 @@ namespace STLNormalSwitcher {
         private System.Windows.Forms.Label labelCompanyName;
         private System.Windows.Forms.TextBox textBoxDescription;
         private System.Windows.Forms.Button okButton;
-        private System.Windows.Forms.Label licenceLabel;
+        private System.Windows.Forms.Label licenseLabel;
         private System.Windows.Forms.TextBox textBox1;
     }
 }
