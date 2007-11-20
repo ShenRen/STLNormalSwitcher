@@ -923,7 +923,7 @@ namespace STLNormalSwitcher {
             // 
             // panel2
             // 
-            this.panel2.BackColor = System.Drawing.Color.Lime;
+            this.panel2.BackColor = System.Drawing.Color.Green;
             this.tableLayoutPanel3.SetColumnSpan(this.panel2, 2);
             this.panel2.Controls.Add(this.bNeighbors);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -1344,7 +1344,7 @@ namespace STLNormalSwitcher {
             // 
             // panel5
             // 
-            this.panel5.BackColor = System.Drawing.Color.Lime;
+            this.panel5.BackColor = System.Drawing.Color.Green;
             this.tableLayoutPanel4.SetColumnSpan(this.panel5, 4);
             this.panel5.Controls.Add(this.verticesB);
             this.panel5.Dock = System.Windows.Forms.DockStyle.Fill;

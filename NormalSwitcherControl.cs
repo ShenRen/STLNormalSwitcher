@@ -33,7 +33,6 @@ using System.IO;
 using System.Drawing.Imaging;
 using Tao.OpenGl;
 using Tao.Platform.Windows;
-using Tao.FreeGlut;
 
 namespace STLNormalSwitcher {
     /// <summary>
@@ -51,16 +50,33 @@ namespace STLNormalSwitcher {
         private float xRot, yRot, xDiff, yDiff;
         private float scale;
         private bool picking;
+        private bool fresh = true;
+        private bool drawVertices = false;
         private int colorDist;
 
         private float[] uColor = new float[3] { Color.Aqua.R / 255, Color.Aqua.G / 255, Color.Aqua.B / 255 };
         private float[] sColor = new float[3] { Color.Red.R / 255, Color.Red.G / 255, Color.Red.B / 255 };
         private float[] aColor = new float[3] { Color.Yellow.R / 255, Color.Yellow.G / 255, Color.Yellow.B / 255 };
-        private float[] bColor = new float[3] { 0, 1.0f, 0 };
+        private float[] bColor = new float[3] { 0, 0.5f, 0 };
         private float[] cColor = new float[3] { 0, 0, 1.0f };
 
         private IntPtr deviceContext = IntPtr.Zero;
         private IntPtr renderContext = IntPtr.Zero;
+
+        #endregion
+
+        #region Properties
+
+        /// <value>Sets the value of fresh and refreshes the visualization, if the value is true</value>
+        public bool Fresh {
+            set {
+                fresh = value;
+                if (fresh) { this.Refresh(); }
+            }
+        }
+
+        /// <value>Sets the value of drawVertices</value>
+        public bool Vertices { set { drawVertices = value; } }
 
         #endregion
 
@@ -274,6 +290,9 @@ namespace STLNormalSwitcher {
             Gl.glTranslatef(0.0f, 0.0f, -owner.Origin);
 
             this.DrawSTL();
+            if (!picking && drawVertices) {
+                this.DrawVertices();
+            }
 
             Gl.glPopMatrix();
         }
@@ -349,38 +368,40 @@ namespace STLNormalSwitcher {
                 Gl.glColorPointer(3, Gl.GL_FLOAT, 0, this.colorArray);
             }
             Gl.glDrawArrays(Gl.GL_TRIANGLES, 0, owner.TriangleList.Count * 3);
+        }
 
-            // Draws the vertices of one selected Triangle as spheres.
-            if (owner.DrawVertices) {
-                Glu.GLUquadric quadobj = Glu.gluNewQuadric();
-                Glu.gluQuadricDrawStyle(quadobj, Glu.GLU_FILL);
+        /// <summary>
+        /// Draws the vertices of one selected Triangle as spheres.
+        /// </summary>
+        private void DrawVertices() {
+            Glu.GLUquadric quadobj = Glu.gluNewQuadric();
+            Glu.gluQuadricDrawStyle(quadobj, Glu.GLU_FILL);
 
-                Gl.glColor3fv(aColor);
-                Gl.glPushMatrix();
-                Gl.glTranslatef(owner.TriangleList.VertexArray[owner.AVertex[0] * 9 + owner.AVertex[1] * 3],
-                    owner.TriangleList.VertexArray[owner.AVertex[0] * 9 + owner.AVertex[1] * 3 + 1],
-                    owner.TriangleList.VertexArray[owner.AVertex[0] * 9 + owner.AVertex[1] * 3 + 2]);
-                Glu.gluSphere(quadobj, 3, 10, 10);
-                Gl.glPopMatrix();
+            Gl.glColor3fv(aColor);
+            Gl.glPushMatrix();
+            Gl.glTranslatef(owner.TriangleList.VertexArray[owner.TriVertices[0] * 9 + owner.TriVertices[1] * 3],
+                owner.TriangleList.VertexArray[owner.TriVertices[0] * 9 + owner.TriVertices[1] * 3 + 1],
+                owner.TriangleList.VertexArray[owner.TriVertices[0] * 9 + owner.TriVertices[1] * 3 + 2]);
+            Glu.gluSphere(quadobj, 2, 10, 10);
+            Gl.glPopMatrix();
 
-                Gl.glColor3fv(bColor);
-                Gl.glPushMatrix();
-                Gl.glTranslatef(owner.TriangleList.VertexArray[owner.BVertex[0] * 9 + owner.BVertex[1] * 3],
-                    owner.TriangleList.VertexArray[owner.BVertex[0] * 9 + owner.BVertex[1] * 3 + 1],
-                    owner.TriangleList.VertexArray[owner.BVertex[0] * 9 + owner.BVertex[1] * 3 + 2]);
-                Glu.gluSphere(quadobj, 3, 10, 10);
-                Gl.glPopMatrix();
+            Gl.glColor3fv(bColor);
+            Gl.glPushMatrix();
+            Gl.glTranslatef(owner.TriangleList.VertexArray[owner.TriVertices[2] * 9 + owner.TriVertices[3] * 3],
+                owner.TriangleList.VertexArray[owner.TriVertices[2] * 9 + owner.TriVertices[3] * 3 + 1],
+                owner.TriangleList.VertexArray[owner.TriVertices[2] * 9 + owner.TriVertices[3] * 3 + 2]);
+            Glu.gluSphere(quadobj, 2, 10, 10);
+            Gl.glPopMatrix();
 
-                Gl.glColor3fv(cColor);
-                Gl.glPushMatrix();
-                Gl.glTranslatef(owner.TriangleList.VertexArray[owner.CVertex[0] * 9 + owner.CVertex[1] * 3],
-                    owner.TriangleList.VertexArray[owner.CVertex[0] * 9 + owner.CVertex[1] * 3 + 1],
-                    owner.TriangleList.VertexArray[owner.CVertex[0] * 9 + owner.CVertex[1] * 3 + 2]);
-                Glu.gluSphere(quadobj, 3, 10, 10);
-                Gl.glPopMatrix();
+            Gl.glColor3fv(cColor);
+            Gl.glPushMatrix();
+            Gl.glTranslatef(owner.TriangleList.VertexArray[owner.TriVertices[4] * 9 + owner.TriVertices[5] * 3],
+                owner.TriangleList.VertexArray[owner.TriVertices[4] * 9 + owner.TriVertices[5] * 3 + 1],
+                owner.TriangleList.VertexArray[owner.TriVertices[4] * 9 + owner.TriVertices[5] * 3 + 2]);
+            Glu.gluSphere(quadobj, 2, 10, 10);
+            Gl.glPopMatrix();
 
-                Glu.gluDeleteQuadric(quadobj);
-            }
+            Glu.gluDeleteQuadric(quadobj);
         }
 
         #endregion
@@ -430,13 +451,6 @@ namespace STLNormalSwitcher {
         }
 
         #endregion
-
-        /// <summary>
-        /// Only refreshes the Control, when the Fresh-flag is set.
-        /// </summary>
-        public override void Refresh() {
-            if (owner.Fresh) { base.Refresh(); }
-        }
 
         #endregion
 
@@ -500,19 +514,21 @@ namespace STLNormalSwitcher {
         /// </summary>
         /// <param name="e">Standard PaintEventArgs</param>
         protected override void OnPaint(PaintEventArgs e) {
-            if (this.deviceContext == IntPtr.Zero || this.renderContext == IntPtr.Zero) {
-                MessageBox.Show("No device or rendering context available!");
-                return;
-            }
+            if (fresh) {
+                if (this.deviceContext == IntPtr.Zero || this.renderContext == IntPtr.Zero) {
+                    MessageBox.Show("No device or rendering context available!");
+                    return;
+                }
 
-            base.OnPaint(e);
+                base.OnPaint(e);
 
-            //Only switch contexts if this is already not the current context
-            if (this.renderContext != Wgl.wglGetCurrentContext()) {
-                this.MakeCurrentContext();
+                //Only switch contexts if this is already not the current context
+                if (this.renderContext != Wgl.wglGetCurrentContext()) {
+                    this.MakeCurrentContext();
+                }
+                this.RenderScene();
+                this.SwapBuffers();
             }
-            this.RenderScene();
-            this.SwapBuffers();
         }
 
         #endregion
