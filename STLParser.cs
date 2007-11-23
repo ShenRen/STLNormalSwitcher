@@ -45,6 +45,7 @@ namespace STLNormalSwitcher {
 
         #region Properties
 
+        /// <value>Gets the triangleList</value>
         public TriangleList TriangleList { get { return triangleList; } }
 
         /// <value>Gets true if the parsed file is an ASCII file</value>

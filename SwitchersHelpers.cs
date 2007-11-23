@@ -192,6 +192,32 @@ namespace STLNormalSwitcher {
             return rect;
         }
 
+        /// <summary>
+        /// Generates a key based on the distance given by <paramref name="dist"/>
+        /// and the vertex-number given by <paramref name="v"/>.
+        /// </summary>
+        /// <param name="dist">Distance between two vertices</param>
+        /// <param name="v">Position of the second vertex</param>
+        /// <param name="limit">Maximum amount of vertices used to fill with leading zeros</param>
+        /// <returns></returns>
+        public static string GenerateKey(double dist, int v, int limit) {
+            string key;
+            int lead = 100 - (int)Math.Ceiling(Math.Log10(dist + 1));
+            key = dist.ToString();
+            for (int i = 0; i < lead; i++) {
+                key = 0 + key;
+            }
+
+            key += "v";
+            int lead2 = (int)Math.Ceiling(Math.Log10(limit + 1)) - (int)Math.Ceiling(Math.Log10(v + 1));
+            for (int j = 0; j < lead2; j++) {
+                key += 0;
+            }
+            key += v.ToString();
+
+            return key;
+        }
+
         #endregion
     }
 }

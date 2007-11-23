@@ -51,7 +51,8 @@ namespace STLNormalSwitcher {
         private float scale;
         private bool picking;
         private bool fresh = true;
-        private bool drawVertices = false;
+        private bool vertices = false;
+        private bool corners = false;
         private int colorDist;
 
         private float[] uColor = new float[3] { Color.Aqua.R / 255, Color.Aqua.G / 255, Color.Aqua.B / 255 };
@@ -75,8 +76,11 @@ namespace STLNormalSwitcher {
             }
         }
 
-        /// <value>Sets the value of drawVertices</value>
-        public bool Vertices { set { drawVertices = value; } }
+        /// <value>Sets the value of vertices</value>
+        public bool Vertices { set { vertices = value; } }
+
+        /// <value>Sets the value of corners</value>
+        public bool Corners { set { corners = value; } }
 
         #endregion
 
@@ -166,33 +170,33 @@ namespace STLNormalSwitcher {
 
             //Setup pixel format
             Gdi.PIXELFORMATDESCRIPTOR pixelFormat = new Gdi.PIXELFORMATDESCRIPTOR();
-            pixelFormat.nSize = (short)Marshal.SizeOf(pixelFormat);                     //Größe in Byte der Struktur
-            pixelFormat.nVersion = 1;                                                   //Versionsnummer
-            pixelFormat.dwFlags = Gdi.PFD_DRAW_TO_WINDOW | Gdi.PFD_SUPPORT_OPENGL |     //Kennzeichen
+            pixelFormat.nSize = (short)Marshal.SizeOf(pixelFormat);
+            pixelFormat.nVersion = 1;
+            pixelFormat.dwFlags = Gdi.PFD_DRAW_TO_WINDOW | Gdi.PFD_SUPPORT_OPENGL |
                 Gdi.PFD_DOUBLEBUFFER;
-            pixelFormat.iPixelType = (byte)Gdi.PFD_TYPE_RGBA;                           //Echtfarb- bzw. Farbindexwerte
-            pixelFormat.cColorBits = 32;                                                //Anzahl der Farbbits pro Pixel; 4,8,16,24,32 = Summe von cRedBits+cGreenBits+cBlueBits
-            pixelFormat.cRedBits = 0;                                                   //Anzahl Bits pro Pixel für Rotanteil
-            pixelFormat.cRedShift = 0;                                                  //Verschiebung der Rotbits in der Farbe
-            pixelFormat.cGreenBits = 0;                                                 //Anzahl Bits pro Pixel für Grünanteil
-            pixelFormat.cGreenShift = 0;                                                //Verschiebung der Grünbits in der Farbe
-            pixelFormat.cBlueBits = 0;                                                  //Anzahl Bits pro Pixel für Blauanteil
-            pixelFormat.cBlueShift = 0;                                                 //Verschiebung der Blaubits in der Farbe
-            pixelFormat.cAlphaBits = 0;                                                 //nicht in der generischen Version
-            pixelFormat.cAlphaShift = 0;                                                //nicht in der generischen Version
-            pixelFormat.cAccumBits = 0;                                                 //Anzahl Bits pro Pixel im Akkumulationsbuffer = Summe der folgenden vier Angaben
-            pixelFormat.cAccumRedBits = 0;                                              //BpP für Rot
-            pixelFormat.cAccumGreenBits = 0;                                            //BpP für Grün
-            pixelFormat.cAccumBlueBits = 0;                                             //BpP für Blau
-            pixelFormat.cAccumAlphaBits = 0;                                            //BpP für Alpha-Anteil
-            pixelFormat.cDepthBits = 16;                                                //16 oder 32
-            pixelFormat.cStencilBits = 0;                                               //BpP im Stencilbuffer
-            pixelFormat.cAuxBuffers = 0;                                                //nicht in der generischen Version
-            pixelFormat.iLayerType = (byte)Gdi.PFD_MAIN_PLANE;                          //PFD_MAIN_PLANE
-            pixelFormat.bReserved = 0;                                                  // = 0
-            pixelFormat.dwLayerMask = 0;                                                //nicht in der generischen Version
-            pixelFormat.dwVisibleMask = 0;                                              //nicht in der generischen Version
-            pixelFormat.dwDamageMask = 0;                                               //nicht in der generischen Version
+            pixelFormat.iPixelType = (byte)Gdi.PFD_TYPE_RGBA;
+            pixelFormat.cColorBits = 32;
+            pixelFormat.cRedBits = 0;
+            pixelFormat.cRedShift = 0;
+            pixelFormat.cGreenBits = 0;
+            pixelFormat.cGreenShift = 0;
+            pixelFormat.cBlueBits = 0;
+            pixelFormat.cBlueShift = 0;
+            pixelFormat.cAlphaBits = 0;
+            pixelFormat.cAlphaShift = 0;
+            pixelFormat.cAccumBits = 0;
+            pixelFormat.cAccumRedBits = 0;
+            pixelFormat.cAccumGreenBits = 0;
+            pixelFormat.cAccumBlueBits = 0;
+            pixelFormat.cAccumAlphaBits = 0;
+            pixelFormat.cDepthBits = 16;
+            pixelFormat.cStencilBits = 0;
+            pixelFormat.cAuxBuffers = 0;
+            pixelFormat.iLayerType = (byte)Gdi.PFD_MAIN_PLANE;
+            pixelFormat.bReserved = 0;
+            pixelFormat.dwLayerMask = 0;
+            pixelFormat.dwVisibleMask = 0;
+            pixelFormat.dwDamageMask = 0;
 
             //Create device context
             this.deviceContext = User.GetDC(this.Handle);
@@ -290,8 +294,11 @@ namespace STLNormalSwitcher {
             Gl.glTranslatef(0.0f, 0.0f, -owner.Origin);
 
             this.DrawSTL();
-            if (!picking && drawVertices) {
+            if (!picking && vertices) {
                 this.DrawVertices();
+            }
+            if (!picking && corners) {
+                this.DrawCorners();
             }
 
             Gl.glPopMatrix();
@@ -321,41 +328,6 @@ namespace STLNormalSwitcher {
         }
 
         /// <summary>
-        /// Initializes the colorArray. All vertices of unselected triangles get the color Aqua.
-        /// The first selected triangle gets the color Red.
-        /// The nearest neighbor of the A-Vertex gets the color Yellow.
-        /// The nearest neighbor of the B-Vertex gets the color Green.
-        /// The nearest neighbor of the C-Vertex gets the color Blue.
-        /// </summary>
-        /// <param name="neighbor">An array containing the positions of the neighbors</param>
-        public void SetNeighborColors(int[] neighbor) {
-            this.colorArray = new float[owner.TriangleList.Count * 9];
-            for (int i = 0; i < owner.TriangleList.Count; i++) {
-                if (owner.CurrentSelection[0] == owner.TriangleList[i]) {
-                    colorArray[i * 9] = colorArray[i * 9 + 3] = colorArray[i * 9 + 6] = sColor[0];
-                    colorArray[i * 9 + 1] = colorArray[i * 9 + 4] = colorArray[i * 9 + 7] = sColor[1];
-                    colorArray[i * 9 + 2] = colorArray[i * 9 + 5] = colorArray[i * 9 + 8] = sColor[2];
-                } else if (i == neighbor[0]) {
-                    colorArray[i * 9] = colorArray[i * 9 + 3] = colorArray[i * 9 + 6] = aColor[0];
-                    colorArray[i * 9 + 1] = colorArray[i * 9 + 4] = colorArray[i * 9 + 7] = aColor[1];
-                    colorArray[i * 9 + 2] = colorArray[i * 9 + 5] = colorArray[i * 9 + 8] = aColor[2];
-                } else if (i == neighbor[1]) {
-                    colorArray[i * 9] = colorArray[i * 9 + 3] = colorArray[i * 9 + 6] = bColor[0];
-                    colorArray[i * 9 + 1] = colorArray[i * 9 + 4] = colorArray[i * 9 + 7] = bColor[1];
-                    colorArray[i * 9 + 2] = colorArray[i * 9 + 5] = colorArray[i * 9 + 8] = bColor[2];
-                } else if (i == neighbor[2]) {
-                    colorArray[i * 9] = colorArray[i * 9 + 3] = colorArray[i * 9 + 6] = cColor[0];
-                    colorArray[i * 9 + 1] = colorArray[i * 9 + 4] = colorArray[i * 9 + 7] = cColor[1];
-                    colorArray[i * 9 + 2] = colorArray[i * 9 + 5] = colorArray[i * 9 + 8] = cColor[2];
-                } else {
-                    colorArray[i * 9] = colorArray[i * 9 + 3] = colorArray[i * 9 + 6] = uColor[0];
-                    colorArray[i * 9 + 1] = colorArray[i * 9 + 4] = colorArray[i * 9 + 7] = uColor[1];
-                    colorArray[i * 9 + 2] = colorArray[i * 9 + 5] = colorArray[i * 9 + 8] = uColor[2];
-                }
-            }
-        }
-
-        /// <summary>
         /// Draws the colored workpiece.
         /// </summary>
         private void DrawSTL() {
@@ -371,7 +343,7 @@ namespace STLNormalSwitcher {
         }
 
         /// <summary>
-        /// Draws the vertices of one selected Triangle as spheres.
+        /// Draws three selected vertices spheres.
         /// </summary>
         private void DrawVertices() {
             Glu.GLUquadric quadobj = Glu.gluNewQuadric();
@@ -379,26 +351,48 @@ namespace STLNormalSwitcher {
 
             Gl.glColor3fv(aColor);
             Gl.glPushMatrix();
-            Gl.glTranslatef(owner.TriangleList.VertexArray[owner.TriVertices[0] * 9 + owner.TriVertices[1] * 3],
-                owner.TriangleList.VertexArray[owner.TriVertices[0] * 9 + owner.TriVertices[1] * 3 + 1],
-                owner.TriangleList.VertexArray[owner.TriVertices[0] * 9 + owner.TriVertices[1] * 3 + 2]);
+            Gl.glTranslatef(owner.TriVertices[0], owner.TriVertices[1], owner.TriVertices[2]);
             Glu.gluSphere(quadobj, 2, 10, 10);
             Gl.glPopMatrix();
 
             Gl.glColor3fv(bColor);
             Gl.glPushMatrix();
-            Gl.glTranslatef(owner.TriangleList.VertexArray[owner.TriVertices[2] * 9 + owner.TriVertices[3] * 3],
-                owner.TriangleList.VertexArray[owner.TriVertices[2] * 9 + owner.TriVertices[3] * 3 + 1],
-                owner.TriangleList.VertexArray[owner.TriVertices[2] * 9 + owner.TriVertices[3] * 3 + 2]);
+            Gl.glTranslatef(owner.TriVertices[3], owner.TriVertices[4], owner.TriVertices[5]);
             Glu.gluSphere(quadobj, 2, 10, 10);
             Gl.glPopMatrix();
 
             Gl.glColor3fv(cColor);
             Gl.glPushMatrix();
-            Gl.glTranslatef(owner.TriangleList.VertexArray[owner.TriVertices[4] * 9 + owner.TriVertices[5] * 3],
-                owner.TriangleList.VertexArray[owner.TriVertices[4] * 9 + owner.TriVertices[5] * 3 + 1],
-                owner.TriangleList.VertexArray[owner.TriVertices[4] * 9 + owner.TriVertices[5] * 3 + 2]);
+            Gl.glTranslatef(owner.TriVertices[6], owner.TriVertices[7], owner.TriVertices[8]);
             Glu.gluSphere(quadobj, 2, 10, 10);
+            Gl.glPopMatrix();
+
+            Glu.gluDeleteQuadric(quadobj);
+        }
+
+        /// <summary>
+        /// Draws the corners of one selected Triangle as spheres.
+        /// </summary>
+        private void DrawCorners() {
+            Glu.GLUquadric quadobj = Glu.gluNewQuadric();
+            Glu.gluQuadricDrawStyle(quadobj, Glu.GLU_FILL);
+
+            Gl.glColor3fv(aColor);
+            Gl.glPushMatrix();
+            Gl.glTranslatef(owner.Corners[0],owner.Corners[1], owner.Corners[2]);
+            Glu.gluSphere(quadobj, 1, 10, 10);
+            Gl.glPopMatrix();
+
+            Gl.glColor3fv(bColor);
+            Gl.glPushMatrix();
+            Gl.glTranslatef(owner.Corners[3], owner.Corners[4], owner.Corners[5]);
+            Glu.gluSphere(quadobj, 1, 10, 10);
+            Gl.glPopMatrix();
+
+            Gl.glColor3fv(cColor);
+            Gl.glPushMatrix();
+            Gl.glTranslatef(owner.Corners[6], owner.Corners[7], owner.Corners[8]);
+            Glu.gluSphere(quadobj, 1, 10, 10);
             Gl.glPopMatrix();
 
             Glu.gluDeleteQuadric(quadobj);
@@ -447,7 +441,7 @@ namespace STLNormalSwitcher {
             Gl.glEnable(Gl.GL_LIGHT0);
             this.picking = false;
 
-            owner.PickTriangle(SwitchersHelpers.UniqueSelection(color, colorDist, owner.TriangleList.Count * 3), additive);
+            owner.PickTriangle(SwitchersHelpers.UniqueSelection(color, colorDist, owner.TriangleList.Count), additive);
         }
 
         #endregion

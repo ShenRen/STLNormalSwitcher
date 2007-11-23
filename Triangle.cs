@@ -34,7 +34,7 @@ using System.IO;
 
 namespace STLNormalSwitcher {
     /// <summary>
-    /// This class represents a triangle. It is basically just a list of vertices, with a few extras.
+    /// This class represents a triangle. It is basically just a list of Vertices, with a few extras.
     /// There are supposed to be three vertices for the corners of the triangle, and the last one is
     /// for the normal vector. (Attention: Since it is just a list, it could be abused and have more vertices)
     /// It also contains the minimum and maximum coordinates of the triangle.
