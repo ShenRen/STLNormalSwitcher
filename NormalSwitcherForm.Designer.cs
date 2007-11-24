@@ -772,6 +772,7 @@ namespace STLNormalSwitcher {
             this.nextNeighborsTextBox.Name = "nextNeighborsTextBox";
             this.nextNeighborsTextBox.Size = new System.Drawing.Size(64, 20);
             this.nextNeighborsTextBox.TabIndex = 21;
+            this.nextNeighborsTextBox.KeyUp += new System.Windows.Forms.KeyEventHandler(this.NextNeighborsTextBox_KeyUp);
             // 
             // nextNeighborsButton
             // 
@@ -793,7 +794,7 @@ namespace STLNormalSwitcher {
             this.hookButtonA.Name = "hookButtonA";
             this.hookButtonA.Size = new System.Drawing.Size(42, 24);
             this.hookButtonA.TabIndex = 23;
-            this.hookButtonA.Text = "Hook";
+            this.hookButtonA.Text = "Copy";
             this.hookButtonA.UseVisualStyleBackColor = true;
             this.hookButtonA.Click += new System.EventHandler(this.HookButtonA_Click);
             // 
@@ -805,7 +806,7 @@ namespace STLNormalSwitcher {
             this.hookButtonB.Name = "hookButtonB";
             this.hookButtonB.Size = new System.Drawing.Size(42, 24);
             this.hookButtonB.TabIndex = 24;
-            this.hookButtonB.Text = "Hook";
+            this.hookButtonB.Text = "Copy";
             this.hookButtonB.UseVisualStyleBackColor = true;
             this.hookButtonB.Click += new System.EventHandler(this.HookButtonB_Click);
             // 
@@ -817,7 +818,7 @@ namespace STLNormalSwitcher {
             this.hookButtonC.Name = "hookButtonC";
             this.hookButtonC.Size = new System.Drawing.Size(42, 24);
             this.hookButtonC.TabIndex = 25;
-            this.hookButtonC.Text = "Hook";
+            this.hookButtonC.Text = "Copy";
             this.hookButtonC.UseVisualStyleBackColor = true;
             this.hookButtonC.Click += new System.EventHandler(this.HookButtonC_Click);
             // 
@@ -1261,7 +1262,7 @@ namespace STLNormalSwitcher {
             this.aVertexHook.Name = "aVertexHook";
             this.aVertexHook.Size = new System.Drawing.Size(44, 24);
             this.aVertexHook.TabIndex = 23;
-            this.aVertexHook.Text = "Hook";
+            this.aVertexHook.Text = "Copy";
             this.aVertexHook.UseVisualStyleBackColor = true;
             this.aVertexHook.Click += new System.EventHandler(this.AVertexHook_Click);
             // 
@@ -1272,7 +1273,7 @@ namespace STLNormalSwitcher {
             this.cVertexHook.Name = "cVertexHook";
             this.cVertexHook.Size = new System.Drawing.Size(44, 24);
             this.cVertexHook.TabIndex = 25;
-            this.cVertexHook.Text = "Hook";
+            this.cVertexHook.Text = "Copy";
             this.cVertexHook.UseVisualStyleBackColor = true;
             this.cVertexHook.Click += new System.EventHandler(this.CVertexHook_Click);
             // 
@@ -1283,7 +1284,7 @@ namespace STLNormalSwitcher {
             this.bVertexHook.Name = "bVertexHook";
             this.bVertexHook.Size = new System.Drawing.Size(44, 24);
             this.bVertexHook.TabIndex = 24;
-            this.bVertexHook.Text = "Hook";
+            this.bVertexHook.Text = "Copy";
             this.bVertexHook.UseVisualStyleBackColor = true;
             this.bVertexHook.Click += new System.EventHandler(this.BVertexHook_Click);
             // 

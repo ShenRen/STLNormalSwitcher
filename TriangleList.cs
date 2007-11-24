@@ -37,8 +37,8 @@ namespace STLNormalSwitcher {
 
         #region Fields
 
-        private float[] min;
-        private float[] max;
+        private float[] min = new float[3] { 0, 0, 0 };
+        private float[] max = new float[3] { 0, 0, 0 };
         private float scale;
         private float[] vertexArray;
         private float[] normalArray;
@@ -59,18 +59,6 @@ namespace STLNormalSwitcher {
 
         /// <value>Gets the scale used for drawing</value>
         public float Scale { get { return scale; } }
-
-        #endregion
-
-        #region Constructors
-
-        /// <summary>
-        /// Creates a new empty TriangleList with minimum and maximum at 0.
-        /// </summary>
-        public TriangleList() {
-            this.min = new float[3] { 0, 0, 0 };
-            this.max = new float[3] { 0, 0, 0 };
-        }
 
         #endregion
 

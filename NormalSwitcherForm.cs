@@ -140,6 +140,9 @@ namespace STLNormalSwitcher {
 
         #region Methods
 
+        /// <summary>
+        /// Subscribes to the events neccessary to enable or disable the buttons.
+        /// </summary>
         private void BindEvents() {
             undoButton.EnabledChanged += new EventHandler(Undo_EnabledChanged);
             allButton.EnabledChanged += new EventHandler(FileCondition_EnabledChanged);
@@ -190,7 +193,7 @@ namespace STLNormalSwitcher {
                 normalListView.SelectedIndexChanged -= NormalListView_SelectedIndexChanged;
                 normalListView.SelectedIndices.Clear();
                 for (int j = 0; j < currentSelection.Count; j++) {
-                    if (currentSelection[j].Position > -1) {
+                    if (currentSelection[j] != null) {
                         normalListView.SelectedIndices.Add(currentSelection[j].Position);
                     }
                 }
@@ -203,7 +206,7 @@ namespace STLNormalSwitcher {
                 visualization.SetColorArray();
             } else if (tabControl1.SelectedTab == tabPage2) {
                 visualization.Vertices = false;
-                if (currentSelection.Count == 1) {
+                if ((currentSelection.Count == 1) && (currentSelection[0] != null)) {
                     aX.Text = currentSelection[0][0][0].ToString();
                     aY.Text = currentSelection[0][0][1].ToString();
                     aZ.Text = currentSelection[0][0][2].ToString();
@@ -227,8 +230,13 @@ namespace STLNormalSwitcher {
                     visualization.Corners = false;
                 }
             } else {
-                visualization.Vertices = true;
-                visualization.Corners = true;
+                if ((currentSelection.Count == 1) && (currentSelection[0] != null)) {
+                    visualization.Vertices = true;
+                    visualization.Corners = true;
+                } else {
+                    visualization.Vertices = false;
+                    visualization.Corners = false;
+                }
 
                 triangleComboBox.SelectedIndexChanged -= TriangleComboBox_SelectedIndexChanged;
                 triangleComboBox.DataSource = null;
@@ -266,26 +274,33 @@ namespace STLNormalSwitcher {
             currentSelection.Clear();
             currentSelection.Add(temp);
             if (currentSelection[0] != null) {
+                visualization.Vertices = true;
+                visualization.Corners = true;
+            } else {
+                visualization.Vertices = false;
+                visualization.Corners = false;
+            }
+            if (currentSelection[0] != null) {
                 verticesA.SelectedItem = currentSelection[0][0];
                 verticesB.SelectedItem = currentSelection[0][1];
                 verticesC.SelectedItem = currentSelection[0][2];
-                triVertices[0] = triangleList.VertexArray[triangleList.IndexOf((verticesA.SelectedItem as Vertex).Owner) * 9 +
+                triVertices[0] = triangleList.VertexArray[(verticesA.SelectedItem as Vertex).Owner.Position * 9 +
                     (verticesA.SelectedItem as Vertex).Owner.IndexOf(verticesA.SelectedItem as Vertex) * 3];
-                triVertices[1] = triangleList.VertexArray[triangleList.IndexOf((verticesA.SelectedItem as Vertex).Owner) * 9 +
+                triVertices[1] = triangleList.VertexArray[(verticesA.SelectedItem as Vertex).Owner.Position * 9 +
                     (verticesA.SelectedItem as Vertex).Owner.IndexOf(verticesA.SelectedItem as Vertex) * 3 + 1];
-                triVertices[2] = triangleList.VertexArray[triangleList.IndexOf((verticesA.SelectedItem as Vertex).Owner) * 9 +
+                triVertices[2] = triangleList.VertexArray[(verticesA.SelectedItem as Vertex).Owner.Position * 9 +
                     (verticesA.SelectedItem as Vertex).Owner.IndexOf(verticesA.SelectedItem as Vertex) * 3 + 2];
-                triVertices[3] = triangleList.VertexArray[triangleList.IndexOf((verticesB.SelectedItem as Vertex).Owner) * 9 +
+                triVertices[3] = triangleList.VertexArray[(verticesB.SelectedItem as Vertex).Owner.Position * 9 +
                     (verticesB.SelectedItem as Vertex).Owner.IndexOf(verticesB.SelectedItem as Vertex) * 3];
-                triVertices[4] = triangleList.VertexArray[triangleList.IndexOf((verticesB.SelectedItem as Vertex).Owner) * 9 +
+                triVertices[4] = triangleList.VertexArray[(verticesB.SelectedItem as Vertex).Owner.Position * 9 +
                     (verticesB.SelectedItem as Vertex).Owner.IndexOf(verticesB.SelectedItem as Vertex) * 3 + 1];
-                triVertices[5] = triangleList.VertexArray[triangleList.IndexOf((verticesB.SelectedItem as Vertex).Owner) * 9 +
+                triVertices[5] = triangleList.VertexArray[(verticesB.SelectedItem as Vertex).Owner.Position * 9 +
                     (verticesB.SelectedItem as Vertex).Owner.IndexOf(verticesB.SelectedItem as Vertex) * 3 + 2];
-                triVertices[6] = triangleList.VertexArray[triangleList.IndexOf((verticesC.SelectedItem as Vertex).Owner) * 9 +
+                triVertices[6] = triangleList.VertexArray[(verticesC.SelectedItem as Vertex).Owner.Position * 9 +
                     (verticesC.SelectedItem as Vertex).Owner.IndexOf(verticesC.SelectedItem as Vertex) * 3];
-                triVertices[7] = triangleList.VertexArray[triangleList.IndexOf((verticesC.SelectedItem as Vertex).Owner) * 9 +
+                triVertices[7] = triangleList.VertexArray[(verticesC.SelectedItem as Vertex).Owner.Position * 9 +
                     (verticesC.SelectedItem as Vertex).Owner.IndexOf(verticesC.SelectedItem as Vertex) * 3 + 1];
-                triVertices[8] = triangleList.VertexArray[triangleList.IndexOf((verticesC.SelectedItem as Vertex).Owner) * 9 +
+                triVertices[8] = triangleList.VertexArray[(verticesC.SelectedItem as Vertex).Owner.Position * 9 +
                     (verticesC.SelectedItem as Vertex).Owner.IndexOf(verticesC.SelectedItem as Vertex) * 3 + 2];
                 visualization.SetColorArray();
             }
@@ -341,38 +356,49 @@ namespace STLNormalSwitcher {
                     visualization.SetColorArray();
                 }
             }
-            if (normalListView.SelectedItems.Count > 0) {
-                normalListView.TopItem = normalListView.SelectedItems[0];
-            } else {
-                normalListView.TopItem = normalListView.Items[0];
+            switch (tabControl1.SelectedIndex) {
+                case 0:
+                    if (normalListView.SelectedItems.Count > 0) {
+                        normalListView.TopItem = normalListView.SelectedItems[0];
+                    } else {
+                        normalListView.TopItem = normalListView.Items[0];
+                    }
+                    break;
+                case 1:
+                    currentSelection.Clear();
+                    if (selected.Count > 0) {
+                        FillTab();
+                        currentSelection.Add(triangleList[selected[0]]);
+                        SetCorners();
+                        visualization.SetColorArray();
+                        FillTab();
+                    } else {
+                        visualization.Corners = false;
+                        visualization.Vertices = false;
+                    }
+                    break;
+                case 2:
+                    if (selected.Count > 0) {
+                        normalListView.SelectedItems.Clear();
+                        triangleComboBox.SelectedIndex = selected[0];
+                        SetCorners();
+                    } else {
+                        triangleComboBox.SelectedIndex = 0;
+                    }
+                    break;
             }
-            if ((selected.Count > 0) && (selected[0] < triangleComboBox.Items.Count) && (tabControl1.SelectedTab == tabPage3)) {
-                normalListView.SelectedItems.Clear();
-                triangleComboBox.SelectedIndex = selected[0];
-                SetCorners();
-            }
-            if ((selected.Count > 0) && (tabControl1.SelectedTab == tabPage2)) {
-                currentSelection.Clear();
-                FillTab();
-                currentSelection.Add(triangleList[selected[0]]);
-                SetCorners();
-                visualization.SetColorArray();
-                FillTab();
-            }
-            if ((selected.Count == 0) && (tabControl1.SelectedTab == tabPage2)) {
-                currentSelection.Clear();
-                visualization.Corners = false;
-                visualization.Vertices = false;
-            }
-            if ((selected.Count == 0) && (tabControl1.SelectedTab == tabPage3)) {
-                triangleComboBox.SelectedIndex = 0;
-            }
+
             visualization.Fresh = true;
         }
 
+        /// <summary>
+        /// Fills the corners array with the values of the vertices of the currently selected Triangle.
+        /// </summary>
         private void SetCorners() {
-            for (int i = 0; i < 9; i++) {
-                corners[i] = triangleList.VertexArray[currentSelection[0].Position * 9 + i];
+            if (currentSelection[0] != null) {
+                for (int i = 0; i < 9; i++) {
+                    corners[i] = triangleList.VertexArray[currentSelection[0].Position * 9 + i];
+                }
             }
         }
 
@@ -482,6 +508,7 @@ namespace STLNormalSwitcher {
                 } else {
                     SwitchersHelpers.WriteToBinary(this.currentFile, triangleList);
                 }
+                changed = false;
             }
         }
 
@@ -505,6 +532,7 @@ namespace STLNormalSwitcher {
                     } else {
                         SwitchersHelpers.WriteToBinary(sfd.FileName, triangleList);
                     }
+                    changed = false;
                 }
             }
         }
@@ -538,15 +566,11 @@ namespace STLNormalSwitcher {
                 changed = false;
                 triVertices = new float[9];
                 corners = new float[9];
-                visualization.Vertices = false;
-                visualization.Fresh = true;
 
                 tabControl1.SelectedIndex = 0;
                 normalListView.Items.Clear();
                 normalListView.Items.Add(new ListViewItem(new string[4] { "Select a File!", "Select a File!", "Select a File!", "Select a File!" }));
                 normalListView.Items[0].Tag = -2;
-
-                triangleComboBox.SelectedIndexChanged -= TriangleComboBox_SelectedIndexChanged;
             }
         }
 
@@ -663,7 +687,7 @@ namespace STLNormalSwitcher {
         }
 
         /// <summary>
-        /// Shows the About dialogue with information about the STLNormalSwitcher.
+        /// Shows the About dialog with information about the STLNormalSwitcher.
         /// </summary>
         /// <param name="sender">aboutToolStripMenuItem</param>
         /// <param name="e">Standard EventArgs</param>
@@ -773,6 +797,17 @@ namespace STLNormalSwitcher {
                 } else { MessageBox.Show("You need to enter an Integer greater than 0!"); }
             } catch {
                 MessageBox.Show("You need to enter an Integer greater than 0!");
+            }
+        }
+
+        /// <summary>
+        /// Fills the Neighbors ComboBoxes, when the Return-Key is pressed in the nextNeighborsTextBox.
+        /// </summary>
+        /// <param name="sender">nextNeighborsTextBox</param>
+        /// <param name="e">Standard KeyEventArgs</param>
+        private void NextNeighborsTextBox_KeyUp(object sender, KeyEventArgs e) {
+            if (e.KeyCode == Keys.Return) {
+                NextNeighborsButton_Click(sender, e);
             }
         }
 
@@ -1032,7 +1067,15 @@ namespace STLNormalSwitcher {
             visualization.Fresh = false;
             Event temp = new Event((triangleComboBox.SelectedItem as Triangle), Event.EventType.Remove);
             history.Add(temp);
-            triangleList.RemoveAt((triangleComboBox.SelectedItem as Triangle).Position);
+            if (temp[0].Position > 0) {
+                triangleComboBox.SelectedIndex = temp[0].Position - 1;
+            } else if (temp[0].Position == 0) {
+                triangleComboBox.SelectedIndex = 0;
+            } else {
+                visualization.Vertices = false;
+                visualization.Corners = false;
+            }
+            triangleList.RemoveAt(temp[0].Position);
             triangleList.Finish();
             triangleList.SetPositions();
             currentSelection.Clear();
@@ -1042,11 +1085,7 @@ namespace STLNormalSwitcher {
             SetOrigin();
             FillTab();
             visualization.SetPickingColors();
-            if (triangleComboBox.Items.Count > 0) {
-                triangleComboBox.SelectedIndex = 0;
-            } else {
-                visualization.Vertices = false;
-            }
+
             visualization.Fresh = true;
         }
 
@@ -1086,7 +1125,11 @@ namespace STLNormalSwitcher {
             cZ2.Text = (verticesC.SelectedItem as Vertex)[2].ToString();
         }
 
-
+        /// <summary>
+        /// Fills the triVertices array with the values of the Vertex selected in the verticesA ComboBox.
+        /// </summary>
+        /// <param name="sender">verticesA</param>
+        /// <param name="e">Standard EventArgs</param>
         private void VerticesA_SelectedIndexChanged(object sender, EventArgs e) {
             if (verticesA.SelectedItem != null) {
                 triVertices[0] = triangleList.VertexArray[(verticesA.SelectedItem as Vertex).Owner.Position * 9 +
@@ -1099,6 +1142,11 @@ namespace STLNormalSwitcher {
             }
         }
 
+        /// <summary>
+        /// Fills the triVertices array with the values of the Vertex selected in the verticesB ComboBox.
+        /// </summary>
+        /// <param name="sender">verticesB</param>
+        /// <param name="e">Standard EventArgs</param>
         private void VerticesB_SelectedIndexChanged(object sender, EventArgs e) {
             if (verticesB.SelectedItem != null) {
                 triVertices[3] = triangleList.VertexArray[(verticesB.SelectedItem as Vertex).Owner.Position * 9 +
@@ -1111,6 +1159,11 @@ namespace STLNormalSwitcher {
             }
         }
 
+        /// <summary>
+        /// Fills the triVertices array with the values of the Vertex selected in the verticesC ComboBox.
+        /// </summary>
+        /// <param name="sender">verticesC</param>
+        /// <param name="e">Standard EventArgs</param>
         private void VerticesC_SelectedIndexChanged(object sender, EventArgs e) {
             if (verticesC.SelectedItem != null) {
                 triVertices[6] = triangleList.VertexArray[(verticesC.SelectedItem as Vertex).Owner.Position * 9 +

@@ -343,7 +343,7 @@ namespace STLNormalSwitcher {
         }
 
         /// <summary>
-        /// Draws three selected vertices spheres.
+        /// Draws three selected vertices as spheres.
         /// </summary>
         private void DrawVertices() {
             Glu.GLUquadric quadobj = Glu.gluNewQuadric();
