@@ -20,8 +20,6 @@
 //
 // For more information and contact details look at STLNormalSwitchers website:
 //      http://normalswitcher.sourceforge.net/
-//
-// Check out PAVEl (http://pavel.sourceforge.net/) another great program brought to you by PG500.
 
 using System;
 using System.Collections.Generic;

@@ -20,8 +20,6 @@
 //
 // For more information and contact details look at STLNormalSwitchers website:
 //      http://normalswitcher.sourceforge.net/
-//
-// Check out PAVEl (http://pavel.sourceforge.net/) another great program brought to you by PG500.
 
 namespace STLNormalSwitcher {
     partial class NormalSwitcherForm {
@@ -636,26 +634,32 @@ namespace STLNormalSwitcher {
             // cZ
             // 
             this.cZ.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.cZ.Enabled = false;
             this.cZ.Location = new System.Drawing.Point(298, 102);
             this.cZ.Name = "cZ";
             this.cZ.Size = new System.Drawing.Size(114, 20);
             this.cZ.TabIndex = 10;
+            this.cZ.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TriangleValue_KeyPress);
             // 
             // cY
             // 
             this.cY.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.cY.Enabled = false;
             this.cY.Location = new System.Drawing.Point(178, 102);
             this.cY.Name = "cY";
             this.cY.Size = new System.Drawing.Size(114, 20);
             this.cY.TabIndex = 11;
+            this.cY.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TriangleValue_KeyPress);
             // 
             // cX
             // 
             this.cX.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.cX.Enabled = false;
             this.cX.Location = new System.Drawing.Point(58, 102);
             this.cX.Name = "cX";
             this.cX.Size = new System.Drawing.Size(114, 20);
             this.cX.TabIndex = 9;
+            this.cX.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TriangleValue_KeyPress);
             // 
             // labelC
             // 
@@ -670,26 +674,32 @@ namespace STLNormalSwitcher {
             // bZ
             // 
             this.bZ.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.bZ.Enabled = false;
             this.bZ.Location = new System.Drawing.Point(298, 72);
             this.bZ.Name = "bZ";
             this.bZ.Size = new System.Drawing.Size(114, 20);
             this.bZ.TabIndex = 8;
+            this.bZ.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TriangleValue_KeyPress);
             // 
             // bY
             // 
             this.bY.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.bY.Enabled = false;
             this.bY.Location = new System.Drawing.Point(178, 72);
             this.bY.Name = "bY";
             this.bY.Size = new System.Drawing.Size(114, 20);
             this.bY.TabIndex = 7;
+            this.bY.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TriangleValue_KeyPress);
             // 
             // bX
             // 
             this.bX.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.bX.Enabled = false;
             this.bX.Location = new System.Drawing.Point(58, 72);
             this.bX.Name = "bX";
             this.bX.Size = new System.Drawing.Size(114, 20);
             this.bX.TabIndex = 6;
+            this.bX.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TriangleValue_KeyPress);
             // 
             // label3
             // 
@@ -704,26 +714,32 @@ namespace STLNormalSwitcher {
             // aX
             // 
             this.aX.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.aX.Enabled = false;
             this.aX.Location = new System.Drawing.Point(58, 42);
             this.aX.Name = "aX";
             this.aX.Size = new System.Drawing.Size(114, 20);
             this.aX.TabIndex = 3;
+            this.aX.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TriangleValue_KeyPress);
             // 
             // aY
             // 
             this.aY.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.aY.Enabled = false;
             this.aY.Location = new System.Drawing.Point(178, 42);
             this.aY.Name = "aY";
             this.aY.Size = new System.Drawing.Size(114, 20);
             this.aY.TabIndex = 4;
+            this.aY.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TriangleValue_KeyPress);
             // 
             // aZ
             // 
             this.aZ.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.aZ.Enabled = false;
             this.aZ.Location = new System.Drawing.Point(298, 42);
             this.aZ.Name = "aZ";
             this.aZ.Size = new System.Drawing.Size(114, 20);
             this.aZ.TabIndex = 5;
+            this.aZ.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TriangleValue_KeyPress);
             // 
             // labelX
             // 
@@ -768,11 +784,12 @@ namespace STLNormalSwitcher {
             // nextNeighborsTextBox
             // 
             this.nextNeighborsTextBox.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.nextNeighborsTextBox.Enabled = false;
             this.nextNeighborsTextBox.Location = new System.Drawing.Point(438, 12);
             this.nextNeighborsTextBox.Name = "nextNeighborsTextBox";
             this.nextNeighborsTextBox.Size = new System.Drawing.Size(64, 20);
             this.nextNeighborsTextBox.TabIndex = 21;
-            this.nextNeighborsTextBox.KeyUp += new System.Windows.Forms.KeyEventHandler(this.NextNeighborsTextBox_KeyUp);
+            this.nextNeighborsTextBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.NextNeighborsTextBox_KeyPress);
             // 
             // nextNeighborsButton
             // 
@@ -825,26 +842,32 @@ namespace STLNormalSwitcher {
             // normalZ
             // 
             this.normalZ.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.normalZ.Enabled = false;
             this.normalZ.Location = new System.Drawing.Point(298, 152);
             this.normalZ.Name = "normalZ";
             this.normalZ.Size = new System.Drawing.Size(114, 20);
             this.normalZ.TabIndex = 29;
+            this.normalZ.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TriangleValue_KeyPress);
             // 
             // normalY
             // 
             this.normalY.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.normalY.Enabled = false;
             this.normalY.Location = new System.Drawing.Point(178, 152);
             this.normalY.Name = "normalY";
             this.normalY.Size = new System.Drawing.Size(114, 20);
             this.normalY.TabIndex = 30;
+            this.normalY.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TriangleValue_KeyPress);
             // 
             // normalX
             // 
             this.normalX.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.normalX.Enabled = false;
             this.normalX.Location = new System.Drawing.Point(58, 152);
             this.normalX.Name = "normalX";
             this.normalX.Size = new System.Drawing.Size(114, 20);
             this.normalX.TabIndex = 31;
+            this.normalX.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TriangleValue_KeyPress);
             // 
             // labelNormal
             // 
@@ -870,6 +893,7 @@ namespace STLNormalSwitcher {
             // 
             // resetTriangleBoxesButton
             // 
+            this.resetTriangleBoxesButton.Enabled = false;
             this.resetTriangleBoxesButton.Location = new System.Drawing.Point(3, 3);
             this.resetTriangleBoxesButton.Name = "resetTriangleBoxesButton";
             this.resetTriangleBoxesButton.Size = new System.Drawing.Size(44, 30);
@@ -915,6 +939,7 @@ namespace STLNormalSwitcher {
             // 
             this.aNeighbors.BackColor = System.Drawing.SystemColors.Window;
             this.aNeighbors.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.aNeighbors.Enabled = false;
             this.aNeighbors.FormattingEnabled = true;
             this.aNeighbors.Location = new System.Drawing.Point(0, 3);
             this.aNeighbors.Name = "aNeighbors";
@@ -937,6 +962,7 @@ namespace STLNormalSwitcher {
             // 
             this.bNeighbors.BackColor = System.Drawing.SystemColors.Window;
             this.bNeighbors.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.bNeighbors.Enabled = false;
             this.bNeighbors.FormattingEnabled = true;
             this.bNeighbors.Location = new System.Drawing.Point(0, 3);
             this.bNeighbors.Name = "bNeighbors";
@@ -959,6 +985,7 @@ namespace STLNormalSwitcher {
             // 
             this.cNeighbors.BackColor = System.Drawing.SystemColors.Window;
             this.cNeighbors.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.cNeighbors.Enabled = false;
             this.cNeighbors.FormattingEnabled = true;
             this.cNeighbors.Location = new System.Drawing.Point(0, 3);
             this.cNeighbors.Name = "cNeighbors";
@@ -1050,6 +1077,7 @@ namespace STLNormalSwitcher {
             this.normalX2.Name = "normalX2";
             this.normalX2.Size = new System.Drawing.Size(114, 20);
             this.normalX2.TabIndex = 31;
+            this.normalX2.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TriangleValue_KeyPress);
             // 
             // labelNormal2
             // 
@@ -1068,6 +1096,7 @@ namespace STLNormalSwitcher {
             this.normalY2.Name = "normalY2";
             this.normalY2.Size = new System.Drawing.Size(114, 20);
             this.normalY2.TabIndex = 30;
+            this.normalY2.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TriangleValue_KeyPress);
             // 
             // normalZ2
             // 
@@ -1076,6 +1105,7 @@ namespace STLNormalSwitcher {
             this.normalZ2.Name = "normalZ2";
             this.normalZ2.Size = new System.Drawing.Size(114, 20);
             this.normalZ2.TabIndex = 29;
+            this.normalZ2.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TriangleValue_KeyPress);
             // 
             // addTriangleButton
             // 
@@ -1119,6 +1149,7 @@ namespace STLNormalSwitcher {
             this.cX2.Name = "cX2";
             this.cX2.Size = new System.Drawing.Size(114, 20);
             this.cX2.TabIndex = 9;
+            this.cX2.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TriangleValue_KeyPress);
             // 
             // cY2
             // 
@@ -1127,6 +1158,7 @@ namespace STLNormalSwitcher {
             this.cY2.Name = "cY2";
             this.cY2.Size = new System.Drawing.Size(114, 20);
             this.cY2.TabIndex = 11;
+            this.cY2.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TriangleValue_KeyPress);
             // 
             // cZ2
             // 
@@ -1135,6 +1167,7 @@ namespace STLNormalSwitcher {
             this.cZ2.Name = "cZ2";
             this.cZ2.Size = new System.Drawing.Size(114, 20);
             this.cZ2.TabIndex = 10;
+            this.cZ2.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TriangleValue_KeyPress);
             // 
             // labelB2
             // 
@@ -1153,6 +1186,7 @@ namespace STLNormalSwitcher {
             this.bX2.Name = "bX2";
             this.bX2.Size = new System.Drawing.Size(114, 20);
             this.bX2.TabIndex = 6;
+            this.bX2.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TriangleValue_KeyPress);
             // 
             // bY2
             // 
@@ -1161,6 +1195,7 @@ namespace STLNormalSwitcher {
             this.bY2.Name = "bY2";
             this.bY2.Size = new System.Drawing.Size(114, 20);
             this.bY2.TabIndex = 7;
+            this.bY2.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TriangleValue_KeyPress);
             // 
             // bZ2
             // 
@@ -1169,6 +1204,7 @@ namespace STLNormalSwitcher {
             this.bZ2.Name = "bZ2";
             this.bZ2.Size = new System.Drawing.Size(114, 20);
             this.bZ2.TabIndex = 8;
+            this.bZ2.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TriangleValue_KeyPress);
             // 
             // aX2
             // 
@@ -1177,6 +1213,7 @@ namespace STLNormalSwitcher {
             this.aX2.Name = "aX2";
             this.aX2.Size = new System.Drawing.Size(114, 20);
             this.aX2.TabIndex = 3;
+            this.aX2.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TriangleValue_KeyPress);
             // 
             // aY2
             // 
@@ -1185,6 +1222,7 @@ namespace STLNormalSwitcher {
             this.aY2.Name = "aY2";
             this.aY2.Size = new System.Drawing.Size(114, 20);
             this.aY2.TabIndex = 4;
+            this.aY2.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TriangleValue_KeyPress);
             // 
             // aZ2
             // 
@@ -1193,6 +1231,7 @@ namespace STLNormalSwitcher {
             this.aZ2.Name = "aZ2";
             this.aZ2.Size = new System.Drawing.Size(114, 20);
             this.aZ2.TabIndex = 5;
+            this.aZ2.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TriangleValue_KeyPress);
             // 
             // labelZ2
             // 

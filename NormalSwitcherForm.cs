@@ -20,8 +20,6 @@
 //
 // For more information and contact details look at STLNormalSwitchers website:
 //      http://normalswitcher.sourceforge.net/
-//
-// Check out PAVEl (http://pavel.sourceforge.net/) another great program brought to you by PG500.
 
 using System;
 using System.Collections.Generic;
@@ -366,15 +364,12 @@ namespace STLNormalSwitcher {
                     break;
                 case 1:
                     currentSelection.Clear();
+                    FillTab();
                     if (selected.Count > 0) {
-                        FillTab();
                         currentSelection.Add(triangleList[selected[0]]);
                         SetCorners();
                         visualization.SetColorArray();
                         FillTab();
-                    } else {
-                        visualization.Corners = false;
-                        visualization.Vertices = false;
                     }
                     break;
                 case 2:
@@ -802,12 +797,16 @@ namespace STLNormalSwitcher {
 
         /// <summary>
         /// Fills the Neighbors ComboBoxes, when the Return-Key is pressed in the nextNeighborsTextBox.
+        /// Prevents the user from entering anything, but numbers.
         /// </summary>
         /// <param name="sender">nextNeighborsTextBox</param>
-        /// <param name="e">Standard KeyEventArgs</param>
-        private void NextNeighborsTextBox_KeyUp(object sender, KeyEventArgs e) {
-            if (e.KeyCode == Keys.Return) {
+        /// <param name="e">Standard KeyPressEventArgs</param>
+        private void NextNeighborsTextBox_KeyPress(object sender, KeyPressEventArgs e) {
+            if (e.KeyChar == (char)Keys.Return) {
                 NextNeighborsButton_Click(sender, e);
+            }
+            if ((!char.IsNumber(e.KeyChar)) & (e.KeyChar != (char)Keys.Back)) {
+                e.Handled = true;
             }
         }
 
@@ -925,13 +924,16 @@ namespace STLNormalSwitcher {
         }
 
         /// <summary>
-        /// Enables the acceptButton, the acceptTriangleButton
+        /// Enables the acceptButton, the acceptTriangleButton, the resetTriangleBoxesButton
         /// and the nextNeighborsButton simultaneously.
         /// </summary>
         /// <param name="sender">acceptButton</param>
         /// <param name="e">Standard EventArgs</param>
         private void AcceptButton_EnabledChanged(object sender, EventArgs e) {
-            acceptTriangleButton.Enabled = nextNeighborsButton.Enabled = acceptButton.Enabled;
+            acceptTriangleButton.Enabled = nextNeighborsButton.Enabled = resetTriangleBoxesButton.Enabled =
+                nextNeighborsTextBox.Enabled = aX.Enabled = aY.Enabled = aZ.Enabled = bX.Enabled = bY.Enabled =
+                bZ.Enabled = cX.Enabled = cY.Enabled = cZ.Enabled = normalX.Enabled = normalY.Enabled =
+                normalZ.Enabled = aNeighbors.Enabled = bNeighbors.Enabled = cNeighbors.Enabled = acceptButton.Enabled;
         }
 
         /// <summary>
@@ -1179,6 +1181,31 @@ namespace STLNormalSwitcher {
         #endregion
 
         /// <summary>
+        /// Prevents the user from entering anything, but a floating point number in the TextBoxes for
+        /// editing or adding Triangles.
+        /// </summary>
+        /// <param name="sender">Any one of the TextBoxes for editing or adding Triangles</param>
+        /// <param name="e">Standard KeyPressEventArgs</param>
+        private void TriangleValue_KeyPress(object sender, KeyPressEventArgs e) {
+            if ((!char.IsNumber(e.KeyChar)) & (e.KeyChar != '.') & (e.KeyChar != '-') & (e.KeyChar != (char)Keys.Back)) {
+                e.Handled = true;
+            } else if (e.KeyChar == '.') {
+                if ((sender as TextBox).Text.Contains(".")) {
+                    e.Handled = true;
+                }
+            } else if (e.KeyChar == '-') {
+                if ((sender as TextBox).Text.StartsWith("-")) {
+                    e.Handled = true;
+                } else {
+                    int temp = (sender as TextBox).SelectionStart;
+                    (sender as TextBox).Text = "-" + (sender as TextBox).Text;
+                    (sender as TextBox).SelectionStart = temp + 1;
+                    e.Handled = true;
+                }
+            }
+        }
+
+        /// <summary>
         /// Updates the rotationOriginTextBox and the origin,
         /// when the value of the originTrackBar is changed and refreshes the NormalSwitcherControl.
         /// </summary>
@@ -1199,8 +1226,20 @@ namespace STLNormalSwitcher {
             if (e.KeyChar == (char)Keys.Return) {
                 try {
                     int value = Convert.ToInt32(rotationOriginTextBox.Text);
-                    if (value < originTrackBar.Minimum) { originTrackBar.Value = originTrackBar.Minimum; } else if (value > originTrackBar.Maximum) { originTrackBar.Value = originTrackBar.Maximum; } else { originTrackBar.Value = value; }
+                    if (value < originTrackBar.Minimum) {
+                        originTrackBar.Value = originTrackBar.Minimum;
+                        OriginTrackBar_ValueChanged(sender, e);
+                    } else if (value > originTrackBar.Maximum) {
+                        originTrackBar.Value = originTrackBar.Maximum;
+                        OriginTrackBar_ValueChanged(sender, e);
+                    } else {
+                        originTrackBar.Value = value;
+                        OriginTrackBar_ValueChanged(sender, e);
+                    }
                 } catch { rotationOriginTextBox.Text = originTrackBar.Value.ToString(); }
+            }
+            if ((!char.IsNumber(e.KeyChar)) & (e.KeyChar != '-') & (e.KeyChar != (char)Keys.Back)) {
+                e.Handled = true;
             }
         }
 
@@ -1236,6 +1275,7 @@ namespace STLNormalSwitcher {
         }
 
         #endregion
+
 
     }
 }
