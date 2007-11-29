@@ -477,6 +477,7 @@ namespace STLNormalSwitcher {
             this.splitContainer2.Panel1.Controls.Add(this.originTrackBar);
             this.splitContainer2.Size = new System.Drawing.Size(605, 452);
             this.splitContainer2.SplitterDistance = 41;
+            this.splitContainer2.SplitterWidth = 1;
             this.splitContainer2.TabIndex = 5;
             // 
             // originTrackBar
@@ -539,7 +540,11 @@ namespace STLNormalSwitcher {
             this.normalListView.UseCompatibleStateImageBehavior = false;
             this.normalListView.View = System.Windows.Forms.View.Details;
             this.normalListView.SelectedIndexChanged += new System.EventHandler(this.NormalListView_SelectedIndexChanged);
+            this.normalListView.MouseUp += new System.Windows.Forms.MouseEventHandler(this.NormalListView_MouseUp);
+            this.normalListView.KeyDown += new System.Windows.Forms.KeyEventHandler(this.NormalListView_KeyDown);
             this.normalListView.ColumnClick += new System.Windows.Forms.ColumnClickEventHandler(this.NormalListView_ColumnClick);
+            this.normalListView.KeyUp += new System.Windows.Forms.KeyEventHandler(this.NormalListView_KeyUp);
+            this.normalListView.MouseDown += new System.Windows.Forms.MouseEventHandler(this.NormalListView_MouseDown);
             // 
             // columnHeader0
             // 

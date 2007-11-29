@@ -94,9 +94,7 @@ namespace STLNormalSwitcher {
             InitializeComponent();
             currentFile = "";
 
-            normalListView.Columns[0].Width = normalListView.Columns[1].Width =
-                normalListView.Columns[2].Width = normalListView.Columns[3].Width =
-                (this.Width - 30) / 4;
+            NormalSwitcherForm_SizeChanged(new object(), new EventArgs());
 
             BindEvents();
         }
@@ -108,9 +106,7 @@ namespace STLNormalSwitcher {
         public NormalSwitcherForm(string file) {
             InitializeComponent();
 
-            normalListView.Columns[0].Width = normalListView.Columns[1].Width =
-                normalListView.Columns[2].Width = normalListView.Columns[3].Width =
-                (this.Width - 30) / 4;
+            NormalSwitcherForm_SizeChanged(new object(), new EventArgs());
 
             BindEvents();
 
@@ -354,6 +350,7 @@ namespace STLNormalSwitcher {
                     visualization.SetColorArray();
                 }
             }
+
             switch (tabControl1.SelectedIndex) {
                 case 0:
                     if (normalListView.SelectedItems.Count > 0) {
@@ -375,10 +372,18 @@ namespace STLNormalSwitcher {
                 case 2:
                     if (selected.Count > 0) {
                         normalListView.SelectedItems.Clear();
-                        triangleComboBox.SelectedIndex = selected[0];
+                        if (triangleComboBox.SelectedIndex != selected[0]) {
+                            triangleComboBox.SelectedIndex = selected[0];
+                        } else {
+                            TriangleComboBox_SelectedIndexChanged(new object(), new EventArgs());
+                        }
                         SetCorners();
                     } else {
-                        triangleComboBox.SelectedIndex = 0;
+                        if (triangleComboBox.SelectedIndex != 0) {
+                            triangleComboBox.SelectedIndex = 0;
+                        } else {
+                            TriangleComboBox_SelectedIndexChanged(new object(), new EventArgs());
+                        }
                     }
                     break;
             }
@@ -743,6 +748,53 @@ namespace STLNormalSwitcher {
         }
 
         /// <summary>
+        /// Unbinds the NormalListView_SelectedIndexChanged EventHandler, so that the
+        /// visualization is not constantly drawn during selection.
+        /// </summary>
+        /// <param name="sender">Mouse</param>
+        /// <param name="e">Standard MouseEventArgs</param>
+        private void NormalListView_MouseDown(object sender, MouseEventArgs e) {
+            normalListView.SelectedIndexChanged -= NormalListView_SelectedIndexChanged;
+        }
+
+        /// <summary>
+        /// Binds the NormalListView_SelectedIndexChanged EventHandler, so that the
+        /// visualization is drawn again, when selection is finished.
+        /// </summary>
+        /// <param name="sender">Mouse</param>
+        /// <param name="e">Standard MouseEventArgs</param>
+        private void NormalListView_MouseUp(object sender, MouseEventArgs e) {
+            normalListView.SelectedIndexChanged += NormalListView_SelectedIndexChanged;
+            NormalListView_SelectedIndexChanged(sender, e);
+        }
+
+        /// <summary>
+        /// Unbinds the NormalListView_SelectedIndexChanged EventHandler, so that the
+        /// visualization is not constantly drawn during selection.
+        /// </summary>
+        /// <param name="sender">Control key or shift key</param>
+        /// <param name="e">Standard KeyEventArgs</param>
+        private void NormalListView_KeyDown(object sender, KeyEventArgs e) {
+            if ((e.KeyCode == Keys.Control) || (e.KeyCode == Keys.Shift)) {
+                normalListView.SelectedIndexChanged -= NormalListView_SelectedIndexChanged;
+            }
+        }
+
+        /// <summary>
+        /// Binds the NormalListView_SelectedIndexChanged EventHandler, so that the
+        /// visualization is drawn again, when selection is finished.
+        /// </summary>
+        /// <param name="sender">Control key or shift key</param>
+        /// <param name="e">Standard KeyEventArgs</param>
+        private void NormalListView_KeyUp(object sender, KeyEventArgs e) {
+            if ((e.KeyCode == Keys.Control) || (e.KeyCode == Keys.Shift)) {
+                normalListView.SelectedIndexChanged += NormalListView_SelectedIndexChanged;
+                NormalListView_SelectedIndexChanged(sender, e);
+            }
+        }
+
+
+        /// <summary>
         /// Sorts the normalListView by the values of the clicked column.
         /// </summary>
         /// <param name="sender">normalListView ColumnHeader</param>
@@ -768,7 +820,7 @@ namespace STLNormalSwitcher {
         private void NormalSwitcherForm_SizeChanged(object sender, EventArgs e) {
             normalListView.Columns[0].Width = normalListView.Columns[1].Width =
                 normalListView.Columns[2].Width = normalListView.Columns[3].Width =
-                (this.Width - 30) / 4;
+                (this.Width - 40) / 4;
         }
 
         #endregion
@@ -1275,7 +1327,6 @@ namespace STLNormalSwitcher {
         }
 
         #endregion
-
 
     }
 }
