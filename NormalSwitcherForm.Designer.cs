@@ -575,7 +575,7 @@ namespace STLNormalSwitcher {
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
             this.tabPage2.Size = new System.Drawing.Size(739, 222);
             this.tabPage2.TabIndex = 1;
-            this.tabPage2.Text = "Edit the First Selected Triangle";
+            this.tabPage2.Text = "Edit Selected Triangle";
             this.tabPage2.UseVisualStyleBackColor = true;
             // 
             // tableLayoutPanel3
