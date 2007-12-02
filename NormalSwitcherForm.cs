@@ -50,6 +50,7 @@ namespace STLNormalSwitcher {
         private float[] triVertices = new float[9];
         private float[] corners = new float[9];
         private bool changed = false;
+        private bool flag = false;
 
         private List<Event> history = new List<Event>();
         private Event currentSelection = new Event();
@@ -97,6 +98,11 @@ namespace STLNormalSwitcher {
                 history = value;
                 changed = true;
             }
+        }
+
+        public bool Flag {
+            get { return flag; }
+            set { flag = value; }
         }
 
         #endregion
@@ -150,6 +156,8 @@ namespace STLNormalSwitcher {
             tabControl1.TabPages.Add(new Page(new ListPanel(this), "List of Triangles"));
             tabControl1.TabPages.Add(new Page(new EditPanel(this), "Edit Selected Triangle"));
             tabControl1.TabPages.Add(new Page(new AddPanel(this), "Add/Remove Triangle"));
+
+            (tabControl1.SelectedTab as Page).UpdateTab(true);
         }
 
         /// <summary>
@@ -218,6 +226,7 @@ namespace STLNormalSwitcher {
                 }
             }
 
+            (tabControl1.SelectedTab as Page).UpdateTab(false);
             RefreshVisualization();
 
         }
@@ -400,7 +409,7 @@ namespace STLNormalSwitcher {
             visualization.SetColorArray();
             visualization.SetPickingColors();
             SetOrigin();
-            (tabControl1.SelectedTab as Page).UpdateTab();
+            (tabControl1.SelectedTab as Page).UpdateTab(true);
         }
 
         /// <summary>
@@ -419,7 +428,7 @@ namespace STLNormalSwitcher {
             visualization.SetColorArray();
             visualization.SetPickingColors();
             SetOrigin();
-            (tabControl1.SelectedTab as Page).UpdateTab();
+            (tabControl1.SelectedTab as Page).UpdateTab(true);
         }
 
         /// <summary>
@@ -445,7 +454,7 @@ namespace STLNormalSwitcher {
 
             undoButton.Enabled = true;
             changed = true;
-            (tabControl1.SelectedTab as Page).UpdateTab();
+            (tabControl1.SelectedTab as Page).UpdateTab(true);
         }
 
         /// <summary>
@@ -465,7 +474,7 @@ namespace STLNormalSwitcher {
 
                 undoButton.Enabled = true;
                 changed = true;
-                (tabControl1.SelectedTab as Page).UpdateTab();
+                (tabControl1.SelectedTab as Page).UpdateTab(true);
             }
         }
 
@@ -576,7 +585,8 @@ namespace STLNormalSwitcher {
         /// <param name="e">Standard TabControlCancelEventArgs</param>
         private void TabControl1_Selecting(object sender, TabControlCancelEventArgs e) {
             if (currentFile != "") {
-                (e.TabPage as Page).UpdateTab();
+                (e.TabPage as Page).UpdateTab(flag);
+                flag = false;
             }
         }
 

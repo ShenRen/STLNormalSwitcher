@@ -12,10 +12,8 @@ namespace STLNormalSwitcher {
             this.panel = panel;
             this.Controls.Add(panel);
             this.Text = name;
-
-            UpdateTab();
         }
 
-        public void UpdateTab() { panel.UpdateTab(); }
+        public void UpdateTab(bool flag) { panel.UpdateTab(flag); }
     }
 }

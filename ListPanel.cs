@@ -50,7 +50,9 @@ namespace STLNormalSwitcher {
             this.normalListView.UseCompatibleStateImageBehavior = false;
             this.normalListView.View = System.Windows.Forms.View.Details;
             this.normalListView.SelectedIndexChanged += new System.EventHandler(this.NormalListView_SelectedIndexChanged);
+            this.normalListView.MouseUp += new System.Windows.Forms.MouseEventHandler(this.NormalListView_MouseUp);
             this.normalListView.ColumnClick += new System.Windows.Forms.ColumnClickEventHandler(this.NormalListView_ColumnClick);
+            this.normalListView.KeyUp += new System.Windows.Forms.KeyEventHandler(this.NormalListView_KeyUp);
             // 
             // columnHeader0
             // 
@@ -91,19 +93,24 @@ namespace STLNormalSwitcher {
             Owner_SizeChanged(new object(), new EventArgs());
         }
 
-        public override void UpdateTab() {
+        /// <summary>
+        /// Fills the normalListView with the correct values;
+        /// </summary>
+        public override void UpdateTab(bool flag) {
             owner.Visualization.Fresh = false;
             owner.Visualization.Vertices = false;
             owner.Visualization.Corners = false;
 
             normalListView.BeginUpdate();
-
-            normalListView.Items.Clear();
             normalListView.Sorting = SortOrder.None;
-            for (int i = 0; i < owner.TriangleList.Count; i++) {
-                normalListView.Items.Add(new ListViewItem(new string[4] { owner.TriangleList[i].NormalToString(),
+
+            if (flag) {
+                normalListView.Items.Clear();
+                for (int i = 0; i < owner.TriangleList.Count; i++) {
+                    normalListView.Items.Add(new ListViewItem(new string[4] { owner.TriangleList[i].NormalToString(),
                     owner.TriangleList[i][0].ToString(), owner.TriangleList[i][1].ToString(), owner.TriangleList[i][2].ToString() }));
-                normalListView.Items[i].Tag = i;
+                    normalListView.Items[i].Tag = i;
+                }
             }
 
             normalListView.SelectedIndexChanged -= NormalListView_SelectedIndexChanged;
@@ -130,7 +137,7 @@ namespace STLNormalSwitcher {
         /// <param name="sender">normalListView</param>
         /// <param name="e">Standard EventArgs</param>
         private void NormalListView_SelectedIndexChanged(object sender, EventArgs e) {
-            if ((Control.ModifierKeys != Keys.Control) && (Control.ModifierKeys != Keys.Shift) && (Control.MouseButtons != MouseButtons.Left)) {
+            if ((Control.ModifierKeys != Keys.Control) && (Control.ModifierKeys != Keys.Shift) && (Control.ModifierKeys != (Keys.Control | Keys.Shift)) && (Control.MouseButtons != MouseButtons.Left)) {
                 Event temp = new Event();
                 if (normalListView.SelectedItems.Count >= 1) {
                     for (int j = 0; j < normalListView.SelectedItems.Count; j++) {
@@ -141,6 +148,24 @@ namespace STLNormalSwitcher {
 
                 owner.RefreshVisualization();
             }
+        }
+
+        /// <summary>
+        /// Triggers an update of the currentSelection, when the ControlKey or the ShiftKey is released.
+        /// </summary>
+        /// <param name="sender">ControlKey or ShiftKey</param>
+        /// <param name="e">Standard KeyEventArgs</param>
+        private void NormalListView_KeyUp(object sender, KeyEventArgs e) {
+            NormalListView_SelectedIndexChanged(sender, e);
+        }
+
+        /// <summary>
+        /// Triggers an update of the currentSelection, when the left MouseButton is released.
+        /// </summary>
+        /// <param name="sender">Left MouseButton</param>
+        /// <param name="e">Standard MouseEventArgs.</param>
+        private void NormalListView_MouseUp(object sender, MouseEventArgs e) {
+            NormalListView_SelectedIndexChanged(sender, e);
         }
 
         /// <summary>
@@ -158,6 +183,10 @@ namespace STLNormalSwitcher {
             } else {
                 normalListView.Sorting = SortOrder.Ascending;
                 normalListView.ListViewItemSorter = new ListViewComparer(e.Column, SortOrder.Ascending);
+            }
+
+            if (normalListView.SelectedItems.Count > 0) {
+                normalListView.TopItem = normalListView.SelectedItems[0];
             }
         }
 

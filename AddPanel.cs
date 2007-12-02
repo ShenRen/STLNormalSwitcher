@@ -527,7 +527,7 @@ namespace STLNormalSwitcher {
             this.owner = owner;
         }
 
-        public override void UpdateTab() {
+        public override void UpdateTab(bool flag) {
             if ((owner.CurrentSelection.Count == 1) && (owner.CurrentSelection[0] != null)) {
                 owner.Visualization.Vertices = true;
                 owner.Visualization.Corners = true;
@@ -657,7 +657,8 @@ namespace STLNormalSwitcher {
                 owner.SetUndoButton(true);
                 owner.SetOrigin();
                 owner.Visualization.SetPickingColors();
-                UpdateTab();
+                UpdateTab(true);
+                owner.Flag = true;
             } catch (ArgumentException ex) {
                 MessageBox.Show(ex.Message, "", MessageBoxButtons.OK, MessageBoxIcon.Error);
             } catch {
@@ -685,7 +686,8 @@ namespace STLNormalSwitcher {
                 owner.SetUndoButton(true);
                 owner.SetOrigin();
                 owner.Visualization.SetPickingColors();
-                UpdateTab();
+                UpdateTab(true);
+                owner.Flag = true;
             } catch (ArgumentException ex) {
                 MessageBox.Show(ex.Message, "", MessageBoxButtons.OK, MessageBoxIcon.Error);
             } catch {
@@ -718,7 +720,8 @@ namespace STLNormalSwitcher {
             owner.SetUndoButton(true);
             owner.SetOrigin();
             owner.Visualization.SetPickingColors();
-            UpdateTab();
+            UpdateTab(true);
+            owner.Flag = true;
 
             owner.RefreshVisualization();
         }
@@ -810,6 +813,30 @@ namespace STLNormalSwitcher {
             }
         }
 
+        /// <summary>
+        /// Prevents the user from entering anything, but a floating point number in the TextBoxes for
+        /// editing or adding Triangles.
+        /// </summary>
+        /// <param name="sender">Any one of the TextBoxes for editing or adding Triangles</param>
+        /// <param name="e">Standard KeyPressEventArgs</param>
+        private void TriangleValue_KeyPress(object sender, KeyPressEventArgs e) {
+            if ((!char.IsNumber(e.KeyChar)) & (e.KeyChar != '.') & (e.KeyChar != '-') & (e.KeyChar != (char)Keys.Back)) {
+                e.Handled = true;
+            } else if (e.KeyChar == '.') {
+                if ((sender as TextBox).Text.Contains(".")) {
+                    e.Handled = true;
+                }
+            } else if (e.KeyChar == '-') {
+                if ((sender as TextBox).Text.StartsWith("-")) {
+                    e.Handled = true;
+                } else {
+                    int temp = (sender as TextBox).SelectionStart;
+                    (sender as TextBox).Text = "-" + (sender as TextBox).Text;
+                    (sender as TextBox).SelectionStart = temp + 1;
+                    e.Handled = true;
+                }
+            }
+        }
     }
 }
 
