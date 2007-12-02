@@ -54,10 +54,6 @@ namespace STLNormalSwitcher {
         private List<Event> history = new List<Event>();
         private Event currentSelection = new Event();
 
-        private List<Vertex> neighborsOfA = new List<Vertex>();
-        private List<Vertex> neighborsOfB = new List<Vertex>();
-        private List<Vertex> neighborsOfC = new List<Vertex>();
-
         #endregion
 
         #region Properties
@@ -72,7 +68,10 @@ namespace STLNormalSwitcher {
         /// Gets the positions of the owners of the Vertices selected on the "Add/Remove"-Tab
         /// and the positions of those Vertices in that Triangle.
         /// </value>
-        public float[] TriVertices { get { return triVertices; } }
+        public float[] TriVertices {
+            get { return triVertices; }
+            set { triVertices = value; }
+        }
 
         /// <value> Gets the positions of the corners of the selected triangle</value>
         public float[] Corners { get { return corners; } }
@@ -80,8 +79,25 @@ namespace STLNormalSwitcher {
         /// <value>Gets the origin, the z-value to rotate around</value>
         public float Origin { get { return (float)origin; } }
 
-        /// <value>Gets the currentSelection</value>
-        public Event CurrentSelection { get { return currentSelection; } }
+        /// <value>Gets the currentSelection or sets it</value>
+        public Event CurrentSelection {
+            get { return currentSelection; }
+            set { currentSelection = value; }
+        }
+
+        /// <value>Gets the visualization or sets it</value>
+        public NormalSwitcherControl Visualization {
+            get { return visualization; }
+            set { visualization = value; }
+        }
+
+        public List<Event> History {
+            get { return history; }
+            set {
+                history = value;
+                changed = true;
+            }
+        }
 
         #endregion
 
@@ -94,8 +110,6 @@ namespace STLNormalSwitcher {
             InitializeComponent();
             currentFile = "";
 
-            NormalSwitcherForm_SizeChanged(new object(), new EventArgs());
-
             BindEvents();
         }
 
@@ -105,8 +119,6 @@ namespace STLNormalSwitcher {
         /// <param name="file">Path of the file to be displayed</param>
         public NormalSwitcherForm(string file) {
             InitializeComponent();
-
-            NormalSwitcherForm_SizeChanged(new object(), new EventArgs());
 
             BindEvents();
 
@@ -122,7 +134,7 @@ namespace STLNormalSwitcher {
                 currentFile = file;
                 allButton.Enabled = true;
 
-                FillTab();
+                InitializePages();
             } catch (Exception exception) {
                 MessageBox.Show(exception.Message, "Error");
             } finally {
@@ -134,14 +146,18 @@ namespace STLNormalSwitcher {
 
         #region Methods
 
+        private void InitializePages() {
+            tabControl1.TabPages.Add(new Page(new ListPanel(this), "List of Triangles"));
+            tabControl1.TabPages.Add(new Page(new EditPanel(this), "Edit Selected Triangle"));
+            tabControl1.TabPages.Add(new Page(new AddPanel(this), "Add/Remove Triangle"));
+        }
+
         /// <summary>
         /// Subscribes to the events neccessary to enable or disable the buttons.
         /// </summary>
         private void BindEvents() {
             undoButton.EnabledChanged += new EventHandler(Undo_EnabledChanged);
             allButton.EnabledChanged += new EventHandler(FileCondition_EnabledChanged);
-            acceptButton.EnabledChanged += new EventHandler(AcceptButton_EnabledChanged);
-            hookButtonA.EnabledChanged += new EventHandler(HookButton_EnabledChanged);
         }
 
         /// <summary>
@@ -156,152 +172,20 @@ namespace STLNormalSwitcher {
         /// <summary>
         /// Sets the origin for rotation.
         /// </summary>
-        private void SetOrigin() {
+        public void SetOrigin() {
             originTrackBar.Minimum = -(int)(triangleList.Scale / 2);
             originTrackBar.Maximum = (int)(triangleList.Scale / 2);
             originTrackBar.Value = origin = 0;
             rotationOriginTextBox.Text = origin.ToString();
         }
 
-        /// <summary>
-        /// Fills the currently open Tab.
-        /// For tabPage1 the normalListView is filled.
-        /// For tabPage2 the TextBoxes are filled with the values of the selected Triangle
-        /// or emptied, if not exactly one Triangle is selected.
-        /// For tabPage3 the triangleComboBox and the vertices ComboBoxes are updated.
-        /// </summary>
-        private void FillTab() {
-            visualization.Fresh = false;
-
-            if (tabControl1.SelectedTab == tabPage1) {
-                visualization.Vertices = false;
-                visualization.Corners = false;
-                normalListView.BeginUpdate();
-                normalListView.Items.Clear();
-                normalListView.Sorting = SortOrder.None;
-                for (int i = 0; i < triangleList.Count; i++) {
-                    normalListView.Items.Add(new ListViewItem(new string[4] { triangleList[i].NormalToString(), triangleList[i][0].ToString(), triangleList[i][1].ToString(), triangleList[i][2].ToString() }));
-                    normalListView.Items[i].Tag = i;
-                }
-
-                normalListView.SelectedIndexChanged -= NormalListView_SelectedIndexChanged;
-                normalListView.SelectedIndices.Clear();
-                for (int j = 0; j < currentSelection.Count; j++) {
-                    if (currentSelection[j] != null) {
-                        normalListView.SelectedIndices.Add(currentSelection[j].Position);
-                    }
-                }
-                normalListView.SelectedIndexChanged += NormalListView_SelectedIndexChanged;
-                if (normalListView.SelectedItems.Count > 0) {
-                    normalListView.TopItem = normalListView.SelectedItems[0];
-                }
-
-                normalListView.EndUpdate();
-                visualization.SetColorArray();
-            } else if (tabControl1.SelectedTab == tabPage2) {
-                visualization.Vertices = false;
-                if ((currentSelection.Count == 1) && (currentSelection[0] != null)) {
-                    aX.Text = currentSelection[0][0][0].ToString();
-                    aY.Text = currentSelection[0][0][1].ToString();
-                    aZ.Text = currentSelection[0][0][2].ToString();
-                    bX.Text = currentSelection[0][1][0].ToString();
-                    bY.Text = currentSelection[0][1][1].ToString();
-                    bZ.Text = currentSelection[0][1][2].ToString();
-                    cX.Text = currentSelection[0][2][0].ToString();
-                    cY.Text = currentSelection[0][2][1].ToString();
-                    cZ.Text = currentSelection[0][2][2].ToString();
-                    normalX.Text = currentSelection[0][3][0].ToString();
-                    normalY.Text = currentSelection[0][3][1].ToString();
-                    normalZ.Text = currentSelection[0][3][2].ToString();
-                    acceptButton.Enabled = true;
-                    visualization.Corners = true;
-                    SetCorners();
-                } else {
-                    aX.Text = aY.Text = aZ.Text = bX.Text = bY.Text = bZ.Text = cX.Text = cY.Text = cZ.Text =
-                        normalX.Text = normalY.Text = normalZ.Text = nextNeighborsTextBox.Text = "";
-                    acceptButton.Enabled = hookButtonA.Enabled = false;
-                    aNeighbors.DataSource = bNeighbors.DataSource = cNeighbors.DataSource = null;
-                    visualization.Corners = false;
-                }
-            } else {
-                if ((currentSelection.Count == 1) && (currentSelection[0] != null)) {
-                    visualization.Vertices = true;
-                    visualization.Corners = true;
-                } else {
-                    visualization.Vertices = false;
-                    visualization.Corners = false;
-                }
-
-                triangleComboBox.SelectedIndexChanged -= TriangleComboBox_SelectedIndexChanged;
-                triangleComboBox.DataSource = null;
-                triangleComboBox.DataSource = triangleList;
-
-                verticesA.DataSource = verticesB.DataSource = verticesC.DataSource = null;
-                verticesA.DataSource = triangleList.Vertices;
-                verticesB.DataSource = triangleList.Vertices;
-                verticesC.DataSource = triangleList.Vertices;
-
-                triangleComboBox.DisplayMember = "AsString";
-                verticesA.DisplayMember = "AsString";
-                verticesB.DisplayMember = "AsString";
-                verticesC.DisplayMember = "AsString";
-
-                triangleComboBox.SelectedIndexChanged += TriangleComboBox_SelectedIndexChanged;
-                UpdateAddRemoveTab();
-            }
-
+        public void RefreshVisualization() {
+            visualization.SetColorArray();
             visualization.Fresh = true;
         }
 
-        /// <summary>
-        /// Updates the Boxes on the "Add/Remove"-Tab.
-        /// </summary>
-        private void UpdateAddRemoveTab() {
-            triangleComboBox.SelectedIndexChanged -= TriangleComboBox_SelectedIndexChanged;
-            Triangle temp;
-            if ((currentSelection.Count > 0) && (currentSelection[0] != null)) {
-                temp = currentSelection[0];
-                triangleComboBox.SelectedIndex = temp.Position;
-            } else {
-                temp = triangleComboBox.SelectedItem as Triangle;
-            }
-            currentSelection.Clear();
-            currentSelection.Add(temp);
-            if (currentSelection[0] != null) {
-                visualization.Vertices = true;
-                visualization.Corners = true;
-
-                verticesA.SelectedItem = currentSelection[0][0];
-                verticesB.SelectedItem = currentSelection[0][1];
-                verticesC.SelectedItem = currentSelection[0][2];
-                triVertices[0] = triangleList.VertexArray[(verticesA.SelectedItem as Vertex).Owner.Position * 9 +
-                    (verticesA.SelectedItem as Vertex).Owner.IndexOf(verticesA.SelectedItem as Vertex) * 3];
-                triVertices[1] = triangleList.VertexArray[(verticesA.SelectedItem as Vertex).Owner.Position * 9 +
-                    (verticesA.SelectedItem as Vertex).Owner.IndexOf(verticesA.SelectedItem as Vertex) * 3 + 1];
-                triVertices[2] = triangleList.VertexArray[(verticesA.SelectedItem as Vertex).Owner.Position * 9 +
-                    (verticesA.SelectedItem as Vertex).Owner.IndexOf(verticesA.SelectedItem as Vertex) * 3 + 2];
-                triVertices[3] = triangleList.VertexArray[(verticesB.SelectedItem as Vertex).Owner.Position * 9 +
-                    (verticesB.SelectedItem as Vertex).Owner.IndexOf(verticesB.SelectedItem as Vertex) * 3];
-                triVertices[4] = triangleList.VertexArray[(verticesB.SelectedItem as Vertex).Owner.Position * 9 +
-                    (verticesB.SelectedItem as Vertex).Owner.IndexOf(verticesB.SelectedItem as Vertex) * 3 + 1];
-                triVertices[5] = triangleList.VertexArray[(verticesB.SelectedItem as Vertex).Owner.Position * 9 +
-                    (verticesB.SelectedItem as Vertex).Owner.IndexOf(verticesB.SelectedItem as Vertex) * 3 + 2];
-                triVertices[6] = triangleList.VertexArray[(verticesC.SelectedItem as Vertex).Owner.Position * 9 +
-                    (verticesC.SelectedItem as Vertex).Owner.IndexOf(verticesC.SelectedItem as Vertex) * 3];
-                triVertices[7] = triangleList.VertexArray[(verticesC.SelectedItem as Vertex).Owner.Position * 9 +
-                    (verticesC.SelectedItem as Vertex).Owner.IndexOf(verticesC.SelectedItem as Vertex) * 3 + 1];
-                triVertices[8] = triangleList.VertexArray[(verticesC.SelectedItem as Vertex).Owner.Position * 9 +
-                    (verticesC.SelectedItem as Vertex).Owner.IndexOf(verticesC.SelectedItem as Vertex) * 3 + 2];
-                visualization.SetColorArray();
-            } else {
-                visualization.Vertices = false;
-                visualization.Corners = false;
-            }
-            triangleComboBox.SelectedIndexChanged += TriangleComboBox_SelectedIndexChanged;
-
-            SetCorners();
-            visualization.Fresh = true;
-        }
+        public void SetUndoButton(bool value) { undoButton.Enabled = value; }
+        
 
         /// <summary>
         /// Marks the triangles picked in the visualization.
@@ -313,76 +197,35 @@ namespace STLNormalSwitcher {
             visualization.Fresh = false;
             if (additive) {
                 if (selected.Count > 0) {
-                    for (int i = 0; i < normalListView.Items.Count; i++) {
-                        if ((int)normalListView.Items[i].Tag == selected[0]) {
-                            if (normalListView.SelectedIndices.Contains(normalListView.Items.IndexOf(normalListView.Items[i]))) {
-                                normalListView.SelectedIndices.Remove(normalListView.Items.IndexOf(normalListView.Items[i]));
+                    for (int i = 0; i < triangleList.Count; i++) {
+                        if (triangleList[i].Position == selected[0]) {
+                            if (currentSelection.Contains(triangleList[i])) {
+                                currentSelection.Remove(triangleList[i]);
                             } else {
-                                normalListView.SelectedIndices.Add(normalListView.Items.IndexOf(normalListView.Items[i]));
+                                currentSelection.Add(triangleList[i]);
                             }
                         }
                     }
                 }
             } else {
+                currentSelection.Clear();
                 if (selected.Count > 0) {
-                    normalListView.SelectedItems.Clear();
-                    for (int i = 0; i < normalListView.Items.Count; i++) {
-                        if ((int)normalListView.Items[i].Tag == selected[0]) {
-                            normalListView.SelectedIndices.Add(normalListView.Items.IndexOf(normalListView.Items[i]));
+                    for (int i = 0; i < triangleList.Count; i++) {
+                        if (triangleList[i].Position == selected[0]) {
+                            currentSelection.Add(triangleList[i]);
                         }
                     }
-                } else {
-                    normalListView.SelectedItems.Clear();
-                    currentSelection.Clear();
-                    visualization.SetColorArray();
                 }
             }
 
-            switch (tabControl1.SelectedIndex) {
-                case 0:
-                    if (normalListView.SelectedItems.Count > 0) {
-                        normalListView.TopItem = normalListView.SelectedItems[0];
-                    } else if(normalListView.Items.Count > 0) {
-                        normalListView.TopItem = normalListView.Items[0];
-                    }
-                    break;
-                case 1:
-                    normalListView.SelectedItems.Clear();
-                    FillTab();
-                    if (selected.Count > 0) {
-                        currentSelection.Add(triangleList[selected[0]]);
-                        SetCorners();
-                        visualization.SetColorArray();
-                        FillTab();
-                    }
-                    break;
-                case 2:
-                    if (selected.Count > 0) {
-                        normalListView.SelectedItems.Clear();
-                        if (triangleComboBox.SelectedIndex != selected[0]) {
-                            triangleComboBox.SelectedIndex = selected[0];
-                        } else {
-                            TriangleComboBox_SelectedIndexChanged(new object(), new EventArgs());
-                        }
-                        SetCorners();
-                    } else {
-                        if (triangleComboBox.SelectedIndex == -1) {
-                        } else if (triangleComboBox.SelectedIndex != 0) {
-                            triangleComboBox.SelectedIndex = 0;
-                        } else {
-                            TriangleComboBox_SelectedIndexChanged(new object(), new EventArgs());
-                        }
-                    }
-                    break;
-            }
+            RefreshVisualization();
 
-            visualization.Fresh = true;
         }
 
         /// <summary>
         /// Fills the corners array with the values of the vertices of the currently selected Triangle.
         /// </summary>
-        private void SetCorners() {
+        public void SetCorners() {
             if (currentSelection[0] != null) {
                 for (int i = 0; i < 9; i++) {
                     corners[i] = triangleList.VertexArray[currentSelection[0].Position * 9 + i];
@@ -390,51 +233,7 @@ namespace STLNormalSwitcher {
             }
         }
 
-        /// <summary>
-        /// Fills the Neighbors ComboBoxes with <paramref name="number"/> neighbors.
-        /// </summary>
-        /// <param name="number">Number of Neighbors</param>
-        private void CalculateNeighbors(int number) {
-            aNeighbors.DataSource = bNeighbors.DataSource = cNeighbors.DataSource = null;
-            neighborsOfA.Clear();
-            neighborsOfB.Clear();
-            neighborsOfC.Clear();
-
-            SortedList<string, Vertex> tempA = new SortedList<string, Vertex>();
-            SortedList<string, Vertex> tempB = new SortedList<string, Vertex>();
-            SortedList<string, Vertex> tempC = new SortedList<string, Vertex>();
-            double dist;
-
-            for (int i = 0; i < triangleList.Vertices.Length; i++) {
-                dist = currentSelection[0][0].DistanceFrom(triangleList.Vertices[i]);
-                tempA.Add(SwitchersHelpers.GenerateKey(dist, i, triangleList.Vertices.Length), triangleList.Vertices[i]);
-                dist = currentSelection[0][1].DistanceFrom(triangleList.Vertices[i]);
-                tempB.Add(SwitchersHelpers.GenerateKey(dist, i, triangleList.Vertices.Length), triangleList.Vertices[i]);
-                dist = currentSelection[0][2].DistanceFrom(triangleList.Vertices[i]);
-                tempC.Add(SwitchersHelpers.GenerateKey(dist, i, triangleList.Vertices.Length), triangleList.Vertices[i]);
-            }
-
-            for (int k = 0; k < number; k++) {
-                neighborsOfA.Add(tempA[tempA.Keys[k]]);
-                neighborsOfB.Add(tempB[tempB.Keys[k]]);
-                neighborsOfC.Add(tempC[tempC.Keys[k]]);
-            }
-
-            aNeighbors.DataSource = neighborsOfA;
-            aNeighbors.DisplayMember = "AsString";
-            aNeighbors.SelectedIndex = 0;
-            bNeighbors.DataSource = neighborsOfB;
-            bNeighbors.DisplayMember = "AsString";
-            bNeighbors.SelectedIndex = 0;
-            cNeighbors.DataSource = neighborsOfC;
-            cNeighbors.DisplayMember = "AsString";
-            cNeighbors.SelectedIndex = 0;
-            visualization.Vertices = true;
-            hookButtonA.Enabled = true;
-
-            visualization.Fresh = true;
-        }
-
+  
         #endregion
 
         #region Event Handling Stuff
@@ -471,7 +270,7 @@ namespace STLNormalSwitcher {
                         currentFile = ofd.FileName;
                         allButton.Enabled = true;
 
-                        FillTab();
+                        InitializePages();
                     } catch (Exception exception) {
                         MessageBox.Show(exception.Message, "Error");
                     } finally {
@@ -555,10 +354,7 @@ namespace STLNormalSwitcher {
                 triVertices = new float[9];
                 corners = new float[9];
 
-                tabControl1.SelectedIndex = 0;
-                normalListView.Items.Clear();
-                normalListView.Items.Add(new ListViewItem(new string[4] { "Select a File!", "Select a File!", "Select a File!", "Select a File!" }));
-                normalListView.Items[0].Tag = -2;
+                tabControl1.TabPages.Clear();
             }
         }
 
@@ -604,7 +400,7 @@ namespace STLNormalSwitcher {
             visualization.SetColorArray();
             visualization.SetPickingColors();
             SetOrigin();
-            FillTab();
+            (tabControl1.SelectedTab as Page).UpdateTab();
         }
 
         /// <summary>
@@ -623,7 +419,7 @@ namespace STLNormalSwitcher {
             visualization.SetColorArray();
             visualization.SetPickingColors();
             SetOrigin();
-            FillTab();
+            (tabControl1.SelectedTab as Page).UpdateTab();
         }
 
         /// <summary>
@@ -649,7 +445,7 @@ namespace STLNormalSwitcher {
 
             undoButton.Enabled = true;
             changed = true;
-            FillTab();
+            (tabControl1.SelectedTab as Page).UpdateTab();
         }
 
         /// <summary>
@@ -669,7 +465,7 @@ namespace STLNormalSwitcher {
 
                 undoButton.Enabled = true;
                 changed = true;
-                FillTab();
+                (tabControl1.SelectedTab as Page).UpdateTab();
             }
         }
 
@@ -720,534 +516,6 @@ namespace STLNormalSwitcher {
         #endregion
 
         #endregion
-
-        #region normalListView
-
-        /// <summary>
-        /// Updates the currentSelection and marks the selected triangles in the NormalSwitcherControl.
-        /// </summary>
-        /// <param name="sender">normalListView</param>
-        /// <param name="e">Standard EventArgs</param>
-        private void NormalListView_SelectedIndexChanged(object sender, EventArgs e) {
-            currentSelection.Clear();
-            if (normalListView.SelectedItems.Count >= 1) {
-                for (int j = 0; j < normalListView.SelectedItems.Count; j++) {
-                    currentSelection.Add(triangleList[(int)normalListView.SelectedItems[j].Tag]);
-                }
-            }
-            visualization.SetColorArray();
-            visualization.Refresh();
-        }
-
-        /// <summary>
-        /// Unbinds the NormalListView_SelectedIndexChanged EventHandler, so that the
-        /// visualization is not constantly drawn during selection.
-        /// </summary>
-        /// <param name="sender">Mouse</param>
-        /// <param name="e">Standard MouseEventArgs</param>
-        private void NormalListView_MouseDown(object sender, MouseEventArgs e) {
-            normalListView.SelectedIndexChanged -= NormalListView_SelectedIndexChanged;
-        }
-
-        /// <summary>
-        /// Binds the NormalListView_SelectedIndexChanged EventHandler, so that the
-        /// visualization is drawn again, when selection is finished.
-        /// </summary>
-        /// <param name="sender">Mouse</param>
-        /// <param name="e">Standard MouseEventArgs</param>
-        private void NormalListView_MouseUp(object sender, MouseEventArgs e) {
-            normalListView.SelectedIndexChanged += NormalListView_SelectedIndexChanged;
-            NormalListView_SelectedIndexChanged(sender, e);
-        }
-
-        /// <summary>
-        /// Unbinds the NormalListView_SelectedIndexChanged EventHandler, so that the
-        /// visualization is not constantly drawn during selection.
-        /// </summary>
-        /// <param name="sender">Control key or shift key</param>
-        /// <param name="e">Standard KeyEventArgs</param>
-        private void NormalListView_KeyDown(object sender, KeyEventArgs e) {
-            if ((e.KeyCode == Keys.Control) || (e.KeyCode == Keys.Shift)) {
-                normalListView.SelectedIndexChanged -= NormalListView_SelectedIndexChanged;
-            }
-        }
-
-        /// <summary>
-        /// Binds the NormalListView_SelectedIndexChanged EventHandler, so that the
-        /// visualization is drawn again, when selection is finished.
-        /// </summary>
-        /// <param name="sender">Control key or shift key</param>
-        /// <param name="e">Standard KeyEventArgs</param>
-        private void NormalListView_KeyUp(object sender, KeyEventArgs e) {
-            if ((e.KeyCode == Keys.Control) || (e.KeyCode == Keys.Shift)) {
-                normalListView.SelectedIndexChanged += NormalListView_SelectedIndexChanged;
-                NormalListView_SelectedIndexChanged(sender, e);
-            }
-        }
-
-
-        /// <summary>
-        /// Sorts the normalListView by the values of the clicked column.
-        /// </summary>
-        /// <param name="sender">normalListView ColumnHeader</param>
-        /// <param name="e">Standard ColumnClickEventArgs</param>
-        private void NormalListView_ColumnClick(object sender, ColumnClickEventArgs e) {
-            if (normalListView.Sorting == SortOrder.None) {
-                normalListView.Sorting = SortOrder.Ascending;
-                normalListView.ListViewItemSorter = new ListViewComparer(e.Column, SortOrder.Ascending);
-            } else if (normalListView.Sorting == SortOrder.Ascending) {
-                normalListView.Sorting = SortOrder.Descending;
-                normalListView.ListViewItemSorter = new ListViewComparer(e.Column, SortOrder.Descending);
-            } else {
-                normalListView.Sorting = SortOrder.Ascending;
-                normalListView.ListViewItemSorter = new ListViewComparer(e.Column, SortOrder.Ascending);
-            }
-        }
-
-        /// <summary>
-        /// Stretches the second column of normalListView to fit the NormalSwitcherForm.
-        /// </summary>
-        /// <param name="sender">this NormalSwitcherForm</param>
-        /// <param name="e">Standard EventArgs</param>
-        private void NormalSwitcherForm_SizeChanged(object sender, EventArgs e) {
-            normalListView.Columns[0].Width = normalListView.Columns[1].Width =
-                normalListView.Columns[2].Width = normalListView.Columns[3].Width =
-                (this.Width - 40) / 4;
-        }
-
-        #endregion
-
-        #region Edit Triangle
-
-        /// <summary>
-        /// Initiates the filling of the Neighbors ComboBoxes.
-        /// </summary>
-        /// <param name="sender">nextNeighborsButton</param>
-        /// <param name="e">Standard EventArgs</param>
-        private void NextNeighborsButton_Click(object sender, EventArgs e) {
-            try {
-                int number = Convert.ToInt32(nextNeighborsTextBox.Text);
-                if (number >= 1) {
-                    if (number >= triangleList.Vertices.Length) {
-                        number = triangleList.Vertices.Length;
-                        nextNeighborsTextBox.Text = number.ToString();
-                    }
-                    CalculateNeighbors(number);
-                } else { MessageBox.Show("You need to enter an Integer greater than 0!"); }
-            } catch {
-                MessageBox.Show("You need to enter an Integer greater than 0!");
-            }
-        }
-
-        /// <summary>
-        /// Fills the Neighbors ComboBoxes, when the Return-Key is pressed in the nextNeighborsTextBox.
-        /// Prevents the user from entering anything, but numbers.
-        /// </summary>
-        /// <param name="sender">nextNeighborsTextBox</param>
-        /// <param name="e">Standard KeyPressEventArgs</param>
-        private void NextNeighborsTextBox_KeyPress(object sender, KeyPressEventArgs e) {
-            if (e.KeyChar == (char)Keys.Return) {
-                NextNeighborsButton_Click(sender, e);
-            }
-            if ((!char.IsNumber(e.KeyChar)) & (e.KeyChar != (char)Keys.Back)) {
-                e.Handled = true;
-            }
-        }
-
-        /// <summary>
-        /// Adjusts the values of the A-Vertex of the Triangle on the
-        /// "Edit Selected Triangle"-Tab to the Vertex in the aNeighbors ComboBox.
-        /// </summary>
-        /// <param name="sender">hookButtonA</param>
-        /// <param name="e">Standard EventArgs</param>
-        private void HookButtonA_Click(object sender, EventArgs e) {
-            aX.Text = (aNeighbors.SelectedItem as Vertex)[0].ToString();
-            aY.Text = (aNeighbors.SelectedItem as Vertex)[1].ToString();
-            aZ.Text = (aNeighbors.SelectedItem as Vertex)[2].ToString();
-        }
-
-        /// <summary>
-        /// Adjusts the values of the B-Vertex of the Triangle on the
-        /// "Edit Selected Triangle"-Tab to the Vertex in the bNeighbors ComboBox.
-        /// </summary>
-        /// <param name="sender">hookButtonB</param>
-        /// <param name="e">Standard EventArgs</param>
-        private void HookButtonB_Click(object sender, EventArgs e) {
-            bX.Text = (bNeighbors.SelectedItem as Vertex)[0].ToString();
-            bY.Text = (bNeighbors.SelectedItem as Vertex)[1].ToString();
-            bZ.Text = (bNeighbors.SelectedItem as Vertex)[2].ToString();
-        }
-
-        /// <summary>
-        /// Adjusts the values of the C-Vertex of the Triangle on the
-        /// "Edit Selected Triangle"-Tab to the Vertex in the cNeighbors ComboBox.
-        /// </summary>
-        /// <param name="sender">hookButtonC</param>
-        /// <param name="e">Standard EventArgs</param>
-        private void HookButtonC_Click(object sender, EventArgs e) {
-            cX.Text = (cNeighbors.SelectedItem as Vertex)[0].ToString();
-            cY.Text = (cNeighbors.SelectedItem as Vertex)[1].ToString();
-            cZ.Text = (cNeighbors.SelectedItem as Vertex)[2].ToString();
-        }
-
-        /// <summary>
-        /// Resets the boxes on the "Edit Selected Triangle"-Tab.
-        /// </summary>
-        /// <param name="sender">resetTriangleBoxesButton</param>
-        /// <param name="e">Standard EventArgs</param>
-        private void ResetTriangleBoxesButton_Click(object sender, EventArgs e) {
-            FillTab();
-        }
-
-        /// <summary>
-        /// Makes the changes to the selected Triangle.
-        /// </summary>
-        /// <param name="sender">acceptTriangleButton</param>
-        /// <param name="e">Standard EventArgs</param>
-        private void AcceptTriangleButton_Click(object sender, EventArgs e) {
-            try {
-                Vertex a = new Vertex((float)Convert.ToDouble(aX.Text), (float)Convert.ToDouble(aY.Text), (float)Convert.ToDouble(aZ.Text));
-                Vertex b = new Vertex((float)Convert.ToDouble(bX.Text), (float)Convert.ToDouble(bY.Text), (float)Convert.ToDouble(bZ.Text));
-                Vertex c = new Vertex((float)Convert.ToDouble(cX.Text), (float)Convert.ToDouble(cY.Text), (float)Convert.ToDouble(cZ.Text));
-                Triangle tri = new Triangle(a, b, c);
-                tri.Position = currentSelection[0].Position;
-                Event temp = new Event(currentSelection[0], Event.EventType.Edit);
-                history.Add(temp);
-                triangleList.EditTriangle(tri);
-
-                currentSelection.Clear();
-                currentSelection.Add(tri);
-                undoButton.Enabled = true;
-                changed = true;
-                SetOrigin();
-                FillTab();
-            } catch (ArgumentException ex) {
-                MessageBox.Show(ex.Message, "", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            } catch {
-                MessageBox.Show("Make sure all values are floating point numbers!", "", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
-
-        /// <summary>
-        /// Makes the changes to the selected Triangle and the normal vector.
-        /// </summary>
-        /// <param name="sender">acceptButton</param>
-        /// <param name="e">Standard EventArgs</param>
-        private void AcceptButton_Click(object sender, EventArgs e) {
-            try {
-                Vertex a = new Vertex((float)Convert.ToDouble(aX.Text), (float)Convert.ToDouble(aY.Text), (float)Convert.ToDouble(aZ.Text));
-                Vertex b = new Vertex((float)Convert.ToDouble(bX.Text), (float)Convert.ToDouble(bY.Text), (float)Convert.ToDouble(bZ.Text));
-                Vertex c = new Vertex((float)Convert.ToDouble(cX.Text), (float)Convert.ToDouble(cY.Text), (float)Convert.ToDouble(cZ.Text));
-                Vertex n = new Vertex((float)Convert.ToDouble(normalX.Text), (float)Convert.ToDouble(normalY.Text), (float)Convert.ToDouble(normalZ.Text));
-                Triangle tri = new Triangle(a, b, c, n);
-                tri.Position = currentSelection[0].Position;
-                Event temp = new Event(currentSelection[0], Event.EventType.Edit);
-                history.Add(temp);
-                triangleList.EditTriangle(tri);
-
-                currentSelection.Clear();
-                currentSelection.Add(tri);
-                undoButton.Enabled = true;
-                changed = true;
-                SetOrigin();
-                FillTab();
-            } catch (ArgumentException ex) {
-                MessageBox.Show(ex.Message, "", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            } catch {
-                MessageBox.Show("Make sure all values are floating point numbers!", "", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
-
-        /// <summary>
-        /// Enables or disables the Hook-Buttons simultaneously.
-        /// </summary>
-        /// <param name="sender">hookButtonA</param>
-        /// <param name="e">Standard EventArgs</param>
-        private void HookButton_EnabledChanged(object sender, EventArgs e) {
-            hookButtonC.Enabled = hookButtonB.Enabled = hookButtonA.Enabled;
-        }
-
-        /// <summary>
-        /// Enables the acceptButton, the acceptTriangleButton, the resetTriangleBoxesButton
-        /// and the nextNeighborsButton simultaneously.
-        /// </summary>
-        /// <param name="sender">acceptButton</param>
-        /// <param name="e">Standard EventArgs</param>
-        private void AcceptButton_EnabledChanged(object sender, EventArgs e) {
-            acceptTriangleButton.Enabled = nextNeighborsButton.Enabled = resetTriangleBoxesButton.Enabled =
-                nextNeighborsTextBox.Enabled = aX.Enabled = aY.Enabled = aZ.Enabled = bX.Enabled = bY.Enabled =
-                bZ.Enabled = cX.Enabled = cY.Enabled = cZ.Enabled = normalX.Enabled = normalY.Enabled =
-                normalZ.Enabled = aNeighbors.Enabled = bNeighbors.Enabled = cNeighbors.Enabled = acceptButton.Enabled;
-        }
-
-        /// <summary>
-        /// Marks the neighbor Triangles in the visualization.
-        /// </summary>
-        /// <param name="sender">aNeighbors or bNeighbors or cNeighbors ComboBox</param>
-        /// <param name="e">Standard EventArgs</param>
-        private void Neighbors_SelectedIndexChanged(object sender, EventArgs e) {
-            if ((aNeighbors.SelectedItem != null) && (bNeighbors.SelectedItem != null) && (cNeighbors.SelectedItem != null)) {
-                triVertices[0] = triangleList.VertexArray[triangleList.IndexOf((aNeighbors.SelectedItem as Vertex).Owner) * 9 +
-                    (aNeighbors.SelectedItem as Vertex).Owner.IndexOf(aNeighbors.SelectedItem as Vertex) * 3];
-                triVertices[1] = triangleList.VertexArray[triangleList.IndexOf((aNeighbors.SelectedItem as Vertex).Owner) * 9 +
-                    (aNeighbors.SelectedItem as Vertex).Owner.IndexOf(aNeighbors.SelectedItem as Vertex) * 3 + 1];
-                triVertices[2] = triangleList.VertexArray[triangleList.IndexOf((aNeighbors.SelectedItem as Vertex).Owner) * 9 +
-                    (aNeighbors.SelectedItem as Vertex).Owner.IndexOf(aNeighbors.SelectedItem as Vertex) * 3 + 2];
-                triVertices[3] = triangleList.VertexArray[triangleList.IndexOf((bNeighbors.SelectedItem as Vertex).Owner) * 9 +
-                    (bNeighbors.SelectedItem as Vertex).Owner.IndexOf(bNeighbors.SelectedItem as Vertex) * 3];
-                triVertices[4] = triangleList.VertexArray[triangleList.IndexOf((bNeighbors.SelectedItem as Vertex).Owner) * 9 +
-                    (bNeighbors.SelectedItem as Vertex).Owner.IndexOf(bNeighbors.SelectedItem as Vertex) * 3 + 1];
-                triVertices[5] = triangleList.VertexArray[triangleList.IndexOf((bNeighbors.SelectedItem as Vertex).Owner) * 9 +
-                    (bNeighbors.SelectedItem as Vertex).Owner.IndexOf(bNeighbors.SelectedItem as Vertex) * 3 + 2];
-                triVertices[6] = triangleList.VertexArray[triangleList.IndexOf((cNeighbors.SelectedItem as Vertex).Owner) * 9 +
-                    (cNeighbors.SelectedItem as Vertex).Owner.IndexOf(cNeighbors.SelectedItem as Vertex) * 3];
-                triVertices[7] = triangleList.VertexArray[triangleList.IndexOf((cNeighbors.SelectedItem as Vertex).Owner) * 9 +
-                    (cNeighbors.SelectedItem as Vertex).Owner.IndexOf(cNeighbors.SelectedItem as Vertex) * 3 + 1];
-                triVertices[8] = triangleList.VertexArray[triangleList.IndexOf((cNeighbors.SelectedItem as Vertex).Owner) * 9 +
-                    (cNeighbors.SelectedItem as Vertex).Owner.IndexOf(cNeighbors.SelectedItem as Vertex) * 3 + 2];
-                visualization.SetColorArray();
-                visualization.Refresh();
-            }
-        }
-
-        #endregion
-
-        #region Add/Remove Triangle
-
-        /// <summary>
-        /// Copies the values of the selected Triangle to the TextBoxes
-        /// on the "Add/Remove Triangle"-Tab.
-        /// </summary>
-        /// <param name="sender">triangleCopyButton</param>
-        /// <param name="e">Standard EventArgs</param>
-        private void TriangleCopyButton_Click(object sender, EventArgs e) {
-            aX2.Text = (triangleComboBox.SelectedItem as Triangle)[0][0].ToString();
-            aY2.Text = (triangleComboBox.SelectedItem as Triangle)[0][1].ToString();
-            aZ2.Text = (triangleComboBox.SelectedItem as Triangle)[0][2].ToString();
-            bX2.Text = (triangleComboBox.SelectedItem as Triangle)[1][0].ToString();
-            bY2.Text = (triangleComboBox.SelectedItem as Triangle)[1][1].ToString();
-            bZ2.Text = (triangleComboBox.SelectedItem as Triangle)[1][2].ToString();
-            cX2.Text = (triangleComboBox.SelectedItem as Triangle)[2][0].ToString();
-            cY2.Text = (triangleComboBox.SelectedItem as Triangle)[2][1].ToString();
-            cZ2.Text = (triangleComboBox.SelectedItem as Triangle)[2][2].ToString();
-            normalX2.Text = (triangleComboBox.SelectedItem as Triangle)[3][0].ToString();
-            normalY2.Text = (triangleComboBox.SelectedItem as Triangle)[3][1].ToString();
-            normalZ2.Text = (triangleComboBox.SelectedItem as Triangle)[3][2].ToString();
-        }
-
-        /// <summary>
-        /// Marks the Triangle selected in the triangleComboBox in the visualization
-        /// and selects the corresponding Vertices in the vertices-ComboBoxes.
-        /// </summary>
-        /// <param name="sender">triangleComboBox</param>
-        /// <param name="e">Standard EventArgs</param>
-        private void TriangleComboBox_SelectedIndexChanged(object sender, EventArgs e) {
-            currentSelection.Clear();
-            currentSelection.Add(triangleComboBox.SelectedItem as Triangle);
-            UpdateAddRemoveTab();
-        }
-
-        /// <summary>
-        /// Add the new Triangle to the triangleList, with the normal vector calculated by the CalculateNormal() method.
-        /// </summary>
-        /// <param name="sender">addTriangleButton</param>
-        /// <param name="e">Standard EventArgs</param>
-        private void AddTriangleButton_Click(object sender, EventArgs e) {
-            try {
-                Vertex a = new Vertex((float)Convert.ToDouble(aX2.Text), (float)Convert.ToDouble(aY2.Text), (float)Convert.ToDouble(aZ2.Text));
-                Vertex b = new Vertex((float)Convert.ToDouble(bX2.Text), (float)Convert.ToDouble(bY2.Text), (float)Convert.ToDouble(bZ2.Text));
-                Vertex c = new Vertex((float)Convert.ToDouble(cX2.Text), (float)Convert.ToDouble(cY2.Text), (float)Convert.ToDouble(cZ2.Text));
-                Triangle tri = new Triangle(a, b, c);
-                Event temp = new Event(currentSelection[0], Event.EventType.Add);
-                history.Add(temp);
-                triangleList.AddTriangle(tri);
-                triangleList.Finish();
-
-                undoButton.Enabled = true;
-                changed = true;
-                SetOrigin();
-                visualization.SetPickingColors();
-                FillTab();
-            } catch (ArgumentException ex) {
-                MessageBox.Show(ex.Message, "", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            } catch {
-                MessageBox.Show("Make sure all values are floating point numbers!", "", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
-
-        /// <summary>
-        /// Add the new Triangle to the triangleList, with the given normal vector.
-        /// </summary>
-        /// <param name="sender">addButton</param>
-        /// <param name="e">Standard EventArgs</param>
-        private void AddButton_Click(object sender, EventArgs e) {
-            try {
-                Vertex a = new Vertex((float)Convert.ToDouble(aX2.Text), (float)Convert.ToDouble(aY2.Text), (float)Convert.ToDouble(aZ2.Text));
-                Vertex b = new Vertex((float)Convert.ToDouble(bX2.Text), (float)Convert.ToDouble(bY2.Text), (float)Convert.ToDouble(bZ2.Text));
-                Vertex c = new Vertex((float)Convert.ToDouble(cX2.Text), (float)Convert.ToDouble(cY2.Text), (float)Convert.ToDouble(cZ2.Text));
-                Vertex n = new Vertex((float)Convert.ToDouble(normalX2.Text), (float)Convert.ToDouble(normalY2.Text), (float)Convert.ToDouble(normalZ2.Text));
-                Triangle tri = new Triangle(a, b, c, n);
-                Event temp = new Event(currentSelection[0], Event.EventType.Add);
-                history.Add(temp);
-                triangleList.AddTriangle(tri);
-                triangleList.Finish();
-
-                undoButton.Enabled = true;
-                changed = true;
-                SetOrigin();
-                visualization.SetPickingColors();
-                FillTab();
-            } catch (ArgumentException ex) {
-                MessageBox.Show(ex.Message, "", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            } catch {
-                MessageBox.Show("Make sure all values are floating point numbers!", "", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
-
-        /// <summary>
-        /// Removes the selected Triangle from the triangleList.
-        /// </summary>
-        /// <param name="sender">removeButton</param>
-        /// <param name="e">Standard EventArgs</param>
-        private void RemoveButton_Click(object sender, EventArgs e) {
-            visualization.Fresh = false;
-            Event temp = new Event((triangleComboBox.SelectedItem as Triangle), Event.EventType.Remove);
-            history.Add(temp);
-            if (temp[0].Position > 0) {
-                triangleComboBox.SelectedIndex = temp[0].Position - 1;
-            } else if (temp[0].Position == 0) {
-                triangleComboBox.SelectedIndex = 0;
-            } else {
-                visualization.Vertices = false;
-                visualization.Corners = false;
-            }
-            triangleList.RemoveAt(temp[0].Position);
-            triangleList.Finish();
-            triangleList.SetPositions();
-            currentSelection.Clear();
-
-            undoButton.Enabled = true;
-            changed = true;
-            SetOrigin();
-            FillTab();
-            visualization.SetPickingColors();
-
-            visualization.Fresh = true;
-        }
-
-        /// <summary>
-        /// Adjusts the values of the A-Vertex of the Triangle on the
-        /// "Add/Remove Triangle"-Tab to the Vertex in the verticesA ComboBox.
-        /// </summary>
-        /// <param name="sender">aVertexHook</param>
-        /// <param name="e">Standard EventArgs</param>
-        private void AVertexHook_Click(object sender, EventArgs e) {
-            aX2.Text = (verticesA.SelectedItem as Vertex)[0].ToString();
-            aY2.Text = (verticesA.SelectedItem as Vertex)[1].ToString();
-            aZ2.Text = (verticesA.SelectedItem as Vertex)[2].ToString();
-        }
-
-        /// <summary>
-        /// Adjusts the values of the B-Vertex of the Triangle on the
-        /// "Add/Remove Triangle"-Tab to the Vertex in the verticesB ComboBox.
-        /// </summary>
-        /// <param name="sender">bVertexHook</param>
-        /// <param name="e">Standard EventArgs</param>
-        private void BVertexHook_Click(object sender, EventArgs e) {
-            bX2.Text = (verticesB.SelectedItem as Vertex)[0].ToString();
-            bY2.Text = (verticesB.SelectedItem as Vertex)[1].ToString();
-            bZ2.Text = (verticesB.SelectedItem as Vertex)[2].ToString();
-        }
-
-        /// <summary>
-        /// Adjusts the values of the C-Vertex of the Triangle on the
-        /// "Add/Remove Triangle"-Tab to the Vertex in the verticesC ComboBox.
-        /// </summary>
-        /// <param name="sender">cVertexHook</param>
-        /// <param name="e">Standard EventArgs</param>
-        private void CVertexHook_Click(object sender, EventArgs e) {
-            cX2.Text = (verticesC.SelectedItem as Vertex)[0].ToString();
-            cY2.Text = (verticesC.SelectedItem as Vertex)[1].ToString();
-            cZ2.Text = (verticesC.SelectedItem as Vertex)[2].ToString();
-        }
-
-        /// <summary>
-        /// Fills the triVertices array with the values of the Vertex selected in the verticesA ComboBox.
-        /// </summary>
-        /// <param name="sender">verticesA</param>
-        /// <param name="e">Standard EventArgs</param>
-        private void VerticesA_SelectedIndexChanged(object sender, EventArgs e) {
-            if (verticesA.SelectedItem != null) {
-                triVertices[0] = triangleList.VertexArray[(verticesA.SelectedItem as Vertex).Owner.Position * 9 +
-                    (verticesA.SelectedItem as Vertex).Owner.IndexOf(verticesA.SelectedItem as Vertex) * 3];
-                triVertices[1] = triangleList.VertexArray[(verticesA.SelectedItem as Vertex).Owner.Position * 9 +
-                    (verticesA.SelectedItem as Vertex).Owner.IndexOf(verticesA.SelectedItem as Vertex) * 3 + 1];
-                triVertices[2] = triangleList.VertexArray[(verticesA.SelectedItem as Vertex).Owner.Position * 9 +
-                    (verticesA.SelectedItem as Vertex).Owner.IndexOf(verticesA.SelectedItem as Vertex) * 3 + 2];
-                visualization.Refresh();
-            }
-        }
-
-        /// <summary>
-        /// Fills the triVertices array with the values of the Vertex selected in the verticesB ComboBox.
-        /// </summary>
-        /// <param name="sender">verticesB</param>
-        /// <param name="e">Standard EventArgs</param>
-        private void VerticesB_SelectedIndexChanged(object sender, EventArgs e) {
-            if (verticesB.SelectedItem != null) {
-                triVertices[3] = triangleList.VertexArray[(verticesB.SelectedItem as Vertex).Owner.Position * 9 +
-                    (verticesB.SelectedItem as Vertex).Owner.IndexOf(verticesB.SelectedItem as Vertex) * 3];
-                triVertices[4] = triangleList.VertexArray[(verticesB.SelectedItem as Vertex).Owner.Position * 9 +
-                    (verticesB.SelectedItem as Vertex).Owner.IndexOf(verticesB.SelectedItem as Vertex) * 3 + 1];
-                triVertices[5] = triangleList.VertexArray[(verticesB.SelectedItem as Vertex).Owner.Position * 9 +
-                    (verticesB.SelectedItem as Vertex).Owner.IndexOf(verticesB.SelectedItem as Vertex) * 3 + 2];
-                visualization.Refresh();
-            }
-        }
-
-        /// <summary>
-        /// Fills the triVertices array with the values of the Vertex selected in the verticesC ComboBox.
-        /// </summary>
-        /// <param name="sender">verticesC</param>
-        /// <param name="e">Standard EventArgs</param>
-        private void VerticesC_SelectedIndexChanged(object sender, EventArgs e) {
-            if (verticesC.SelectedItem != null) {
-                triVertices[6] = triangleList.VertexArray[(verticesC.SelectedItem as Vertex).Owner.Position * 9 +
-                    (verticesC.SelectedItem as Vertex).Owner.IndexOf(verticesC.SelectedItem as Vertex) * 3];
-                triVertices[7] = triangleList.VertexArray[(verticesC.SelectedItem as Vertex).Owner.Position * 9 +
-                    (verticesC.SelectedItem as Vertex).Owner.IndexOf(verticesC.SelectedItem as Vertex) * 3 + 1];
-                triVertices[8] = triangleList.VertexArray[(verticesC.SelectedItem as Vertex).Owner.Position * 9 +
-                    (verticesC.SelectedItem as Vertex).Owner.IndexOf(verticesC.SelectedItem as Vertex) * 3 + 2];
-                visualization.Refresh();
-            }
-        }
-
-        #endregion
-
-        /// <summary>
-        /// Prevents the user from entering anything, but a floating point number in the TextBoxes for
-        /// editing or adding Triangles.
-        /// </summary>
-        /// <param name="sender">Any one of the TextBoxes for editing or adding Triangles</param>
-        /// <param name="e">Standard KeyPressEventArgs</param>
-        private void TriangleValue_KeyPress(object sender, KeyPressEventArgs e) {
-            if ((!char.IsNumber(e.KeyChar)) & (e.KeyChar != '.') & (e.KeyChar != '-') & (e.KeyChar != (char)Keys.Back)) {
-                e.Handled = true;
-            } else if (e.KeyChar == '.') {
-                if ((sender as TextBox).Text.Contains(".")) {
-                    e.Handled = true;
-                }
-            } else if (e.KeyChar == '-') {
-                if ((sender as TextBox).Text.StartsWith("-")) {
-                    e.Handled = true;
-                } else {
-                    int temp = (sender as TextBox).SelectionStart;
-                    (sender as TextBox).Text = "-" + (sender as TextBox).Text;
-                    (sender as TextBox).SelectionStart = temp + 1;
-                    e.Handled = true;
-                }
-            }
-        }
 
         /// <summary>
         /// Updates the rotationOriginTextBox and the origin,
@@ -1308,14 +576,8 @@ namespace STLNormalSwitcher {
         /// <param name="e">Standard TabControlCancelEventArgs</param>
         private void TabControl1_Selecting(object sender, TabControlCancelEventArgs e) {
             if (currentFile != "") {
-                visualization.Fresh = false;
-                FillTab();
-                if (tabControl1.SelectedTab == tabPage2) {
-                    // Neighbor colors
-                    Neighbors_SelectedIndexChanged(sender, e);
-                }
-                visualization.Fresh = true;
-            } else { tabControl1.SelectedTab = tabPage1; }
+                (e.TabPage as Page).UpdateTab();
+            }
         }
 
         #endregion
