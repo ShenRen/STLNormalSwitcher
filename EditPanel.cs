@@ -1,3 +1,26 @@
+// Part of STLNormalSwitcher: A program to switch normal vectors in STL-files
+//
+// Copyright (C) 2007  PG500, ISF, University of Dortmund
+//      PG500 are: Christoph Begau, Christoph Heuel, Raffael Joliet, Jan Kolanski,
+//                 Mandy Kröller, Christian Moritz, Daniel Niggemann, Mathias Stöber,
+//                 Timo Stönner, Jan Varwig, Dafan Zhai
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License along
+// with this program. If not, see <http://www.gnu.org/licenses/>.
+//
+// For more information and contact details look at STLNormalSwitchers website:
+//      http://normalswitcher.sourceforge.net/
+
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -559,11 +582,11 @@ namespace STLNormalSwitcher {
                 owner.SetCorners();
             } else {
                 aX.Text = aY.Text = aZ.Text = bX.Text = bY.Text = bZ.Text = cX.Text = cY.Text = cZ.Text =
-                    normalX.Text = normalY.Text = normalZ.Text = nextNeighborsTextBox.Text = "";
-                acceptButton.Enabled = copyA.Enabled = false;
-                aNeighbors.DataSource = bNeighbors.DataSource = cNeighbors.DataSource = null;
-                owner.Visualization.Corners = false;
+                    normalX.Text = normalY.Text = normalZ.Text = "";
+                acceptButton.Enabled = copyA.Enabled = owner.Visualization.Corners = false;
             }
+            nextNeighborsTextBox.Text = "";
+            aNeighbors.DataSource = bNeighbors.DataSource = cNeighbors.DataSource = null;
 
             owner.RefreshVisualization();
         }

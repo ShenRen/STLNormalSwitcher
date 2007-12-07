@@ -108,7 +108,7 @@ namespace STLNormalSwitcher {
         }
 
         /// <summary>
-        /// Compares this Vertex to a give object.
+        /// Compares this Vertex to a given object.
         /// Two vertices are equal, when their values are the same,
         /// they can have different owners.
         /// </summary>

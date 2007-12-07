@@ -242,7 +242,6 @@ namespace STLNormalSwitcher {
             }
         }
 
-  
         #endregion
 
         #region Event Handling Stuff
