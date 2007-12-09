@@ -27,7 +27,10 @@ using System.Text;
 using System.Windows.Forms;
 
 namespace STLNormalSwitcher {
-    public class AddPanel : TabPanel {
+    /// <summary>
+    /// The TabPanel for adding and removing Triangles.
+    /// </summary>
+    internal class AddPanel : TabPanel {
 
         #region Designer
 
@@ -545,12 +548,26 @@ namespace STLNormalSwitcher {
 
         #endregion
 
-        public AddPanel(NormalSwitcherForm owner) {
+        #region Constructors
+
+        /// <summary>
+        /// Initializes the panel and sets the owner.
+        /// </summary>
+        /// <param name="owner">The NormalSwitcherForm that contains this AddPanel</param>
+        internal AddPanel(NormalSwitcherForm owner) {
             InitializeComponent();
             this.owner = owner;
         }
 
-        public override void UpdateTab(bool flag) {
+        #endregion
+
+        #region Methods
+
+        /// <summary>
+        /// The main method of all TabPanels. Updates the elements on the panel.
+        /// </summary>
+        /// <param name="flag">Not used for this TabPanel</param>
+        internal override void UpdateTab(bool flag) {
             if ((owner.CurrentSelection.Count == 1) && (owner.CurrentSelection[0] != null)) {
                 owner.Visualization.Vertices = true;
                 owner.Visualization.Corners = true;
@@ -559,7 +576,10 @@ namespace STLNormalSwitcher {
                 owner.Visualization.Corners = false;
             }
 
-            UnbindEvents();
+            BeginUpdate();
+            aX.Text = aY.Text = aZ.Text = bX.Text = bY.Text = bZ.Text = cX.Text = cY.Text = cZ.Text =
+                    normalX.Text = normalY.Text = normalZ.Text = "";
+
             triangleComboBox.DataSource = null;
             triangleComboBox.DataSource = owner.TriangleList;
 
@@ -573,15 +593,15 @@ namespace STLNormalSwitcher {
             verticesB.DisplayMember = "AsString";
             verticesC.DisplayMember = "AsString";
 
-            BindEvents();
+            EndUpdate();
             UpdateTriVertices();
         }
 
         /// <summary>
-        /// Updates the Boxes on the "Add/Remove"-Tab.
+        /// Updates owner.TriVertices, when the selected Triangle is changed.
         /// </summary>
         private void UpdateTriVertices() {
-            UnbindEvents();
+            BeginUpdate();
             Triangle temp;
             if ((owner.CurrentSelection.Count > 0) && (owner.CurrentSelection[0] != null)) {
                 temp = owner.CurrentSelection[0];
@@ -620,25 +640,35 @@ namespace STLNormalSwitcher {
                 owner.Visualization.Vertices = false;
                 owner.Visualization.Corners = false;
             }
-            BindEvents();
+            EndUpdate();
 
             owner.SetCorners();
             owner.RefreshVisualization();
         }
 
-        private void UnbindEvents() {
+        /// <summary>
+        /// Unbinds the SelectedIndexChanged-events, so that not every little change is visualized at once.
+        /// </summary>
+        private void BeginUpdate() {
             triangleComboBox.SelectedIndexChanged -= TriangleComboBox_SelectedIndexChanged;
             verticesA.SelectedIndexChanged -= VerticesA_SelectedIndexChanged;
             verticesB.SelectedIndexChanged -= VerticesB_SelectedIndexChanged;
             verticesC.SelectedIndexChanged -= VerticesC_SelectedIndexChanged;
         }
 
-        private void BindEvents() {
+        /// <summary>
+        /// Binds the SelectedIndexChanged-events again.
+        /// </summary>
+        private void EndUpdate() {
             triangleComboBox.SelectedIndexChanged += TriangleComboBox_SelectedIndexChanged;
             verticesA.SelectedIndexChanged += VerticesA_SelectedIndexChanged;
             verticesB.SelectedIndexChanged += VerticesB_SelectedIndexChanged;
             verticesC.SelectedIndexChanged += VerticesC_SelectedIndexChanged;
         }
+
+        #endregion
+
+        #region Event Handling Stuff
 
         /// <summary>
         /// Copies the values of the selected Triangle to the TextBoxes
@@ -857,13 +887,17 @@ namespace STLNormalSwitcher {
         private void TriangleValue_KeyPress(object sender, KeyPressEventArgs e) {
             if ((!char.IsNumber(e.KeyChar)) & (e.KeyChar != '.') & (e.KeyChar != '-') & (e.KeyChar != (char)Keys.Back)) {
                 e.Handled = true;
+            } else if ((sender as TextBox).SelectedText == (sender as TextBox).Text) {
+                (sender as TextBox).Text = "";
             } else if (e.KeyChar == '.') {
-                if ((sender as TextBox).Text.Contains(".")) {
+                if (((sender as TextBox).Text.Contains(".")) && (!(sender as TextBox).SelectedText.Contains("."))) {
                     e.Handled = true;
                 }
             } else if (e.KeyChar == '-') {
-                if ((sender as TextBox).Text.StartsWith("-")) {
+                if (((sender as TextBox).Text.StartsWith("-")) && (!(sender as TextBox).SelectedText.Contains("-"))) {
                     e.Handled = true;
+                } else if ((sender as TextBox).SelectedText.Contains("-")) {
+                    return;
                 } else {
                     int temp = (sender as TextBox).SelectionStart;
                     (sender as TextBox).Text = "-" + (sender as TextBox).Text;
@@ -872,27 +906,7 @@ namespace STLNormalSwitcher {
                 }
             }
         }
+
+        #endregion
     }
 }
-
-//switch (tabControl1.SelectedIndex) {
-//   
-//    case 2:
-//        if (selected.Count > 0) {
-//            normalListView.SelectedItems.Clear();
-//            if (triangleComboBox.SelectedIndex != selected[0]) {
-//                triangleComboBox.SelectedIndex = selected[0];
-//            } else {
-//                TriangleComboBox_SelectedIndexChanged(new object(), new EventArgs());
-//            }
-//            SetCorners();
-//        } else {
-//            if (triangleComboBox.SelectedIndex == -1) {
-//            } else if (triangleComboBox.SelectedIndex != 0) {
-//                triangleComboBox.SelectedIndex = 0;
-//            } else {
-//                TriangleComboBox_SelectedIndexChanged(new object(), new EventArgs());
-//            }
-//        }
-//        break;
-//}

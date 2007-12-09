@@ -35,12 +35,12 @@ namespace STLNormalSwitcher {
     /// <summary>
     /// The main class of the STLNormalSwitcher.
     /// </summary>
-    public static class STLNormalSwitcher {
+    internal static class STLNormalSwitcher {
         /// <summary>
         /// Main method sets the CurrentCulture and starts the Application.
         /// </summary>
         [STAThread]
-        public static void Main(string[] args) {
+        internal static void Main(string[] args) {
             Application.EnableVisualStyles();
             Application.CurrentCulture = new CultureInfo("en-US");
             if (args.Length == 0) {

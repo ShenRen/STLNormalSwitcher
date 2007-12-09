@@ -30,7 +30,7 @@ namespace STLNormalSwitcher {
     /// A specialised Container for an RGB color of 3 floats.
     /// Implements a comparable and an equal-method.
     /// </summary>
-    public class RGB : IComparable<RGB>, IEquatable<RGB> {
+    internal class RGB : IComparable<RGB>, IEquatable<RGB> {
 
         #region Fields
 
@@ -41,19 +41,19 @@ namespace STLNormalSwitcher {
         #region Properties
 
         /// <value>Gets the red value or sets it</value>
-        public float R {
+        internal float R {
             get { return r; }
             set { r = value; }
         }
 
         /// <value>Gets the green value or sets it</value>
-        public float G {
+        internal float G {
             get { return g; }
             set { g = value; }
         }
 
         /// <value>Gets the blue value or sets it</value>
-        public float B {
+        internal float B {
             get { return b; }
             set { b = value; }
         }
@@ -68,7 +68,7 @@ namespace STLNormalSwitcher {
         /// <param name="r">Red value</param>
         /// <param name="g">Green value</param>
         /// <param name="b">Blue value</param>
-        public RGB(float r, float g, float b) {
+        internal RGB(float r, float g, float b) {
             this.r = r;
             this.g = g;
             this.b = b;

@@ -39,7 +39,7 @@ namespace STLNormalSwitcher {
         #region Properties
 
         /// <value> Gets the AssemblyTitle </value>
-        public string AssemblyTitle {
+        internal string AssemblyTitle {
             get {
                 // Get all title-attributes in this assembly
                 object[] attributes = Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(AssemblyTitleAttribute), false);
@@ -57,14 +57,14 @@ namespace STLNormalSwitcher {
         }
 
         /// <value> Gets the AssemblyVersion </value>
-        public string AssemblyVersion {
+        internal string AssemblyVersion {
             get {
                 return Assembly.GetExecutingAssembly().GetName().Version.ToString();
             }
         }
 
         /// <value> Gets the AssemblyDescription </value>
-        public string AssemblyDescription {
+        internal string AssemblyDescription {
             get {
                 // Get all description-attributes in this assembly
                 object[] attributes = Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(AssemblyDescriptionAttribute), false);
@@ -77,7 +77,7 @@ namespace STLNormalSwitcher {
         }
 
         /// <value> Gets the AssemblyProduct </value>
-        public string AssemblyProduct {
+        internal string AssemblyProduct {
             get {
                 // Get all product-attributes in this assembly
                 object[] attributes = Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(AssemblyProductAttribute), false);
@@ -90,7 +90,7 @@ namespace STLNormalSwitcher {
         }
 
         /// <value> Gets the AssemblyCopyright </value>
-        public string AssemblyCopyright {
+        internal string AssemblyCopyright {
             get {
                 // Get all copyright-attributes in this assembly
                 object[] attributes = Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(AssemblyCopyrightAttribute), false);
@@ -103,7 +103,7 @@ namespace STLNormalSwitcher {
         }
 
         /// <value> Gets the AssemblyCompany </value>
-        public string AssemblyCompany {
+        internal string AssemblyCompany {
             get {
                 // Get all company-attributes in this assembly
                 object[] attributes = Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(AssemblyCompanyAttribute), false);
@@ -122,7 +122,7 @@ namespace STLNormalSwitcher {
         /// <summary>
         /// Fills the Form with the information from AssemblyInfo.
         /// </summary>
-        public About() {
+        internal About() {
             InitializeComponent();
 
             // Initialize AboutBox to display productinformations from the Assemblyinformation.

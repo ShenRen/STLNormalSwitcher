@@ -32,7 +32,7 @@ namespace STLNormalSwitcher {
     /// <summary>
     /// A parser for Binary or ASCII STL-files.
     /// </summary>
-    public class STLParser {
+    internal class STLParser {
 
         #region Fields
 
@@ -44,10 +44,10 @@ namespace STLNormalSwitcher {
         #region Properties
 
         /// <value>Gets the triangleList</value>
-        public TriangleList TriangleList { get { return triangleList; } }
+        internal TriangleList TriangleList { get { return triangleList; } }
 
         /// <value>Gets true if the parsed file is an ASCII file</value>
-        public bool ASCII { get { return ascii; } }
+        internal bool ASCII { get { return ascii; } }
 
         #endregion
 
@@ -57,7 +57,7 @@ namespace STLNormalSwitcher {
         /// Parse the given Stream.
         /// </summary>
         /// <param name="file">Stream to parse</param>
-        public void Parse(StreamReader file) {
+        internal void Parse(StreamReader file) {
             // First test, if the stream is ASCII or binary
             if (ascii = TestIfASCII(file)) {
                 ParseASCII(file);

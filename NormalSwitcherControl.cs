@@ -36,7 +36,7 @@ namespace STLNormalSwitcher {
     /// <summary>
     /// The Control visualizing the STL-data.
     /// </summary>
-    public class NormalSwitcherControl : Control {
+    internal class NormalSwitcherControl : Control {
 
         #region Fields
 
@@ -67,7 +67,7 @@ namespace STLNormalSwitcher {
         #region Properties
 
         /// <value>Sets the value of fresh and refreshes the visualization, if the value is true</value>
-        public bool Fresh {
+        internal bool Fresh {
             set {
                 fresh = value;
                 if (fresh) { this.Refresh(); }
@@ -75,10 +75,10 @@ namespace STLNormalSwitcher {
         }
 
         /// <value>Sets the value of vertices</value>
-        public bool Vertices { set { vertices = value; } }
+        internal bool Vertices { set { vertices = value; } }
 
         /// <value>Sets the value of corners</value>
-        public bool Corners { set { corners = value; } }
+        internal bool Corners { set { corners = value; } }
 
         #endregion
 
@@ -88,7 +88,7 @@ namespace STLNormalSwitcher {
         /// Initializes the NormalSwitcherControl.
         /// </summary>
         /// <param name="owner">The NormalSwitcherForm owning this Control</param>
-        public NormalSwitcherControl(NormalSwitcherForm owner) {
+        internal NormalSwitcherControl(NormalSwitcherForm owner) {
             this.InitStyles();
             this.InitContexts();
             this.InitOpenGL();
@@ -158,7 +158,7 @@ namespace STLNormalSwitcher {
         /// <summary>
         /// Creates and sets the pixel format and creates and connects the deviceContext and renderContext.
         /// </summary>
-        public void InitContexts() {
+        internal void InitContexts() {
             int selectedPixelFormat;
 
             //Make sure the handle for this control has been created
@@ -231,7 +231,7 @@ namespace STLNormalSwitcher {
         /// <summary>
         /// Connects the deviceContext with the renderContext.
         /// </summary>
-        public void MakeCurrentContext() {
+        internal void MakeCurrentContext() {
             if (!Wgl.wglMakeCurrent(this.deviceContext, this.renderContext)) {
                 MessageBox.Show("MakeCurrentContext: Unable to activate this control's OpenGL rendering context!", "Fatal Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 Environment.Exit(-1);
@@ -241,7 +241,7 @@ namespace STLNormalSwitcher {
         /// <summary>
         /// Deletes the deviceContext and renderContext.
         /// </summary>
-        public void DestroyContexts() {
+        internal void DestroyContexts() {
             if (this.renderContext != IntPtr.Zero) {
                 Wgl.wglMakeCurrent(IntPtr.Zero, IntPtr.Zero);
                 Wgl.wglDeleteContext(this.renderContext);
@@ -259,7 +259,7 @@ namespace STLNormalSwitcher {
         /// <summary>
         /// Swaps the back and front buffer.
         /// </summary>
-        public void SwapBuffers() {
+        internal void SwapBuffers() {
             Gdi.SwapBuffersFast(this.deviceContext);
         }
 
@@ -310,7 +310,7 @@ namespace STLNormalSwitcher {
         /// Initializes the colorArray. All vertices of unselected triangles get the color Aqua.
         /// Selected triangles get the color Red.
         /// </summary>
-        public void SetColorArray() {
+        internal void SetColorArray() {
             this.colorArray = new float[owner.TriangleList.Count * 9];
             for (int i = 0; i < owner.TriangleList.Count; i++) {
                 if ((owner.CurrentSelection.Count != 0) && (owner.CurrentSelection.Contains(owner.TriangleList[i]))) {
@@ -403,7 +403,7 @@ namespace STLNormalSwitcher {
         /// <summary>
         /// Sets a different color for each triangle for picking.
         /// </summary>
-        public void SetPickingColors() {
+        internal void SetPickingColors() {
             RGB color;
 
             this.colorDist = 256 * 256 * 256 / (owner.TriangleList.Count + 2);

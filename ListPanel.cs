@@ -27,7 +27,10 @@ using System.Text;
 using System.Windows.Forms;
 
 namespace STLNormalSwitcher {
-    public class ListPanel : TabPanel {
+    /// <summary>
+    /// The TabPanel that lists the Triangles.
+    /// </summary>
+    internal class ListPanel : TabPanel {
 
         #region Designer
 
@@ -98,7 +101,13 @@ namespace STLNormalSwitcher {
 
         #endregion
 
-        public ListPanel(NormalSwitcherForm owner) {
+        #region Constructors
+
+        /// <summary>
+        /// Initializes the panel and sets the owner.
+        /// </summary>
+        /// <param name="owner">The NormalSwitcherForm that contains this ListPanel</param>
+        internal ListPanel(NormalSwitcherForm owner) {
             InitializeComponent();
             this.owner = owner;
 
@@ -107,10 +116,15 @@ namespace STLNormalSwitcher {
             Owner_SizeChanged(new object(), new EventArgs());
         }
 
+        #endregion
+
+        #region Methods
+
         /// <summary>
-        /// Fills the normalListView with the correct values;
+        /// The main method of all TabPanels. Updates the elements on the panel.
         /// </summary>
-        public override void UpdateTab(bool flag) {
+        /// <param name="flag">The ListView is only refilled, when flag == true</param>
+        internal override void UpdateTab(bool flag) {
             owner.Visualization.Fresh = false;
             owner.Visualization.Vertices = false;
             owner.Visualization.Corners = false;
@@ -144,6 +158,10 @@ namespace STLNormalSwitcher {
 
             owner.RefreshVisualization();
         }
+
+        #endregion
+
+        #region Event Handling Stuff
 
         /// <summary>
         /// Updates the currentSelection and marks the selected triangles in the NormalSwitcherControl.
@@ -215,5 +233,6 @@ namespace STLNormalSwitcher {
                 this.Width / 4;
         }
 
+        #endregion
     }
 }

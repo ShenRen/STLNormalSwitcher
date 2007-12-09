@@ -31,7 +31,7 @@ namespace STLNormalSwitcher {
     /// in the list are available. A scale and the vertices and normals as arrays used for drawing
     /// are also contained in the TriangleList.
     /// </summary>
-    public class TriangleList : List<Triangle> {
+    internal class TriangleList : List<Triangle> {
 
         #region Fields
 
@@ -47,16 +47,16 @@ namespace STLNormalSwitcher {
         #region Properties
 
         /// <value>Gets the normalized vertices of all triangles in an array</value>
-        public float[] VertexArray { get { return vertexArray; } }
+        internal float[] VertexArray { get { return vertexArray; } }
 
         /// <value>Gets the normal vectors of all triangles expanded to all corners as an array</value>
-        public float[] NormalArray { get { return normalArray; } }
+        internal float[] NormalArray { get { return normalArray; } }
 
         /// <value>Gets a list of all vertices of all Triangles</value>
-        public Vertex[] Vertices { get { return vertices.ToArray(); } }
+        internal Vertex[] Vertices { get { return vertices.ToArray(); } }
 
         /// <value>Gets the scale used for drawing</value>
-        public float Scale { get { return scale; } }
+        internal float Scale { get { return scale; } }
 
         #endregion
 
@@ -67,7 +67,7 @@ namespace STLNormalSwitcher {
         /// the minimum and maximum of the TriangleList.
         /// </summary>
         /// <param name="tri">The Triangle to be added</param>
-        public void AddTriangle(Triangle tri) {
+        internal void AddTriangle(Triangle tri) {
             this.Add(tri);
             tri.Position = this.Count - 1;
         }
@@ -76,7 +76,7 @@ namespace STLNormalSwitcher {
         /// <summary>
         /// Recalculates both the vertex- and the normalArray.
         /// </summary>
-        public void CalculateArrays() {
+        internal void CalculateArrays() {
             CalculateNormalArray();
             CalculateVertexArray();
         }
@@ -85,7 +85,7 @@ namespace STLNormalSwitcher {
         /// The normalArray is calculated. The normal vectors of the triangles are copied to
         /// all three corners of the corresponding triangle and saved in an array.
         /// </summary>
-        public void CalculateNormalArray() {
+        internal void CalculateNormalArray() {
             normalArray = new float[9 * this.Count];
             for (int i = 0; i < this.Count; i++) {
                 for (int j = 0; j < 3; j++) {
@@ -100,7 +100,7 @@ namespace STLNormalSwitcher {
         /// The vertexArray is calculated. All vertices of all triangles are normalized
         /// and saved in an array.
         /// </summary>
-        public void CalculateVertexArray() {
+        internal void CalculateVertexArray() {
             vertexArray = new float[9 * this.Count];
             for (int i = 0; i < this.Count; i++) {
                 for (int j = 0; j < 3; j++) {
@@ -115,7 +115,7 @@ namespace STLNormalSwitcher {
         /// Returns a copy of the TriangleList.
         /// </summary>
         /// <returns>Copy of the TriangleList</returns>
-        public TriangleList Copy() {
+        internal TriangleList Copy() {
             TriangleList tri = new TriangleList();
             for (int i = 0; i < this.Count; i++) {
                 tri.AddTriangle(this[i].Copy());
@@ -128,7 +128,7 @@ namespace STLNormalSwitcher {
         /// Replaces a Triangle in the TriangleList with a new Triangle and recalculates the minimum and maximum.
         /// </summary>
         /// <param name="newTriangle"></param>
-        public void EditTriangle(Triangle newTriangle) {
+        internal void EditTriangle(Triangle newTriangle) {
             this[newTriangle.Position] = newTriangle;
             Finish();
         }
@@ -137,7 +137,7 @@ namespace STLNormalSwitcher {
         /// Fills "vertices" with all vertices from all Triangles,
         /// every Vertex is in the list only once.
         /// </summary>
-        public void FillVertexList() {
+        internal void FillVertexList() {
             vertices.Clear();
             for (int i = 0; i < this.Count; i++) {
                 for (int j = 0; j < 3; j++) {
@@ -151,7 +151,7 @@ namespace STLNormalSwitcher {
         /// <summary>
         /// Calculates the scale as the maximum of the differences between the maxima and minima.
         /// </summary>
-        public void Finish() {
+        internal void Finish() {
             SetExtrema();
 
             scale = max[0] - min[0];
@@ -165,7 +165,7 @@ namespace STLNormalSwitcher {
         /// <summary>
         /// Sets the position of each Triangle to the correct position in this list.
         /// </summary>
-        public void SetPositions() {
+        internal void SetPositions() {
             for (int i = 0; i < this.Count; i++) {
                 this[i].Position = i;
             }
@@ -191,7 +191,7 @@ namespace STLNormalSwitcher {
         /// <summary>
         /// Switches the normal vectors of all Triangles.
         /// </summary>
-        public void SwitchAll() {
+        internal void SwitchAll() {
             for (int i = 0; i < this.Count; i++) {
                 this[i].SwitchNormal();
             }
@@ -203,7 +203,7 @@ namespace STLNormalSwitcher {
         /// Switches only the normal vectors of the selected Triangles.
         /// </summary>
         /// <param name="selection">A List of Triangles</param>
-        public void SwitchSelected(List<Triangle> selection) {
+        internal void SwitchSelected(List<Triangle> selection) {
             for (int i = 0; i < selection.Count; i++) {
                 this[selection[i].Position].SwitchNormal();
             }

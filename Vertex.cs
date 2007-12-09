@@ -29,7 +29,7 @@ namespace STLNormalSwitcher {
     /// <summary>
     /// A Vertex can be either the corner of a Triangle or a normal vector.
     /// </summary>
-    public class Vertex : List<float> {
+    internal class Vertex : List<float> {
 
         #region Fields
 
@@ -40,7 +40,7 @@ namespace STLNormalSwitcher {
         #region Properties
 
         /// <value>Gets the owner or sets it</value>
-        public Triangle Owner {
+        internal Triangle Owner {
             get { return owner; }
             set { owner = value; }
         }
@@ -58,7 +58,7 @@ namespace STLNormalSwitcher {
         /// <param name="x">x-coordinate</param>
         /// <param name="y">y-coordinate</param>
         /// <param name="z">z-coordinate</param>
-        public Vertex(float x, float y, float z) {
+        internal Vertex(float x, float y, float z) {
             this.Add(x);
             this.Add(y);
             this.Add(z);
@@ -72,14 +72,14 @@ namespace STLNormalSwitcher {
         /// Returns a copy of this Vertex.
         /// </summary>
         /// <returns>Copy of this Vertex</returns>
-        public Vertex Copy() { return new Vertex(this[0], this[1], this[2]); }
+        internal Vertex Copy() { return new Vertex(this[0], this[1], this[2]); }
 
         /// <summary>
         /// Calculates the distance of this Vertex from the Vertex given by <paramref name="v2"/>.
         /// </summary>
         /// <param name="tri">Another Vertex</param>
         /// <returns>Distance between the Vertices</returns>
-        public double DistanceFrom(Vertex v2) {
+        internal double DistanceFrom(Vertex v2) {
             return Math.Pow(this[0] - v2[0], 2) + Math.Pow(this[1] - v2[1], 2) + Math.Pow(this[2] - v2[2], 2);
         }
 
@@ -87,7 +87,7 @@ namespace STLNormalSwitcher {
         /// Normalizes this Vertex, so the vector it represents has length 1.
         /// </summary>
         /// <returns>The normalized Vertex</returns>
-        public Vertex Normalize() {
+        internal Vertex Normalize() {
             if ((this[0] == 0) && (this[1] == 0) && (this[2] == 0)) {
                 throw new ArgumentException("The normal vector can not be [0,0,0]!");
             }

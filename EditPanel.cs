@@ -27,7 +27,10 @@ using System.Text;
 using System.Windows.Forms;
 
 namespace STLNormalSwitcher {
-    public class EditPanel : TabPanel {
+    /// <summary>
+    /// The TabPanel for editing Triangles.
+    /// </summary>
+    internal class EditPanel : TabPanel {
 
         #region Designer
 
@@ -546,11 +549,21 @@ namespace STLNormalSwitcher {
 
         #endregion
 
+        #region Fields
+
         private List<Vertex> neighborsOfA = new List<Vertex>();
         private List<Vertex> neighborsOfB = new List<Vertex>();
         private List<Vertex> neighborsOfC = new List<Vertex>();
 
-        public EditPanel(NormalSwitcherForm owner) {
+        #endregion
+
+        #region Constructors
+
+        /// <summary>
+        /// Initializes the panel and sets the owner.
+        /// </summary>
+        /// <param name="owner">The NormalSwitcherForm that contains this EditPanel</param>
+        internal EditPanel(NormalSwitcherForm owner) {
             InitializeComponent();
             this.owner = owner;
 
@@ -560,7 +573,15 @@ namespace STLNormalSwitcher {
             copyA.EnabledChanged += new EventHandler(CopyButton_EnabledChanged);
         }
 
-        public override void UpdateTab(bool flag) {
+        #endregion
+
+        #region Methods
+
+        /// <summary>
+        /// The main method of all TabPanels. Updates the elements on the panel.
+        /// </summary>
+        /// <param name="flag">Not used for this TabPanel</param>
+        internal override void UpdateTab(bool flag) {
             owner.Visualization.Fresh = false;
             owner.Visualization.Vertices = false;
 
@@ -636,8 +657,12 @@ namespace STLNormalSwitcher {
             owner.Visualization.Fresh = true;
         }
 
+        #endregion
+
+        #region Event Handling Stuff
+
         /// <summary>
-        /// Initiates the filling of the Neighbors ComboBoxes.
+        /// Initializes the filling of the Neighbors ComboBoxes.
         /// </summary>
         /// <param name="sender">nextNeighborsButton</param>
         /// <param name="e">Standard EventArgs</param>
@@ -781,7 +806,7 @@ namespace STLNormalSwitcher {
         /// <param name="sender">hookButtonA</param>
         /// <param name="e">Standard EventArgs</param>
         private void CopyButton_EnabledChanged(object sender, EventArgs e) {
-            copyA.Enabled = copyB.Enabled = copyC.Enabled;
+            copyB.Enabled = copyC.Enabled = copyA.Enabled;
         }
 
         /// <summary>
@@ -836,13 +861,17 @@ namespace STLNormalSwitcher {
         private void TriangleValue_KeyPress(object sender, KeyPressEventArgs e) {
             if ((!char.IsNumber(e.KeyChar)) & (e.KeyChar != '.') & (e.KeyChar != '-') & (e.KeyChar != (char)Keys.Back)) {
                 e.Handled = true;
+            } else if ((sender as TextBox).SelectedText == (sender as TextBox).Text) {
+                (sender as TextBox).Text = "";
             } else if (e.KeyChar == '.') {
-                if ((sender as TextBox).Text.Contains(".")) {
+                if (((sender as TextBox).Text.Contains(".")) && (!(sender as TextBox).SelectedText.Contains("."))) {
                     e.Handled = true;
                 }
             } else if (e.KeyChar == '-') {
-                if ((sender as TextBox).Text.StartsWith("-")) {
+                if (((sender as TextBox).Text.StartsWith("-")) && (!(sender as TextBox).SelectedText.Contains("-"))) {
                     e.Handled = true;
+                } else if ((sender as TextBox).SelectedText.Contains("-")) {
+                    return;
                 } else {
                     int temp = (sender as TextBox).SelectionStart;
                     (sender as TextBox).Text = "-" + (sender as TextBox).Text;
@@ -851,5 +880,7 @@ namespace STLNormalSwitcher {
                 }
             }
         }
+
+        #endregion
     }
 }

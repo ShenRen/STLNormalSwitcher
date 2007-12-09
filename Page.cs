@@ -27,16 +27,40 @@ using System.Text;
 using System.Windows.Forms;
 
 namespace STLNormalSwitcher {
-    public class Page : TabPage {
+    /// <summary>
+    /// A TabPage that contains a TabPanel and a method UpdateTab to call that TabPanels UpdateTab-method.
+    /// </summary>
+    internal class Page : TabPage {
+
+        #region Fields
 
         private TabPanel panel;
 
-        public Page(TabPanel panel, string name) {
+        #endregion
+
+        #region Constructors
+
+        /// <summary>
+        /// Initializes the Page.
+        /// </summary>
+        /// <param name="panel">The TabPanel to be included in this Page</param>
+        /// <param name="name">The text to be displayed on the tab</param>
+        internal Page(TabPanel panel, string name) {
             this.panel = panel;
             this.Controls.Add(panel);
             this.Text = name;
         }
 
-        public void UpdateTab(bool flag) { panel.UpdateTab(flag); }
+        #endregion
+
+        #region Methods
+
+        /// <summary>
+        /// Updates the panel.
+        /// </summary>
+        /// <param name="flag">Parameter that indicates significant changes</param>
+        internal void UpdateTab(bool flag) { panel.UpdateTab(flag); }
+
+        #endregion
     }
 }

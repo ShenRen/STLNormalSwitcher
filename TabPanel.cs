@@ -30,14 +30,34 @@ using System.Text;
 using System.Windows.Forms;
 
 namespace STLNormalSwitcher {
-    public partial class TabPanel : UserControl {
+    /// <summary>
+    /// A UserControl used to visually set TabPages.
+    /// </summary>
+    internal partial class TabPanel : UserControl {
+
+        #region Fields
 
         protected NormalSwitcherForm owner;
 
-        public TabPanel() {
-            InitializeComponent();
-        }
+        #endregion
 
-        public virtual void UpdateTab(bool flag) { }
+        #region Constructors
+
+        /// <summary>
+        /// Initializes the TabPanel.
+        /// </summary>
+        internal TabPanel() { InitializeComponent(); }
+
+        #endregion
+
+        #region Methods
+
+        /// <summary>
+        /// The main method of all TabPanels. All TabPanels need to override this method.
+        /// </summary>
+        /// <param name="flag">Parameter that indicates significant changes</param>
+        internal virtual void UpdateTab(bool flag) { }
+
+        #endregion
     }
 }

@@ -38,7 +38,7 @@ namespace STLNormalSwitcher {
     /// It also contains the minimum and maximum coordinates of the triangle.
     /// In addition it can contain the position of the triangle in a TriangleList.
     /// </summary>
-    public class Triangle : List<Vertex> {
+    internal class Triangle : List<Vertex> {
 
         #region Fields
 
@@ -54,13 +54,13 @@ namespace STLNormalSwitcher {
         public string AsString { get { return this.ToString(); } }
 
         /// <value>Gets the maximum coordinates</value>
-        public float[] Max { get { return max; } }
+        internal float[] Max { get { return max; } }
 
         /// <value>Gets the minimum coordinates</value>
-        public float[] Min { get { return min; } }
+        internal float[] Min { get { return min; } }
 
         /// <value>Gets the position in the TriangleList or sets it.</value>
-        public int Position {
+        internal int Position {
             get { return position; }
             set { position = value; }
         }
@@ -75,7 +75,7 @@ namespace STLNormalSwitcher {
         /// for the normal vector.
         /// </summary>
         /// <param name="vertices">The corners of the triangle and the normal vector</param>
-        public Triangle(IEnumerable<Vertex> vertices) {
+        internal Triangle(IEnumerable<Vertex> vertices) {
             this.AddRange(vertices);
 
             for (int i = 0; i < this.Count; i++) {
@@ -92,7 +92,7 @@ namespace STLNormalSwitcher {
         /// <param name="a">The first corner</param>
         /// <param name="b">The second corner</param>
         /// <param name="c">The third corner</param>
-        public Triangle(Vertex a, Vertex b, Vertex c) {
+        internal Triangle(Vertex a, Vertex b, Vertex c) {
             this.Add(a);
             this.Add(b);
             this.Add(c);
@@ -114,7 +114,7 @@ namespace STLNormalSwitcher {
         /// <param name="b">The second corner</param>
         /// <param name="c">The third corner</param>
         /// <param name="n">The normal vector</param>
-        public Triangle(Vertex a, Vertex b, Vertex c, Vertex n) {
+        internal Triangle(Vertex a, Vertex b, Vertex c, Vertex n) {
             this.Add(a);
             this.Add(b);
             this.Add(c);
@@ -159,7 +159,7 @@ namespace STLNormalSwitcher {
         /// Returns a copy of this Triangle.
         /// </summary>
         /// <returns>A copy of this Triangle</returns>
-        public Triangle Copy() {
+        internal Triangle Copy() {
             Triangle tri = new Triangle(new Vertex[4] { this[0].Copy(), this[1].Copy(), this[2].Copy(), this[3].Copy() });
             tri.Position = this.position;
             return tri;
@@ -198,7 +198,7 @@ namespace STLNormalSwitcher {
         /// Returns the normal vector as a string.
         /// </summary>
         /// <returns>The normal vector as a string</returns>
-        public string NormalToString() {
+        internal string NormalToString() {
             return this[3].ToString();
         }
 
@@ -223,7 +223,7 @@ namespace STLNormalSwitcher {
         /// <summary>
         /// Switches the normal vector. Each value of the normal is multiplied by -1.
         /// </summary>
-        public void SwitchNormal() {
+        internal void SwitchNormal() {
             for (int i = 0; i < 3; i++) {
                 this[3][i] *= -1;
             }

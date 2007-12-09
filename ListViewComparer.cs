@@ -31,7 +31,7 @@ namespace STLNormalSwitcher {
     /// <summary>
     /// Allows sorting of the columns of a ListView.
     /// </summary>
-    public class ListViewComparer : IComparer {
+    internal class ListViewComparer : IComparer {
 
         #region Fields
 
@@ -47,7 +47,7 @@ namespace STLNormalSwitcher {
         /// </summary>
         /// <param name="col">Column to be sorted</param>
         /// <param name="order">Order to sort it in</param>
-        public ListViewComparer(int col, SortOrder order) {
+        internal ListViewComparer(int col, SortOrder order) {
             this.col = col;
             this.order = order;
         }

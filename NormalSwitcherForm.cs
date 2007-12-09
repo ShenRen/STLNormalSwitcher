@@ -34,7 +34,7 @@ namespace STLNormalSwitcher {
     /// <summary>
     /// The GUI of the STLNormalSwitcher.
     /// </summary>
-    public partial class NormalSwitcherForm : Form {
+    internal partial class NormalSwitcherForm : Form {
 
         #region Fields
 
@@ -60,7 +60,7 @@ namespace STLNormalSwitcher {
         #region Properties
 
         /// <value>Gets the TriangleList or sets it</value>
-        public TriangleList TriangleList {
+        internal TriangleList TriangleList {
             get { return triangleList; }
             set { triangleList = value; }
         }
@@ -69,30 +69,31 @@ namespace STLNormalSwitcher {
         /// Gets the positions of the owners of the Vertices selected on the "Add/Remove"-Tab
         /// and the positions of those Vertices in that Triangle.
         /// </value>
-        public float[] TriVertices {
+        internal float[] TriVertices {
             get { return triVertices; }
             set { triVertices = value; }
         }
 
         /// <value> Gets the positions of the corners of the selected triangle</value>
-        public float[] Corners { get { return corners; } }
+        internal float[] Corners { get { return corners; } }
 
         /// <value>Gets the origin, the z-value to rotate around</value>
-        public float Origin { get { return (float)origin; } }
+        internal float Origin { get { return (float)origin; } }
 
         /// <value>Gets the currentSelection or sets it</value>
-        public Event CurrentSelection {
+        internal Event CurrentSelection {
             get { return currentSelection; }
             set { currentSelection = value; }
         }
 
         /// <value>Gets the visualization or sets it</value>
-        public NormalSwitcherControl Visualization {
+        internal NormalSwitcherControl Visualization {
             get { return visualization; }
             set { visualization = value; }
         }
 
-        public List<Event> History {
+        /// <value>Gets the history or sets it. Sets changed to true, when the history is changed.</value>
+        internal List<Event> History {
             get { return history; }
             set {
                 history = value;
@@ -100,7 +101,8 @@ namespace STLNormalSwitcher {
             }
         }
 
-        public bool Flag {
+        /// <value>Gets a flag indicating significant changes to the triangleList or sets it</value>
+        internal bool Flag {
             get { return flag; }
             set { flag = value; }
         }
@@ -112,7 +114,7 @@ namespace STLNormalSwitcher {
         /// <summary>
         /// Initializes the NormalSwitcherForm and subscribes to events.
         /// </summary>
-        public NormalSwitcherForm() {
+        internal NormalSwitcherForm() {
             InitializeComponent();
             currentFile = "";
 
@@ -123,7 +125,7 @@ namespace STLNormalSwitcher {
         /// Initializes the NormalSwitcherForm and opens the file given by <paramref name="file"/>
         /// </summary>
         /// <param name="file">Path of the file to be displayed</param>
-        public NormalSwitcherForm(string file) {
+        internal NormalSwitcherForm(string file) {
             InitializeComponent();
 
             BindEvents();
@@ -152,20 +154,23 @@ namespace STLNormalSwitcher {
 
         #region Methods
 
-        private void InitializePages() {
-            tabControl1.TabPages.Add(new Page(new ListPanel(this), "List of Triangles"));
-            tabControl1.TabPages.Add(new Page(new EditPanel(this), "Edit Selected Triangle"));
-            tabControl1.TabPages.Add(new Page(new AddPanel(this), "Add/Remove Triangle"));
-
-            (tabControl1.SelectedTab as Page).UpdateTab(true);
-        }
-
         /// <summary>
         /// Subscribes to the events neccessary to enable or disable the buttons.
         /// </summary>
         private void BindEvents() {
             undoButton.EnabledChanged += new EventHandler(Undo_EnabledChanged);
             allButton.EnabledChanged += new EventHandler(FileCondition_EnabledChanged);
+        }
+
+        /// <summary>
+        /// Creates the new TabPages and adds them to tabControl1.
+        /// </summary>
+        private void InitializePages() {
+            tabControl1.TabPages.Add(new Page(new ListPanel(this), "List of Triangles"));
+            tabControl1.TabPages.Add(new Page(new EditPanel(this), "Edit Selected Triangle"));
+            tabControl1.TabPages.Add(new Page(new AddPanel(this), "Add/Remove Triangle"));
+
+            (tabControl1.SelectedTab as Page).UpdateTab(true);
         }
 
         /// <summary>
@@ -180,19 +185,26 @@ namespace STLNormalSwitcher {
         /// <summary>
         /// Sets the origin for rotation.
         /// </summary>
-        public void SetOrigin() {
+        internal void SetOrigin() {
             originTrackBar.Minimum = -(int)(triangleList.Scale / 2);
             originTrackBar.Maximum = (int)(triangleList.Scale / 2);
             originTrackBar.Value = origin = 0;
             rotationOriginTextBox.Text = origin.ToString();
         }
 
-        public void RefreshVisualization() {
+        /// <summary>
+        /// Sets the colorArray of the visualization and refreshes the visualization.
+        /// </summary>
+        internal void RefreshVisualization() {
             visualization.SetColorArray();
             visualization.Fresh = true;
         }
 
-        public void SetUndoButton(bool value) { undoButton.Enabled = value; }
+        /// <summary>
+        /// Enables the undoButton and the corresponding menu-item or disables them.
+        /// </summary>
+        /// <param name="value">True, if the undoButton should be enabled</param>
+        internal void SetUndoButton(bool value) { undoButton.Enabled = value; }
         
 
         /// <summary>
@@ -201,7 +213,7 @@ namespace STLNormalSwitcher {
         /// <param name="selected">List of the selected triangles</param>
         /// <param name="additive">If true, the <paramref name="selected"/> triangles will be selected
         /// in addition to the previously selected ones. Selecting a triangle twice deselects it.</param>
-        public void PickTriangle(List<int> selected, bool additive) {
+        internal void PickTriangle(List<int> selected, bool additive) {
             visualization.Fresh = false;
             if (additive) {
                 if (selected.Count > 0) {
@@ -234,7 +246,7 @@ namespace STLNormalSwitcher {
         /// <summary>
         /// Fills the corners array with the values of the vertices of the currently selected Triangle.
         /// </summary>
-        public void SetCorners() {
+        internal void SetCorners() {
             if (currentSelection[0] != null) {
                 for (int i = 0; i < 9; i++) {
                     corners[i] = triangleList.VertexArray[currentSelection[0].Position * 9 + i];
@@ -439,7 +451,6 @@ namespace STLNormalSwitcher {
             history.Clear();
             undoButton.Enabled = false;
         }
-
 
         /// <summary>
         /// Switches all normal vectors.
