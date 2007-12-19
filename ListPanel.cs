@@ -125,8 +125,8 @@ namespace STLNormalSwitcher {
         /// </summary>
         /// <param name="flag">The ListView is only refilled, when flag == true</param>
         internal override void UpdateTab(bool flag) {
+            owner.Visualization.Vertices = new bool[3] { false, false, false };
             owner.Visualization.Fresh = false;
-            owner.Visualization.Vertices = false;
             owner.Visualization.Corners = false;
 
             normalListView.BeginUpdate();

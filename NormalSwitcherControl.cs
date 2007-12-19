@@ -49,7 +49,7 @@ namespace STLNormalSwitcher {
         private float scale;
         private bool picking;
         private bool fresh = true;
-        private bool vertices = false;
+        private bool[] vertices = new bool[3] { false, false, false };
         private bool corners = false;
         private int colorDist;
 
@@ -75,7 +75,10 @@ namespace STLNormalSwitcher {
         }
 
         /// <value>Sets the value of vertices</value>
-        internal bool Vertices { set { vertices = value; } }
+        internal bool[] Vertices {
+            get { return vertices; }
+            set { vertices = value; }
+        }
 
         /// <value>Sets the value of corners</value>
         internal bool Corners { set { corners = value; } }
@@ -292,7 +295,7 @@ namespace STLNormalSwitcher {
             Gl.glTranslatef(0.0f, 0.0f, -owner.Origin);
 
             this.DrawSTL();
-            if (!picking && vertices) {
+            if (!picking) {
                 this.DrawVertices();
             }
             if (!picking && corners) {
@@ -347,23 +350,29 @@ namespace STLNormalSwitcher {
             Glu.GLUquadric quadobj = Glu.gluNewQuadric();
             Glu.gluQuadricDrawStyle(quadobj, Glu.GLU_FILL);
 
-            Gl.glColor3fv(aColor);
-            Gl.glPushMatrix();
-            Gl.glTranslatef(owner.TriVertices[0], owner.TriVertices[1], owner.TriVertices[2]);
-            Glu.gluSphere(quadobj, 2, 10, 10);
-            Gl.glPopMatrix();
+            if (vertices[0]) {
+                Gl.glColor3fv(aColor);
+                Gl.glPushMatrix();
+                Gl.glTranslatef(owner.TriVertices[0], owner.TriVertices[1], owner.TriVertices[2]);
+                Glu.gluSphere(quadobj, 2, 10, 10);
+                Gl.glPopMatrix();
+            }
 
-            Gl.glColor3fv(bColor);
-            Gl.glPushMatrix();
-            Gl.glTranslatef(owner.TriVertices[3], owner.TriVertices[4], owner.TriVertices[5]);
-            Glu.gluSphere(quadobj, 2, 10, 10);
-            Gl.glPopMatrix();
+            if (vertices[1]) {
+                Gl.glColor3fv(bColor);
+                Gl.glPushMatrix();
+                Gl.glTranslatef(owner.TriVertices[3], owner.TriVertices[4], owner.TriVertices[5]);
+                Glu.gluSphere(quadobj, 2, 10, 10);
+                Gl.glPopMatrix();
+            }
 
-            Gl.glColor3fv(cColor);
-            Gl.glPushMatrix();
-            Gl.glTranslatef(owner.TriVertices[6], owner.TriVertices[7], owner.TriVertices[8]);
-            Glu.gluSphere(quadobj, 2, 10, 10);
-            Gl.glPopMatrix();
+            if (vertices[2]) {
+                Gl.glColor3fv(cColor);
+                Gl.glPushMatrix();
+                Gl.glTranslatef(owner.TriVertices[6], owner.TriVertices[7], owner.TriVertices[8]);
+                Glu.gluSphere(quadobj, 2, 10, 10);
+                Gl.glPopMatrix();
+            }
 
             Glu.gluDeleteQuadric(quadobj);
         }

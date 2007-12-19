@@ -206,7 +206,6 @@ namespace STLNormalSwitcher {
         /// <param name="value">True, if the undoButton should be enabled</param>
         internal void SetUndoButton(bool value) { undoButton.Enabled = value; }
         
-
         /// <summary>
         /// Marks the triangles picked in the visualization.
         /// </summary>

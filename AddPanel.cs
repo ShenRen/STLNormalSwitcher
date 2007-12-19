@@ -79,11 +79,9 @@ namespace STLNormalSwitcher {
             this.normalZ = new System.Windows.Forms.TextBox();
             this.addTriangleButton = new System.Windows.Forms.Button();
             this.addButton = new System.Windows.Forms.Button();
-            this.labelC = new System.Windows.Forms.Label();
             this.cX = new System.Windows.Forms.TextBox();
             this.cY = new System.Windows.Forms.TextBox();
             this.cZ = new System.Windows.Forms.TextBox();
-            this.labelB = new System.Windows.Forms.Label();
             this.bX = new System.Windows.Forms.TextBox();
             this.bY = new System.Windows.Forms.TextBox();
             this.bZ = new System.Windows.Forms.TextBox();
@@ -93,7 +91,6 @@ namespace STLNormalSwitcher {
             this.labelZ = new System.Windows.Forms.Label();
             this.labelY = new System.Windows.Forms.Label();
             this.labelX = new System.Windows.Forms.Label();
-            this.labelA = new System.Windows.Forms.Label();
             this.triangleComboBox = new System.Windows.Forms.ComboBox();
             this.labelTriangle = new System.Windows.Forms.Label();
             this.copyA = new System.Windows.Forms.Button();
@@ -102,12 +99,15 @@ namespace STLNormalSwitcher {
             this.labelVertex = new System.Windows.Forms.Label();
             this.triangleCopyButton = new System.Windows.Forms.Button();
             this.removeButton = new System.Windows.Forms.Button();
-            this.panel4 = new System.Windows.Forms.Panel();
             this.verticesA = new System.Windows.Forms.ComboBox();
-            this.panel5 = new System.Windows.Forms.Panel();
             this.verticesB = new System.Windows.Forms.ComboBox();
-            this.panel6 = new System.Windows.Forms.Panel();
             this.verticesC = new System.Windows.Forms.ComboBox();
+            this.panel4 = new System.Windows.Forms.Panel();
+            this.labelA = new System.Windows.Forms.Label();
+            this.panel5 = new System.Windows.Forms.Panel();
+            this.labelB = new System.Windows.Forms.Label();
+            this.panel6 = new System.Windows.Forms.Panel();
+            this.labelC = new System.Windows.Forms.Label();
             this.tableLayoutPanel4.SuspendLayout();
             this.panel4.SuspendLayout();
             this.panel5.SuspendLayout();
@@ -136,11 +136,9 @@ namespace STLNormalSwitcher {
             this.tableLayoutPanel4.Controls.Add(this.normalZ, 4, 7);
             this.tableLayoutPanel4.Controls.Add(this.addTriangleButton, 6, 7);
             this.tableLayoutPanel4.Controls.Add(this.addButton, 7, 7);
-            this.tableLayoutPanel4.Controls.Add(this.labelC, 1, 5);
             this.tableLayoutPanel4.Controls.Add(this.cX, 2, 5);
             this.tableLayoutPanel4.Controls.Add(this.cY, 3, 5);
             this.tableLayoutPanel4.Controls.Add(this.cZ, 4, 5);
-            this.tableLayoutPanel4.Controls.Add(this.labelB, 1, 4);
             this.tableLayoutPanel4.Controls.Add(this.bX, 2, 4);
             this.tableLayoutPanel4.Controls.Add(this.bY, 3, 4);
             this.tableLayoutPanel4.Controls.Add(this.bZ, 4, 4);
@@ -150,7 +148,6 @@ namespace STLNormalSwitcher {
             this.tableLayoutPanel4.Controls.Add(this.labelZ, 4, 2);
             this.tableLayoutPanel4.Controls.Add(this.labelY, 3, 2);
             this.tableLayoutPanel4.Controls.Add(this.labelX, 2, 2);
-            this.tableLayoutPanel4.Controls.Add(this.labelA, 1, 3);
             this.tableLayoutPanel4.Controls.Add(this.triangleComboBox, 3, 1);
             this.tableLayoutPanel4.Controls.Add(this.labelTriangle, 2, 1);
             this.tableLayoutPanel4.Controls.Add(this.copyA, 10, 3);
@@ -159,9 +156,12 @@ namespace STLNormalSwitcher {
             this.tableLayoutPanel4.Controls.Add(this.labelVertex, 6, 2);
             this.tableLayoutPanel4.Controls.Add(this.triangleCopyButton, 8, 1);
             this.tableLayoutPanel4.Controls.Add(this.removeButton, 9, 1);
-            this.tableLayoutPanel4.Controls.Add(this.panel4, 6, 3);
-            this.tableLayoutPanel4.Controls.Add(this.panel5, 6, 4);
-            this.tableLayoutPanel4.Controls.Add(this.panel6, 6, 5);
+            this.tableLayoutPanel4.Controls.Add(this.verticesA, 6, 3);
+            this.tableLayoutPanel4.Controls.Add(this.verticesB, 6, 4);
+            this.tableLayoutPanel4.Controls.Add(this.verticesC, 6, 5);
+            this.tableLayoutPanel4.Controls.Add(this.panel4, 1, 3);
+            this.tableLayoutPanel4.Controls.Add(this.panel5, 1, 4);
+            this.tableLayoutPanel4.Controls.Add(this.panel6, 1, 5);
             this.tableLayoutPanel4.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel4.Location = new System.Drawing.Point(0, 0);
             this.tableLayoutPanel4.MinimumSize = new System.Drawing.Size(608, 208);
@@ -241,16 +241,6 @@ namespace STLNormalSwitcher {
             this.addButton.UseVisualStyleBackColor = true;
             this.addButton.Click += new System.EventHandler(this.AddButton_Click);
             // 
-            // labelC
-            // 
-            this.labelC.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-            this.labelC.AutoSize = true;
-            this.labelC.Location = new System.Drawing.Point(21, 142);
-            this.labelC.Name = "labelC";
-            this.labelC.Size = new System.Drawing.Size(17, 13);
-            this.labelC.TabIndex = 2;
-            this.labelC.Text = "C:";
-            // 
             // cX
             // 
             this.cX.Dock = System.Windows.Forms.DockStyle.Bottom;
@@ -259,6 +249,7 @@ namespace STLNormalSwitcher {
             this.cX.Size = new System.Drawing.Size(114, 20);
             this.cX.TabIndex = 9;
             this.cX.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TriangleValue_KeyPress);
+            this.cX.TextChanged += new System.EventHandler(this.C_Changed);
             // 
             // cY
             // 
@@ -268,6 +259,7 @@ namespace STLNormalSwitcher {
             this.cY.Size = new System.Drawing.Size(114, 20);
             this.cY.TabIndex = 11;
             this.cY.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TriangleValue_KeyPress);
+            this.cY.TextChanged += new System.EventHandler(this.C_Changed);
             // 
             // cZ
             // 
@@ -277,16 +269,7 @@ namespace STLNormalSwitcher {
             this.cZ.Size = new System.Drawing.Size(114, 20);
             this.cZ.TabIndex = 10;
             this.cZ.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TriangleValue_KeyPress);
-            // 
-            // labelB
-            // 
-            this.labelB.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-            this.labelB.AutoSize = true;
-            this.labelB.Location = new System.Drawing.Point(21, 112);
-            this.labelB.Name = "labelB";
-            this.labelB.Size = new System.Drawing.Size(17, 13);
-            this.labelB.TabIndex = 1;
-            this.labelB.Text = "B:";
+            this.cZ.TextChanged += new System.EventHandler(this.C_Changed);
             // 
             // bX
             // 
@@ -296,6 +279,7 @@ namespace STLNormalSwitcher {
             this.bX.Size = new System.Drawing.Size(114, 20);
             this.bX.TabIndex = 6;
             this.bX.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TriangleValue_KeyPress);
+            this.bX.TextChanged += new System.EventHandler(this.B_Changed);
             // 
             // bY
             // 
@@ -305,6 +289,7 @@ namespace STLNormalSwitcher {
             this.bY.Size = new System.Drawing.Size(114, 20);
             this.bY.TabIndex = 7;
             this.bY.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TriangleValue_KeyPress);
+            this.bY.TextChanged += new System.EventHandler(this.B_Changed);
             // 
             // bZ
             // 
@@ -314,6 +299,7 @@ namespace STLNormalSwitcher {
             this.bZ.Size = new System.Drawing.Size(114, 20);
             this.bZ.TabIndex = 8;
             this.bZ.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TriangleValue_KeyPress);
+            this.bZ.TextChanged += new System.EventHandler(this.B_Changed);
             // 
             // aX
             // 
@@ -323,6 +309,7 @@ namespace STLNormalSwitcher {
             this.aX.Size = new System.Drawing.Size(114, 20);
             this.aX.TabIndex = 3;
             this.aX.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TriangleValue_KeyPress);
+            this.aX.TextChanged += new System.EventHandler(this.A_Changed);
             // 
             // aY
             // 
@@ -332,6 +319,7 @@ namespace STLNormalSwitcher {
             this.aY.Size = new System.Drawing.Size(114, 20);
             this.aY.TabIndex = 4;
             this.aY.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TriangleValue_KeyPress);
+            this.aY.TextChanged += new System.EventHandler(this.A_Changed);
             // 
             // aZ
             // 
@@ -341,6 +329,7 @@ namespace STLNormalSwitcher {
             this.aZ.Size = new System.Drawing.Size(114, 20);
             this.aZ.TabIndex = 5;
             this.aZ.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TriangleValue_KeyPress);
+            this.aZ.TextChanged += new System.EventHandler(this.A_Changed);
             // 
             // labelZ
             // 
@@ -371,16 +360,6 @@ namespace STLNormalSwitcher {
             this.labelX.Size = new System.Drawing.Size(14, 13);
             this.labelX.TabIndex = 12;
             this.labelX.Text = "X";
-            // 
-            // labelA
-            // 
-            this.labelA.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-            this.labelA.AutoSize = true;
-            this.labelA.Location = new System.Drawing.Point(21, 82);
-            this.labelA.Name = "labelA";
-            this.labelA.Size = new System.Drawing.Size(17, 13);
-            this.labelA.TabIndex = 0;
-            this.labelA.Text = "A:";
             // 
             // triangleComboBox
             // 
@@ -470,68 +449,106 @@ namespace STLNormalSwitcher {
             this.removeButton.UseVisualStyleBackColor = true;
             this.removeButton.Click += new System.EventHandler(this.RemoveButton_Click);
             // 
-            // panel4
-            // 
-            this.panel4.BackColor = System.Drawing.Color.Yellow;
-            this.tableLayoutPanel4.SetColumnSpan(this.panel4, 4);
-            this.panel4.Controls.Add(this.verticesA);
-            this.panel4.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel4.Location = new System.Drawing.Point(423, 68);
-            this.panel4.Name = "panel4";
-            this.panel4.Size = new System.Drawing.Size(249, 24);
-            this.panel4.TabIndex = 41;
-            // 
             // verticesA
             // 
+            this.tableLayoutPanel4.SetColumnSpan(this.verticesA, 4);
             this.verticesA.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.verticesA.FormattingEnabled = true;
-            this.verticesA.Location = new System.Drawing.Point(0, 3);
+            this.verticesA.Location = new System.Drawing.Point(423, 71);
             this.verticesA.Name = "verticesA";
             this.verticesA.Size = new System.Drawing.Size(249, 21);
             this.verticesA.TabIndex = 26;
-            this.verticesA.SelectedIndexChanged += new System.EventHandler(this.VerticesA_SelectedIndexChanged);
-            // 
-            // panel5
-            // 
-            this.panel5.BackColor = System.Drawing.Color.Green;
-            this.tableLayoutPanel4.SetColumnSpan(this.panel5, 4);
-            this.panel5.Controls.Add(this.verticesB);
-            this.panel5.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel5.Location = new System.Drawing.Point(423, 98);
-            this.panel5.Name = "panel5";
-            this.panel5.Size = new System.Drawing.Size(249, 24);
-            this.panel5.TabIndex = 42;
             // 
             // verticesB
             // 
+            this.tableLayoutPanel4.SetColumnSpan(this.verticesB, 4);
             this.verticesB.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.verticesB.FormattingEnabled = true;
-            this.verticesB.Location = new System.Drawing.Point(0, 3);
+            this.verticesB.Location = new System.Drawing.Point(423, 101);
             this.verticesB.Name = "verticesB";
             this.verticesB.Size = new System.Drawing.Size(249, 21);
             this.verticesB.TabIndex = 38;
-            this.verticesB.SelectedIndexChanged += new System.EventHandler(this.VerticesB_SelectedIndexChanged);
-            // 
-            // panel6
-            // 
-            this.panel6.BackColor = System.Drawing.Color.Blue;
-            this.tableLayoutPanel4.SetColumnSpan(this.panel6, 4);
-            this.panel6.Controls.Add(this.verticesC);
-            this.panel6.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel6.Location = new System.Drawing.Point(423, 128);
-            this.panel6.Name = "panel6";
-            this.panel6.Size = new System.Drawing.Size(249, 24);
-            this.panel6.TabIndex = 43;
             // 
             // verticesC
             // 
+            this.tableLayoutPanel4.SetColumnSpan(this.verticesC, 4);
             this.verticesC.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.verticesC.FormattingEnabled = true;
-            this.verticesC.Location = new System.Drawing.Point(0, 3);
+            this.verticesC.Location = new System.Drawing.Point(423, 131);
             this.verticesC.Name = "verticesC";
             this.verticesC.Size = new System.Drawing.Size(249, 21);
             this.verticesC.TabIndex = 39;
-            this.verticesC.SelectedIndexChanged += new System.EventHandler(this.VerticesC_SelectedIndexChanged);
+            // 
+            // panel4
+            // 
+            this.panel4.BackColor = System.Drawing.Color.Transparent;
+            this.panel4.BackgroundImage = global::STLNormalSwitcher.Properties.Resources.yellowDot;
+            this.panel4.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.panel4.Controls.Add(this.labelA);
+            this.panel4.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel4.Location = new System.Drawing.Point(8, 68);
+            this.panel4.Name = "panel4";
+            this.panel4.Size = new System.Drawing.Size(44, 24);
+            this.panel4.TabIndex = 41;
+            // 
+            // labelA
+            // 
+            this.labelA.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.labelA.AutoSize = true;
+            this.labelA.BackColor = System.Drawing.Color.Transparent;
+            this.labelA.Location = new System.Drawing.Point(13, 6);
+            this.labelA.Name = "labelA";
+            this.labelA.Size = new System.Drawing.Size(17, 13);
+            this.labelA.TabIndex = 0;
+            this.labelA.Text = "A:";
+            // 
+            // panel5
+            // 
+            this.panel5.BackColor = System.Drawing.Color.Transparent;
+            this.panel5.BackgroundImage = global::STLNormalSwitcher.Properties.Resources.greenDot;
+            this.panel5.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.panel5.Controls.Add(this.labelB);
+            this.panel5.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel5.Location = new System.Drawing.Point(8, 98);
+            this.panel5.Name = "panel5";
+            this.panel5.Size = new System.Drawing.Size(44, 24);
+            this.panel5.TabIndex = 42;
+            // 
+            // labelB
+            // 
+            this.labelB.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.labelB.AutoSize = true;
+            this.labelB.BackColor = System.Drawing.Color.Transparent;
+            this.labelB.ForeColor = System.Drawing.SystemColors.ControlLightLight;
+            this.labelB.Location = new System.Drawing.Point(13, 6);
+            this.labelB.Name = "labelB";
+            this.labelB.Size = new System.Drawing.Size(17, 13);
+            this.labelB.TabIndex = 1;
+            this.labelB.Text = "B:";
+            // 
+            // panel6
+            // 
+            this.panel6.BackColor = System.Drawing.Color.Transparent;
+            this.panel6.BackgroundImage = global::STLNormalSwitcher.Properties.Resources.blueDot;
+            this.panel6.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.panel6.Controls.Add(this.labelC);
+            this.panel6.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel6.Location = new System.Drawing.Point(8, 128);
+            this.panel6.Name = "panel6";
+            this.panel6.Size = new System.Drawing.Size(44, 24);
+            this.panel6.TabIndex = 43;
+            // 
+            // labelC
+            // 
+            this.labelC.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.labelC.AutoSize = true;
+            this.labelC.BackColor = System.Drawing.Color.Transparent;
+            this.labelC.ForeColor = System.Drawing.SystemColors.ControlLightLight;
+            this.labelC.Location = new System.Drawing.Point(13, 6);
+            this.labelC.Name = "labelC";
+            this.labelC.Size = new System.Drawing.Size(17, 13);
+            this.labelC.TabIndex = 2;
+            this.labelC.Text = "C:";
             // 
             // AddPanel
             // 
@@ -540,8 +557,11 @@ namespace STLNormalSwitcher {
             this.tableLayoutPanel4.ResumeLayout(false);
             this.tableLayoutPanel4.PerformLayout();
             this.panel4.ResumeLayout(false);
+            this.panel4.PerformLayout();
             this.panel5.ResumeLayout(false);
+            this.panel5.PerformLayout();
             this.panel6.ResumeLayout(false);
+            this.panel6.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -569,10 +589,8 @@ namespace STLNormalSwitcher {
         /// <param name="flag">Not used for this TabPanel</param>
         internal override void UpdateTab(bool flag) {
             if ((owner.CurrentSelection.Count == 1) && (owner.CurrentSelection[0] != null)) {
-                owner.Visualization.Vertices = true;
                 owner.Visualization.Corners = true;
             } else {
-                owner.Visualization.Vertices = false;
                 owner.Visualization.Corners = false;
             }
 
@@ -594,13 +612,13 @@ namespace STLNormalSwitcher {
             verticesC.DisplayMember = "AsString";
 
             EndUpdate();
-            UpdateTriVertices();
+            UpdateVerticesBoxes();
         }
 
         /// <summary>
-        /// Updates owner.TriVertices, when the selected Triangle is changed.
+        /// Updates the vertices boxes, when the selected Triangle is changed.
         /// </summary>
-        private void UpdateTriVertices() {
+        private void UpdateVerticesBoxes() {
             BeginUpdate();
             Triangle temp;
             if ((owner.CurrentSelection.Count > 0) && (owner.CurrentSelection[0] != null)) {
@@ -612,58 +630,59 @@ namespace STLNormalSwitcher {
             owner.CurrentSelection.Clear();
             owner.CurrentSelection.Add(temp);
             if (owner.CurrentSelection[0] != null) {
-                owner.Visualization.Vertices = true;
                 owner.Visualization.Corners = true;
 
                 verticesA.SelectedItem = owner.CurrentSelection[0][0];
                 verticesB.SelectedItem = owner.CurrentSelection[0][1];
                 verticesC.SelectedItem = owner.CurrentSelection[0][2];
-                owner.TriVertices[0] = owner.TriangleList.VertexArray[(verticesA.SelectedItem as Vertex).Owner.Position * 9 +
-                    (verticesA.SelectedItem as Vertex).Owner.IndexOf(verticesA.SelectedItem as Vertex) * 3];
-                owner.TriVertices[1] = owner.TriangleList.VertexArray[(verticesA.SelectedItem as Vertex).Owner.Position * 9 +
-                    (verticesA.SelectedItem as Vertex).Owner.IndexOf(verticesA.SelectedItem as Vertex) * 3 + 1];
-                owner.TriVertices[2] = owner.TriangleList.VertexArray[(verticesA.SelectedItem as Vertex).Owner.Position * 9 +
-                    (verticesA.SelectedItem as Vertex).Owner.IndexOf(verticesA.SelectedItem as Vertex) * 3 + 2];
-                owner.TriVertices[3] = owner.TriangleList.VertexArray[(verticesB.SelectedItem as Vertex).Owner.Position * 9 +
-                    (verticesB.SelectedItem as Vertex).Owner.IndexOf(verticesB.SelectedItem as Vertex) * 3];
-                owner.TriVertices[4] = owner.TriangleList.VertexArray[(verticesB.SelectedItem as Vertex).Owner.Position * 9 +
-                    (verticesB.SelectedItem as Vertex).Owner.IndexOf(verticesB.SelectedItem as Vertex) * 3 + 1];
-                owner.TriVertices[5] = owner.TriangleList.VertexArray[(verticesB.SelectedItem as Vertex).Owner.Position * 9 +
-                    (verticesB.SelectedItem as Vertex).Owner.IndexOf(verticesB.SelectedItem as Vertex) * 3 + 2];
-                owner.TriVertices[6] = owner.TriangleList.VertexArray[(verticesC.SelectedItem as Vertex).Owner.Position * 9 +
-                    (verticesC.SelectedItem as Vertex).Owner.IndexOf(verticesC.SelectedItem as Vertex) * 3];
-                owner.TriVertices[7] = owner.TriangleList.VertexArray[(verticesC.SelectedItem as Vertex).Owner.Position * 9 +
-                    (verticesC.SelectedItem as Vertex).Owner.IndexOf(verticesC.SelectedItem as Vertex) * 3 + 1];
-                owner.TriVertices[8] = owner.TriangleList.VertexArray[(verticesC.SelectedItem as Vertex).Owner.Position * 9 +
-                    (verticesC.SelectedItem as Vertex).Owner.IndexOf(verticesC.SelectedItem as Vertex) * 3 + 2];
             } else {
-                owner.Visualization.Vertices = false;
                 owner.Visualization.Corners = false;
             }
             EndUpdate();
+
+            owner.Visualization.Fresh = false;
+            A_Changed(new object(), new EventArgs());
+            B_Changed(new object(), new EventArgs());
+            C_Changed(new object(), new EventArgs());
 
             owner.SetCorners();
             owner.RefreshVisualization();
         }
 
         /// <summary>
-        /// Unbinds the SelectedIndexChanged-events, so that not every little change is visualized at once.
+        /// Unbinds the TextChanged EventHandlers.
         /// </summary>
         private void BeginUpdate() {
             triangleComboBox.SelectedIndexChanged -= TriangleComboBox_SelectedIndexChanged;
-            verticesA.SelectedIndexChanged -= VerticesA_SelectedIndexChanged;
-            verticesB.SelectedIndexChanged -= VerticesB_SelectedIndexChanged;
-            verticesC.SelectedIndexChanged -= VerticesC_SelectedIndexChanged;
+            aX.TextChanged -= A_Changed;
+            aY.TextChanged -= A_Changed;
+            aZ.TextChanged -= A_Changed;
+            bX.TextChanged -= B_Changed;
+            bY.TextChanged -= B_Changed;
+            bZ.TextChanged -= B_Changed;
+            cX.TextChanged -= C_Changed;
+            cY.TextChanged -= C_Changed;
+            cZ.TextChanged -= C_Changed;
         }
 
         /// <summary>
-        /// Binds the SelectedIndexChanged-events again.
+        /// Binds the TextChanged EventHandlers again.
         /// </summary>
         private void EndUpdate() {
             triangleComboBox.SelectedIndexChanged += TriangleComboBox_SelectedIndexChanged;
-            verticesA.SelectedIndexChanged += VerticesA_SelectedIndexChanged;
-            verticesB.SelectedIndexChanged += VerticesB_SelectedIndexChanged;
-            verticesC.SelectedIndexChanged += VerticesC_SelectedIndexChanged;
+            aX.TextChanged += A_Changed;
+            aY.TextChanged += A_Changed;
+            aZ.TextChanged += A_Changed;
+            bX.TextChanged += B_Changed;
+            bY.TextChanged += B_Changed;
+            bZ.TextChanged += B_Changed;
+            cX.TextChanged += C_Changed;
+            cY.TextChanged += C_Changed;
+            cZ.TextChanged += C_Changed;
+
+            A_Changed(new object(), new EventArgs());
+            B_Changed(new object(), new EventArgs());
+            C_Changed(new object(), new EventArgs());
         }
 
         #endregion
@@ -700,7 +719,7 @@ namespace STLNormalSwitcher {
         private void TriangleComboBox_SelectedIndexChanged(object sender, EventArgs e) {
             owner.CurrentSelection.Clear();
             owner.CurrentSelection.Add(triangleComboBox.SelectedItem as Triangle);
-            UpdateTriVertices();
+            UpdateVerticesBoxes();
         }
 
         /// <summary>
@@ -774,7 +793,6 @@ namespace STLNormalSwitcher {
             } else if (temp[0].Position == 0) {
                 triangleComboBox.SelectedIndex = 0;
             } else {
-                owner.Visualization.Vertices = false;
                 owner.Visualization.Corners = false;
             }
             owner.TriangleList.RemoveAt(temp[0].Position);
@@ -828,57 +846,6 @@ namespace STLNormalSwitcher {
         }
 
         /// <summary>
-        /// Fills the triVertices array with the values of the Vertex selected in the verticesA ComboBox.
-        /// </summary>
-        /// <param name="sender">verticesA</param>
-        /// <param name="e">Standard EventArgs</param>
-        private void VerticesA_SelectedIndexChanged(object sender, EventArgs e) {
-            if (verticesA.SelectedItem != null) {
-                owner.TriVertices[0] = owner.TriangleList.VertexArray[(verticesA.SelectedItem as Vertex).Owner.Position * 9 +
-                    (verticesA.SelectedItem as Vertex).Owner.IndexOf(verticesA.SelectedItem as Vertex) * 3];
-                owner.TriVertices[1] = owner.TriangleList.VertexArray[(verticesA.SelectedItem as Vertex).Owner.Position * 9 +
-                    (verticesA.SelectedItem as Vertex).Owner.IndexOf(verticesA.SelectedItem as Vertex) * 3 + 1];
-                owner.TriVertices[2] = owner.TriangleList.VertexArray[(verticesA.SelectedItem as Vertex).Owner.Position * 9 +
-                    (verticesA.SelectedItem as Vertex).Owner.IndexOf(verticesA.SelectedItem as Vertex) * 3 + 2];
-                owner.Visualization.Refresh();
-            }
-        }
-
-        /// <summary>
-        /// Fills the triVertices array with the values of the Vertex selected in the verticesB ComboBox.
-        /// </summary>
-        /// <param name="sender">verticesB</param>
-        /// <param name="e">Standard EventArgs</param>
-        private void VerticesB_SelectedIndexChanged(object sender, EventArgs e) {
-            if (verticesB.SelectedItem != null) {
-                owner.TriVertices[3] = owner.TriangleList.VertexArray[(verticesB.SelectedItem as Vertex).Owner.Position * 9 +
-                    (verticesB.SelectedItem as Vertex).Owner.IndexOf(verticesB.SelectedItem as Vertex) * 3];
-                owner.TriVertices[4] = owner.TriangleList.VertexArray[(verticesB.SelectedItem as Vertex).Owner.Position * 9 +
-                    (verticesB.SelectedItem as Vertex).Owner.IndexOf(verticesB.SelectedItem as Vertex) * 3 + 1];
-                owner.TriVertices[5] = owner.TriangleList.VertexArray[(verticesB.SelectedItem as Vertex).Owner.Position * 9 +
-                    (verticesB.SelectedItem as Vertex).Owner.IndexOf(verticesB.SelectedItem as Vertex) * 3 + 2];
-                owner.Visualization.Refresh();
-            }
-        }
-
-        /// <summary>
-        /// Fills the triVertices array with the values of the Vertex selected in the verticesC ComboBox.
-        /// </summary>
-        /// <param name="sender">verticesC</param>
-        /// <param name="e">Standard EventArgs</param>
-        private void VerticesC_SelectedIndexChanged(object sender, EventArgs e) {
-            if (verticesC.SelectedItem != null) {
-                owner.TriVertices[6] = owner.TriangleList.VertexArray[(verticesC.SelectedItem as Vertex).Owner.Position * 9 +
-                    (verticesC.SelectedItem as Vertex).Owner.IndexOf(verticesC.SelectedItem as Vertex) * 3];
-                owner.TriVertices[7] = owner.TriangleList.VertexArray[(verticesC.SelectedItem as Vertex).Owner.Position * 9 +
-                    (verticesC.SelectedItem as Vertex).Owner.IndexOf(verticesC.SelectedItem as Vertex) * 3 + 1];
-                owner.TriVertices[8] = owner.TriangleList.VertexArray[(verticesC.SelectedItem as Vertex).Owner.Position * 9 +
-                    (verticesC.SelectedItem as Vertex).Owner.IndexOf(verticesC.SelectedItem as Vertex) * 3 + 2];
-                owner.Visualization.Refresh();
-            }
-        }
-
-        /// <summary>
         /// Prevents the user from entering anything, but a floating point number in the TextBoxes for
         /// editing or adding Triangles.
         /// </summary>
@@ -905,6 +872,54 @@ namespace STLNormalSwitcher {
                     e.Handled = true;
                 }
             }
+        }
+
+        /// <summary>
+        /// Updates owner.TriVertices, when the text in one of the TextBoxes of vertex a is changed.
+        /// </summary>
+        /// <param name="sender">aX, aY or aZ</param>
+        /// <param name="e">Standard EventArgs</param>
+        private void A_Changed(object sender, EventArgs e) {
+            try {
+                Vertex a = owner.TriangleList.VisualPositionOfVertex(new Vertex((float)Convert.ToDouble(aX.Text),
+                    (float)Convert.ToDouble(aY.Text), (float)Convert.ToDouble(aZ.Text)));
+                owner.TriVertices[0] = a[0];
+                owner.TriVertices[1] = a[1];
+                owner.TriVertices[2] = a[2];
+                owner.Visualization.Vertices[0] = true;
+            } catch { owner.Visualization.Vertices[0] = false; } finally { owner.Visualization.Refresh(); }
+        }
+
+        /// <summary>
+        /// Updates owner.TriVertices, when the text in one of the TextBoxes of vertex b is changed.
+        /// </summary>
+        /// <param name="sender">bX, bY or bZ</param>
+        /// <param name="e">Standard EventArgs</param>
+        private void B_Changed(object sender, EventArgs e) {
+            try {
+                Vertex b = owner.TriangleList.VisualPositionOfVertex(new Vertex((float)Convert.ToDouble(bX.Text),
+                    (float)Convert.ToDouble(bY.Text), (float)Convert.ToDouble(bZ.Text)));
+                owner.TriVertices[3] = b[0];
+                owner.TriVertices[4] = b[1];
+                owner.TriVertices[5] = b[2];
+                owner.Visualization.Vertices[1] = true;
+            } catch { owner.Visualization.Vertices[1] = false; } finally { owner.Visualization.Refresh(); }
+        }
+
+        /// <summary>
+        /// Updates owner.TriVertices, when the text in one of the TextBoxes of vertex c is changed.
+        /// </summary>
+        /// <param name="sender">cX, cY or cZ</param>
+        /// <param name="e">Standard EventArgs</param>
+        private void C_Changed(object sender, EventArgs e) {
+            try {
+                Vertex c = owner.TriangleList.VisualPositionOfVertex(new Vertex((float)Convert.ToDouble(cX.Text),
+                    (float)Convert.ToDouble(cY.Text), (float)Convert.ToDouble(cZ.Text)));
+                owner.TriVertices[6] = c[0];
+                owner.TriVertices[7] = c[1];
+                owner.TriVertices[8] = c[2];
+                owner.Visualization.Vertices[2] = true;
+            } catch { owner.Visualization.Vertices[2] = false; } finally { owner.Visualization.Refresh(); }
         }
 
         #endregion
