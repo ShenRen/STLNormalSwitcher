@@ -598,15 +598,13 @@ namespace STLNormalSwitcher {
             aX.Text = aY.Text = aZ.Text = bX.Text = bY.Text = bZ.Text = cX.Text = cY.Text = cZ.Text =
                     normalX.Text = normalY.Text = normalZ.Text = "";
 
-            triangleComboBox.DataSource = null;
-            triangleComboBox.DataSource = owner.TriangleList;
+            FillTriangleComboBox();
 
             verticesA.DataSource = verticesB.DataSource = verticesC.DataSource = null;
             verticesA.DataSource = owner.TriangleList.Vertices;
             verticesB.DataSource = owner.TriangleList.Vertices;
             verticesC.DataSource = owner.TriangleList.Vertices;
 
-            triangleComboBox.DisplayMember = "AsString";
             verticesA.DisplayMember = "AsString";
             verticesB.DisplayMember = "AsString";
             verticesC.DisplayMember = "AsString";
@@ -623,19 +621,17 @@ namespace STLNormalSwitcher {
             Triangle temp;
             if ((owner.CurrentSelection.Count > 0) && (owner.CurrentSelection[0] != null)) {
                 temp = owner.CurrentSelection[0];
-                triangleComboBox.SelectedIndex = temp.Position;
-            } else {
-                temp = triangleComboBox.SelectedItem as Triangle;
-            }
-            owner.CurrentSelection.Clear();
-            owner.CurrentSelection.Add(temp);
-            if (owner.CurrentSelection[0] != null) {
+                triangleComboBox.SelectedIndex = temp.Position + 1;
+                owner.CurrentSelection.Clear();
+                owner.CurrentSelection.Add(temp);
                 owner.Visualization.Corners = true;
-
                 verticesA.SelectedItem = owner.CurrentSelection[0][0];
                 verticesB.SelectedItem = owner.CurrentSelection[0][1];
                 verticesC.SelectedItem = owner.CurrentSelection[0][2];
+                owner.SetCorners();
             } else {
+                triangleComboBox.SelectedIndex = 0;
+                owner.CurrentSelection.Clear();
                 owner.Visualization.Corners = false;
             }
             EndUpdate();
@@ -645,8 +641,18 @@ namespace STLNormalSwitcher {
             B_Changed(new object(), new EventArgs());
             C_Changed(new object(), new EventArgs());
 
-            owner.SetCorners();
             owner.RefreshVisualization();
+        }
+
+        /// <summary>
+        /// Fills the triangleComboBox with the value "None" and the strings of all triangles.
+        /// </summary>
+        private void FillTriangleComboBox() {
+            triangleComboBox.Items.Clear();
+            triangleComboBox.Items.Add("None");
+            for (int i = 0; i < owner.TriangleList.Count; i++) {
+                triangleComboBox.Items.Add(owner.TriangleList[i].ToString());
+            }
         }
 
         /// <summary>
@@ -696,18 +702,21 @@ namespace STLNormalSwitcher {
         /// <param name="sender">triangleCopyButton</param>
         /// <param name="e">Standard EventArgs</param>
         private void TriangleCopyButton_Click(object sender, EventArgs e) {
-            aX.Text = (triangleComboBox.SelectedItem as Triangle)[0][0].ToString();
-            aY.Text = (triangleComboBox.SelectedItem as Triangle)[0][1].ToString();
-            aZ.Text = (triangleComboBox.SelectedItem as Triangle)[0][2].ToString();
-            bX.Text = (triangleComboBox.SelectedItem as Triangle)[1][0].ToString();
-            bY.Text = (triangleComboBox.SelectedItem as Triangle)[1][1].ToString();
-            bZ.Text = (triangleComboBox.SelectedItem as Triangle)[1][2].ToString();
-            cX.Text = (triangleComboBox.SelectedItem as Triangle)[2][0].ToString();
-            cY.Text = (triangleComboBox.SelectedItem as Triangle)[2][1].ToString();
-            cZ.Text = (triangleComboBox.SelectedItem as Triangle)[2][2].ToString();
-            normalX.Text = (triangleComboBox.SelectedItem as Triangle)[3][0].ToString();
-            normalY.Text = (triangleComboBox.SelectedItem as Triangle)[3][1].ToString();
-            normalZ.Text = (triangleComboBox.SelectedItem as Triangle)[3][2].ToString();
+            if (triangleComboBox.SelectedIndex != 0) {
+                int temp = triangleComboBox.SelectedIndex - 1;
+                aX.Text = (owner.TriangleList[temp])[0][0].ToString();
+                aY.Text = (owner.TriangleList[temp])[0][1].ToString();
+                aZ.Text = (owner.TriangleList[temp])[0][2].ToString();
+                bX.Text = (owner.TriangleList[temp])[1][0].ToString();
+                bY.Text = (owner.TriangleList[temp])[1][1].ToString();
+                bZ.Text = (owner.TriangleList[temp])[1][2].ToString();
+                cX.Text = (owner.TriangleList[temp])[2][0].ToString();
+                cY.Text = (owner.TriangleList[temp])[2][1].ToString();
+                cZ.Text = (owner.TriangleList[temp])[2][2].ToString();
+                normalX.Text = (owner.TriangleList[temp])[3][0].ToString();
+                normalY.Text = (owner.TriangleList[temp])[3][1].ToString();
+                normalZ.Text = (owner.TriangleList[temp])[3][2].ToString();
+            }
         }
 
         /// <summary>
@@ -718,7 +727,9 @@ namespace STLNormalSwitcher {
         /// <param name="e">Standard EventArgs</param>
         private void TriangleComboBox_SelectedIndexChanged(object sender, EventArgs e) {
             owner.CurrentSelection.Clear();
-            owner.CurrentSelection.Add(triangleComboBox.SelectedItem as Triangle);
+            if (triangleComboBox.SelectedIndex != 0) {
+                owner.CurrentSelection.Add(owner.TriangleList[triangleComboBox.SelectedIndex - 1]);
+            }
             UpdateVerticesBoxes();
         }
 
