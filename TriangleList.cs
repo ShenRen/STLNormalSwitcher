@@ -169,9 +169,11 @@ namespace STLNormalSwitcher {
         /// <param name="vertex">A given Vertex in real position</param>
         /// <returns>The same vertex in visual position</returns>
         internal Vertex VisualPositionOfVertex(Vertex vertex) {
-            Vertex temp = new Vertex(scale * (((vertex[0] - min[0]) / (scale)) - 0.5f),
-                scale * (((vertex[1] - min[1]) / (scale)) - 0.5f), scale * (((vertex[2] - min[2]) / (scale)) - 0.5f));
-            return temp;
+            if (scale != 0.0f) {
+                Vertex temp = new Vertex(scale * (((vertex[0] - min[0]) / (scale)) - 0.5f),
+                    scale * (((vertex[1] - min[1]) / (scale)) - 0.5f), scale * (((vertex[2] - min[2]) / (scale)) - 0.5f));
+                return temp;
+            } else { return vertex; }
         }
 
         /// <summary>

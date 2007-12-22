@@ -50,7 +50,6 @@ namespace STLNormalSwitcher {
         private float[] triVertices = new float[9];
         private float[] corners = new float[9];
         private bool changed = false;
-        private bool flag = false;
 
         private List<Event> history = new List<Event>();
         private Event currentSelection = new Event();
@@ -99,12 +98,6 @@ namespace STLNormalSwitcher {
                 history = value;
                 changed = true;
             }
-        }
-
-        /// <value>Gets a flag indicating significant changes to the triangleList or sets it</value>
-        internal bool Flag {
-            get { return flag; }
-            set { flag = value; }
         }
 
         #endregion
@@ -170,7 +163,7 @@ namespace STLNormalSwitcher {
             tabControl1.TabPages.Add(new Page(new EditPanel(this), "Edit Selected Triangle"));
             tabControl1.TabPages.Add(new Page(new AddPanel(this), "Add/Remove Triangle"));
 
-            (tabControl1.SelectedTab as Page).UpdateTab(true);
+            (tabControl1.SelectedTab as Page).UpdateTab();
         }
 
         /// <summary>
@@ -237,7 +230,7 @@ namespace STLNormalSwitcher {
                 }
             }
 
-            (tabControl1.SelectedTab as Page).UpdateTab(false);
+            (tabControl1.SelectedTab as Page).UpdateTab();
             RefreshVisualization();
 
         }
@@ -392,6 +385,7 @@ namespace STLNormalSwitcher {
         /// <param name="sender">undoToolStripMenuItem or undoButton</param>
         /// <param name="e">Standard EventArgs</param>
         private void Undo(object sender, EventArgs e) {
+            visualization.Fresh = false;
             if (history.Count >= 1) {
                 currentSelection = history[history.Count - 1];
                 if (currentSelection.eventType == Event.EventType.SwitchAll) {
@@ -402,11 +396,10 @@ namespace STLNormalSwitcher {
                     }
                 } else if (currentSelection.eventType == Event.EventType.Add) {
                     triangleList.RemoveAt(currentSelection[0].Position);
-                    triangleList.Finish();
                     triangleList.SetPositions();
+                    currentSelection.Clear();
                 } else {
                     triangleList.Insert(currentSelection[0].Position, currentSelection[0]);
-                    triangleList.Finish();
                     triangleList.SetPositions();
                 }
                 history.RemoveAt(history.Count - 1);
@@ -419,7 +412,7 @@ namespace STLNormalSwitcher {
             visualization.SetColorArray();
             visualization.SetPickingColors();
             SetOrigin();
-            (tabControl1.SelectedTab as Page).UpdateTab(true);
+            (tabControl1.SelectedTab as Page).UpdateTab();
         }
 
         /// <summary>
@@ -438,7 +431,7 @@ namespace STLNormalSwitcher {
             visualization.SetColorArray();
             visualization.SetPickingColors();
             SetOrigin();
-            (tabControl1.SelectedTab as Page).UpdateTab(true);
+            (tabControl1.SelectedTab as Page).UpdateTab();
         }
 
         /// <summary>
@@ -463,7 +456,7 @@ namespace STLNormalSwitcher {
 
             undoButton.Enabled = true;
             changed = true;
-            (tabControl1.SelectedTab as Page).UpdateTab(true);
+            (tabControl1.SelectedTab as Page).UpdateTab();
         }
 
         /// <summary>
@@ -483,7 +476,7 @@ namespace STLNormalSwitcher {
 
                 undoButton.Enabled = true;
                 changed = true;
-                (tabControl1.SelectedTab as Page).UpdateTab(true);
+                (tabControl1.SelectedTab as Page).UpdateTab();
             }
         }
 
@@ -594,8 +587,7 @@ namespace STLNormalSwitcher {
         /// <param name="e">Standard TabControlCancelEventArgs</param>
         private void TabControl1_Selecting(object sender, TabControlCancelEventArgs e) {
             if (currentFile != "") {
-                (e.TabPage as Page).UpdateTab(flag);
-                flag = false;
+                (e.TabPage as Page).UpdateTab();
             }
         }
 

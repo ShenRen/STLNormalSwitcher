@@ -595,8 +595,7 @@ namespace STLNormalSwitcher {
         /// <summary>
         /// The main method of all TabPanels. Updates the elements on the panel.
         /// </summary>
-        /// <param name="flag">Not used for this TabPanel</param>
-        internal override void UpdateTab(bool flag) {
+        internal override void UpdateTab() {
             owner.Visualization.Fresh = false;
 
             BeginUpdate();
@@ -789,7 +788,7 @@ namespace STLNormalSwitcher {
         /// <param name="sender">resetTriangleBoxesButton</param>
         /// <param name="e">Standard EventArgs</param>
         private void ResetTriangleBoxesButton_Click(object sender, EventArgs e) {
-            UpdateTab(true);
+            UpdateTab();
         }
 
         /// <summary>
@@ -812,8 +811,7 @@ namespace STLNormalSwitcher {
                 owner.CurrentSelection.Add(tri);
                 owner.SetUndoButton(true);
                 owner.SetOrigin();
-                UpdateTab(true);
-                owner.Flag = true;
+                UpdateTab();
             } catch (ArgumentException ex) {
                 MessageBox.Show(ex.Message, "", MessageBoxButtons.OK, MessageBoxIcon.Error);
             } catch {
@@ -842,8 +840,7 @@ namespace STLNormalSwitcher {
                 owner.CurrentSelection.Add(tri);
                 owner.SetUndoButton(true);
                 owner.SetOrigin();
-                UpdateTab(true);
-                owner.Flag = true;
+                UpdateTab();
             } catch (ArgumentException ex) {
                 MessageBox.Show(ex.Message, "", MessageBoxButtons.OK, MessageBoxIcon.Error);
             } catch {

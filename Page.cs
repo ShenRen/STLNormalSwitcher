@@ -58,8 +58,7 @@ namespace STLNormalSwitcher {
         /// <summary>
         /// Updates the panel.
         /// </summary>
-        /// <param name="flag">Parameter that indicates significant changes</param>
-        internal void UpdateTab(bool flag) { panel.UpdateTab(flag); }
+        internal void UpdateTab() { panel.UpdateTab(); }
 
         #endregion
     }

@@ -123,8 +123,7 @@ namespace STLNormalSwitcher {
         /// <summary>
         /// The main method of all TabPanels. Updates the elements on the panel.
         /// </summary>
-        /// <param name="flag">The ListView is only refilled, when flag == true</param>
-        internal override void UpdateTab(bool flag) {
+        internal override void UpdateTab() {
             owner.Visualization.Vertices = new bool[3] { false, false, false };
             owner.Visualization.Fresh = false;
             owner.Visualization.Corners = false;
@@ -132,13 +131,11 @@ namespace STLNormalSwitcher {
             normalListView.BeginUpdate();
             normalListView.Sorting = SortOrder.None;
 
-            if (flag) {
-                normalListView.Items.Clear();
-                for (int i = 0; i < owner.TriangleList.Count; i++) {
-                    normalListView.Items.Add(new ListViewItem(new string[4] { owner.TriangleList[i].NormalToString(),
+            normalListView.Items.Clear();
+            for (int i = 0; i < owner.TriangleList.Count; i++) {
+                normalListView.Items.Add(new ListViewItem(new string[4] { owner.TriangleList[i].NormalToString(),
                     owner.TriangleList[i][0].ToString(), owner.TriangleList[i][1].ToString(), owner.TriangleList[i][2].ToString() }));
-                    normalListView.Items[i].Tag = i;
-                }
+                normalListView.Items[i].Tag = i;
             }
 
             normalListView.SelectedIndexChanged -= NormalListView_SelectedIndexChanged;

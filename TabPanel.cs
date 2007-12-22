@@ -55,8 +55,7 @@ namespace STLNormalSwitcher {
         /// <summary>
         /// The main method of all TabPanels. All TabPanels need to override this method.
         /// </summary>
-        /// <param name="flag">Parameter that indicates significant changes</param>
-        internal virtual void UpdateTab(bool flag) { }
+        internal virtual void UpdateTab() { }
 
         #endregion
     }

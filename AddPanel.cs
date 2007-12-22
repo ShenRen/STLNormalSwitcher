@@ -586,8 +586,9 @@ namespace STLNormalSwitcher {
         /// <summary>
         /// The main method of all TabPanels. Updates the elements on the panel.
         /// </summary>
-        /// <param name="flag">Not used for this TabPanel</param>
-        internal override void UpdateTab(bool flag) {
+        internal override void UpdateTab() {
+            owner.Visualization.Fresh = false;
+
             if ((owner.CurrentSelection.Count == 1) && (owner.CurrentSelection[0] != null)) {
                 owner.Visualization.Corners = true;
             } else {
@@ -599,15 +600,21 @@ namespace STLNormalSwitcher {
                     normalX.Text = normalY.Text = normalZ.Text = "";
 
             FillTriangleComboBox();
-
             verticesA.DataSource = verticesB.DataSource = verticesC.DataSource = null;
             verticesA.DataSource = owner.TriangleList.Vertices;
             verticesB.DataSource = owner.TriangleList.Vertices;
             verticesC.DataSource = owner.TriangleList.Vertices;
-
             verticesA.DisplayMember = "AsString";
             verticesB.DisplayMember = "AsString";
             verticesC.DisplayMember = "AsString";
+
+            if (triangleComboBox.Items.Count > 1) {
+                triangleCopyButton.Enabled = removeButton.Enabled =
+                    copyA.Enabled = copyB.Enabled = copyC.Enabled = true;
+            } else {
+                triangleCopyButton.Enabled = removeButton.Enabled =
+                    copyA.Enabled = copyB.Enabled = copyC.Enabled = false;
+            }
 
             EndUpdate();
             UpdateVerticesBoxes();
@@ -636,7 +643,6 @@ namespace STLNormalSwitcher {
             }
             EndUpdate();
 
-            owner.Visualization.Fresh = false;
             A_Changed(new object(), new EventArgs());
             B_Changed(new object(), new EventArgs());
             C_Changed(new object(), new EventArgs());
@@ -744,16 +750,15 @@ namespace STLNormalSwitcher {
                 Vertex b = new Vertex((float)Convert.ToDouble(bX.Text), (float)Convert.ToDouble(bY.Text), (float)Convert.ToDouble(bZ.Text));
                 Vertex c = new Vertex((float)Convert.ToDouble(cX.Text), (float)Convert.ToDouble(cY.Text), (float)Convert.ToDouble(cZ.Text));
                 Triangle tri = new Triangle(a, b, c);
-                Event temp = new Event(owner.CurrentSelection[0], Event.EventType.Add);
-                owner.History.Add(temp);
                 owner.TriangleList.AddTriangle(tri);
                 owner.TriangleList.Finish();
+                Event temp = new Event(tri.Copy(), Event.EventType.Add);
+                owner.History.Add(temp);
 
                 owner.SetUndoButton(true);
                 owner.SetOrigin();
                 owner.Visualization.SetPickingColors();
-                UpdateTab(true);
-                owner.Flag = true;
+                UpdateTab();
             } catch (ArgumentException ex) {
                 MessageBox.Show(ex.Message, "", MessageBoxButtons.OK, MessageBoxIcon.Error);
             } catch {
@@ -773,16 +778,15 @@ namespace STLNormalSwitcher {
                 Vertex c = new Vertex((float)Convert.ToDouble(cX.Text), (float)Convert.ToDouble(cY.Text), (float)Convert.ToDouble(cZ.Text));
                 Vertex n = new Vertex((float)Convert.ToDouble(normalX.Text), (float)Convert.ToDouble(normalY.Text), (float)Convert.ToDouble(normalZ.Text));
                 Triangle tri = new Triangle(a, b, c, n);
-                Event temp = new Event(owner.CurrentSelection[0], Event.EventType.Add);
-                owner.History.Add(temp);
                 owner.TriangleList.AddTriangle(tri);
                 owner.TriangleList.Finish();
+                Event temp = new Event(tri.Copy(), Event.EventType.Add);
+                owner.History.Add(temp);
 
                 owner.SetUndoButton(true);
                 owner.SetOrigin();
                 owner.Visualization.SetPickingColors();
-                UpdateTab(true);
-                owner.Flag = true;
+                UpdateTab();
             } catch (ArgumentException ex) {
                 MessageBox.Show(ex.Message, "", MessageBoxButtons.OK, MessageBoxIcon.Error);
             } catch {
@@ -796,28 +800,27 @@ namespace STLNormalSwitcher {
         /// <param name="sender">removeButton</param>
         /// <param name="e">Standard EventArgs</param>
         private void RemoveButton_Click(object sender, EventArgs e) {
-            owner.Visualization.Fresh = false;
-            Event temp = new Event((triangleComboBox.SelectedItem as Triangle), Event.EventType.Remove);
-            owner.History.Add(temp);
-            if (temp[0].Position > 0) {
-                triangleComboBox.SelectedIndex = temp[0].Position - 1;
-            } else if (temp[0].Position == 0) {
-                triangleComboBox.SelectedIndex = 0;
-            } else {
-                owner.Visualization.Corners = false;
+            if (triangleComboBox.SelectedIndex != 0) {
+                owner.Visualization.Fresh = false;
+                Event temp = new Event(owner.TriangleList[triangleComboBox.SelectedIndex - 1].Copy(), Event.EventType.Remove);
+                owner.History.Add(temp);
+                BeginUpdate();
+                if (temp[0].Position > 0) {
+                    triangleComboBox.SelectedIndex = temp[0].Position - 1;
+                } else if (temp[0].Position == 0) {
+                    triangleComboBox.SelectedIndex = 0;
+                }
+                EndUpdate();
+
+                owner.CurrentSelection.Clear();
+                owner.TriangleList.RemoveAt(temp[0].Position);
+                owner.TriangleList.SetPositions();
+
+                owner.SetUndoButton(true);
+                owner.SetOrigin();
+                owner.Visualization.SetPickingColors();
+                UpdateTab();
             }
-            owner.TriangleList.RemoveAt(temp[0].Position);
-            owner.TriangleList.Finish();
-            owner.TriangleList.SetPositions();
-            owner.CurrentSelection.Clear();
-
-            owner.SetUndoButton(true);
-            owner.SetOrigin();
-            owner.Visualization.SetPickingColors();
-            UpdateTab(true);
-            owner.Flag = true;
-
-            owner.RefreshVisualization();
         }
 
         /// <summary>
