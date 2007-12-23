@@ -811,6 +811,7 @@ namespace STLNormalSwitcher {
                 owner.CurrentSelection.Add(tri);
                 owner.SetUndoButton(true);
                 owner.SetOrigin();
+                owner.SetPanelsChanged();
                 UpdateTab();
             } catch (ArgumentException ex) {
                 MessageBox.Show(ex.Message, "", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -840,6 +841,7 @@ namespace STLNormalSwitcher {
                 owner.CurrentSelection.Add(tri);
                 owner.SetUndoButton(true);
                 owner.SetOrigin();
+                owner.SetPanelsChanged();
                 UpdateTab();
             } catch (ArgumentException ex) {
                 MessageBox.Show(ex.Message, "", MessageBoxButtons.OK, MessageBoxIcon.Error);

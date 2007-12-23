@@ -131,11 +131,14 @@ namespace STLNormalSwitcher {
             normalListView.BeginUpdate();
             normalListView.Sorting = SortOrder.None;
 
-            normalListView.Items.Clear();
-            for (int i = 0; i < owner.TriangleList.Count; i++) {
-                normalListView.Items.Add(new ListViewItem(new string[4] { owner.TriangleList[i].NormalToString(),
+            if (changed) {
+                normalListView.Items.Clear();
+                for (int i = 0; i < owner.TriangleList.Count; i++) {
+                    normalListView.Items.Add(new ListViewItem(new string[4] { owner.TriangleList[i].NormalToString(),
                     owner.TriangleList[i][0].ToString(), owner.TriangleList[i][1].ToString(), owner.TriangleList[i][2].ToString() }));
-                normalListView.Items[i].Tag = i;
+                    normalListView.Items[i].Tag = i;
+                }
+                changed = false;
             }
 
             normalListView.SelectedIndexChanged -= NormalListView_SelectedIndexChanged;

@@ -38,6 +38,14 @@ namespace STLNormalSwitcher {
         #region Fields
 
         protected NormalSwitcherForm owner;
+        protected bool changed = true;
+
+        #endregion
+
+        #region Properties
+
+        /// <value>Sets the value of changed</value>
+        internal bool Changed { set { changed = value; } }
 
         #endregion
 

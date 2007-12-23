@@ -117,10 +117,11 @@ namespace STLNormalSwitcher {
             // tableLayoutPanel4
             // 
             this.tableLayoutPanel4.BackColor = System.Drawing.SystemColors.Control;
-            this.tableLayoutPanel4.ColumnCount = 12;
+            this.tableLayoutPanel4.ColumnCount = 13;
             this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 5F));
             this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 50F));
-            this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 120F));
+            this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 60F));
+            this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 60F));
             this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 120F));
             this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 120F));
             this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 5F));
@@ -132,36 +133,36 @@ namespace STLNormalSwitcher {
             this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel4.Controls.Add(this.normalX, 2, 7);
             this.tableLayoutPanel4.Controls.Add(this.labelNormal, 1, 7);
-            this.tableLayoutPanel4.Controls.Add(this.normalY, 3, 7);
-            this.tableLayoutPanel4.Controls.Add(this.normalZ, 4, 7);
-            this.tableLayoutPanel4.Controls.Add(this.addTriangleButton, 6, 7);
-            this.tableLayoutPanel4.Controls.Add(this.addButton, 7, 7);
+            this.tableLayoutPanel4.Controls.Add(this.normalY, 4, 7);
+            this.tableLayoutPanel4.Controls.Add(this.normalZ, 5, 7);
+            this.tableLayoutPanel4.Controls.Add(this.addTriangleButton, 7, 7);
+            this.tableLayoutPanel4.Controls.Add(this.addButton, 8, 7);
             this.tableLayoutPanel4.Controls.Add(this.cX, 2, 5);
-            this.tableLayoutPanel4.Controls.Add(this.cY, 3, 5);
-            this.tableLayoutPanel4.Controls.Add(this.cZ, 4, 5);
-            this.tableLayoutPanel4.Controls.Add(this.bX, 2, 4);
-            this.tableLayoutPanel4.Controls.Add(this.bY, 3, 4);
-            this.tableLayoutPanel4.Controls.Add(this.bZ, 4, 4);
-            this.tableLayoutPanel4.Controls.Add(this.aX, 2, 3);
-            this.tableLayoutPanel4.Controls.Add(this.aY, 3, 3);
-            this.tableLayoutPanel4.Controls.Add(this.aZ, 4, 3);
-            this.tableLayoutPanel4.Controls.Add(this.labelZ, 4, 2);
-            this.tableLayoutPanel4.Controls.Add(this.labelY, 3, 2);
-            this.tableLayoutPanel4.Controls.Add(this.labelX, 2, 2);
+            this.tableLayoutPanel4.Controls.Add(this.cY, 4, 5);
+            this.tableLayoutPanel4.Controls.Add(this.cZ, 5, 5);
+            this.tableLayoutPanel4.Controls.Add(this.bY, 4, 4);
+            this.tableLayoutPanel4.Controls.Add(this.bZ, 5, 4);
+            this.tableLayoutPanel4.Controls.Add(this.aY, 4, 3);
+            this.tableLayoutPanel4.Controls.Add(this.aZ, 5, 3);
+            this.tableLayoutPanel4.Controls.Add(this.labelZ, 5, 2);
+            this.tableLayoutPanel4.Controls.Add(this.labelY, 4, 2);
             this.tableLayoutPanel4.Controls.Add(this.triangleComboBox, 3, 1);
-            this.tableLayoutPanel4.Controls.Add(this.labelTriangle, 2, 1);
-            this.tableLayoutPanel4.Controls.Add(this.copyA, 10, 3);
-            this.tableLayoutPanel4.Controls.Add(this.copyC, 10, 5);
-            this.tableLayoutPanel4.Controls.Add(this.copyB, 10, 4);
-            this.tableLayoutPanel4.Controls.Add(this.labelVertex, 6, 2);
-            this.tableLayoutPanel4.Controls.Add(this.triangleCopyButton, 8, 1);
-            this.tableLayoutPanel4.Controls.Add(this.removeButton, 9, 1);
-            this.tableLayoutPanel4.Controls.Add(this.verticesA, 6, 3);
-            this.tableLayoutPanel4.Controls.Add(this.verticesB, 6, 4);
-            this.tableLayoutPanel4.Controls.Add(this.verticesC, 6, 5);
+            this.tableLayoutPanel4.Controls.Add(this.copyA, 11, 3);
+            this.tableLayoutPanel4.Controls.Add(this.copyC, 11, 5);
+            this.tableLayoutPanel4.Controls.Add(this.copyB, 11, 4);
+            this.tableLayoutPanel4.Controls.Add(this.labelVertex, 7, 2);
+            this.tableLayoutPanel4.Controls.Add(this.triangleCopyButton, 9, 1);
+            this.tableLayoutPanel4.Controls.Add(this.removeButton, 10, 1);
+            this.tableLayoutPanel4.Controls.Add(this.verticesA, 7, 3);
+            this.tableLayoutPanel4.Controls.Add(this.verticesB, 7, 4);
+            this.tableLayoutPanel4.Controls.Add(this.verticesC, 7, 5);
             this.tableLayoutPanel4.Controls.Add(this.panel4, 1, 3);
             this.tableLayoutPanel4.Controls.Add(this.panel5, 1, 4);
             this.tableLayoutPanel4.Controls.Add(this.panel6, 1, 5);
+            this.tableLayoutPanel4.Controls.Add(this.labelX, 2, 2);
+            this.tableLayoutPanel4.Controls.Add(this.labelTriangle, 1, 1);
+            this.tableLayoutPanel4.Controls.Add(this.aX, 2, 3);
+            this.tableLayoutPanel4.Controls.Add(this.bX, 2, 4);
             this.tableLayoutPanel4.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel4.Location = new System.Drawing.Point(0, 0);
             this.tableLayoutPanel4.MinimumSize = new System.Drawing.Size(608, 208);
@@ -181,6 +182,7 @@ namespace STLNormalSwitcher {
             // 
             // normalX
             // 
+            this.tableLayoutPanel4.SetColumnSpan(this.normalX, 2);
             this.normalX.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.normalX.Location = new System.Drawing.Point(58, 177);
             this.normalX.Name = "normalX";
@@ -243,6 +245,7 @@ namespace STLNormalSwitcher {
             // 
             // cX
             // 
+            this.tableLayoutPanel4.SetColumnSpan(this.cX, 2);
             this.cX.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.cX.Location = new System.Drawing.Point(58, 132);
             this.cX.Name = "cX";
@@ -273,6 +276,7 @@ namespace STLNormalSwitcher {
             // 
             // bX
             // 
+            this.tableLayoutPanel4.SetColumnSpan(this.bX, 2);
             this.bX.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.bX.Location = new System.Drawing.Point(58, 102);
             this.bX.Name = "bX";
@@ -303,6 +307,7 @@ namespace STLNormalSwitcher {
             // 
             // aX
             // 
+            this.tableLayoutPanel4.SetColumnSpan(this.aX, 2);
             this.aX.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.aX.Location = new System.Drawing.Point(58, 72);
             this.aX.Name = "aX";
@@ -355,6 +360,7 @@ namespace STLNormalSwitcher {
             // 
             this.labelX.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.labelX.AutoSize = true;
+            this.tableLayoutPanel4.SetColumnSpan(this.labelX, 2);
             this.labelX.Location = new System.Drawing.Point(108, 52);
             this.labelX.Name = "labelX";
             this.labelX.Size = new System.Drawing.Size(14, 13);
@@ -363,12 +369,12 @@ namespace STLNormalSwitcher {
             // 
             // triangleComboBox
             // 
-            this.tableLayoutPanel4.SetColumnSpan(this.triangleComboBox, 5);
+            this.tableLayoutPanel4.SetColumnSpan(this.triangleComboBox, 6);
             this.triangleComboBox.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.triangleComboBox.FormattingEnabled = true;
-            this.triangleComboBox.Location = new System.Drawing.Point(178, 11);
+            this.triangleComboBox.Location = new System.Drawing.Point(118, 11);
             this.triangleComboBox.Name = "triangleComboBox";
-            this.triangleComboBox.Size = new System.Drawing.Size(424, 21);
+            this.triangleComboBox.Size = new System.Drawing.Size(484, 21);
             this.triangleComboBox.TabIndex = 35;
             this.triangleComboBox.SelectedIndexChanged += new System.EventHandler(this.TriangleComboBox_SelectedIndexChanged);
             // 
@@ -376,7 +382,8 @@ namespace STLNormalSwitcher {
             // 
             this.labelTriangle.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.labelTriangle.AutoSize = true;
-            this.labelTriangle.Location = new System.Drawing.Point(68, 22);
+            this.tableLayoutPanel4.SetColumnSpan(this.labelTriangle, 2);
+            this.labelTriangle.Location = new System.Drawing.Point(13, 22);
             this.labelTriangle.Name = "labelTriangle";
             this.labelTriangle.Size = new System.Drawing.Size(93, 13);
             this.labelTriangle.TabIndex = 34;
@@ -599,14 +606,17 @@ namespace STLNormalSwitcher {
             aX.Text = aY.Text = aZ.Text = bX.Text = bY.Text = bZ.Text = cX.Text = cY.Text = cZ.Text =
                     normalX.Text = normalY.Text = normalZ.Text = "";
 
-            FillTriangleComboBox();
-            verticesA.DataSource = verticesB.DataSource = verticesC.DataSource = null;
-            verticesA.DataSource = owner.TriangleList.Vertices;
-            verticesB.DataSource = owner.TriangleList.Vertices;
-            verticesC.DataSource = owner.TriangleList.Vertices;
-            verticesA.DisplayMember = "AsString";
-            verticesB.DisplayMember = "AsString";
-            verticesC.DisplayMember = "AsString";
+            if (changed) {
+                FillTriangleComboBox();
+                verticesA.DataSource = verticesB.DataSource = verticesC.DataSource = null;
+                verticesA.DataSource = owner.TriangleList.Vertices;
+                verticesB.DataSource = owner.TriangleList.Vertices;
+                verticesC.DataSource = owner.TriangleList.Vertices;
+                verticesA.DisplayMember = "AsString";
+                verticesB.DisplayMember = "AsString";
+                verticesC.DisplayMember = "AsString";
+                changed = false;
+            }
 
             if (triangleComboBox.Items.Count > 1) {
                 triangleCopyButton.Enabled = removeButton.Enabled =
@@ -758,6 +768,7 @@ namespace STLNormalSwitcher {
                 owner.SetUndoButton(true);
                 owner.SetOrigin();
                 owner.Visualization.SetPickingColors();
+                owner.SetPanelsChanged();
                 UpdateTab();
             } catch (ArgumentException ex) {
                 MessageBox.Show(ex.Message, "", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -786,6 +797,7 @@ namespace STLNormalSwitcher {
                 owner.SetUndoButton(true);
                 owner.SetOrigin();
                 owner.Visualization.SetPickingColors();
+                owner.SetPanelsChanged();
                 UpdateTab();
             } catch (ArgumentException ex) {
                 MessageBox.Show(ex.Message, "", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -819,6 +831,7 @@ namespace STLNormalSwitcher {
                 owner.SetUndoButton(true);
                 owner.SetOrigin();
                 owner.Visualization.SetPickingColors();
+                owner.SetPanelsChanged();
                 UpdateTab();
             }
         }

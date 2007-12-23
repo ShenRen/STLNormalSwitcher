@@ -246,6 +246,15 @@ namespace STLNormalSwitcher {
             }
         }
 
+        /// <summary>
+        /// Sets the changed-flag for all Pages in the tabControl to true.
+        /// </summary>
+        internal void SetPanelsChanged() {
+            for (int i = 0; i < 3; i++) {
+                (tabControl1.TabPages[i] as Page).Changed = true;
+            }
+        }
+
         #endregion
 
         #region Event Handling Stuff
@@ -412,6 +421,7 @@ namespace STLNormalSwitcher {
             visualization.SetColorArray();
             visualization.SetPickingColors();
             SetOrigin();
+            SetPanelsChanged();
             (tabControl1.SelectedTab as Page).UpdateTab();
         }
 
@@ -431,6 +441,7 @@ namespace STLNormalSwitcher {
             visualization.SetColorArray();
             visualization.SetPickingColors();
             SetOrigin();
+            SetPanelsChanged();
             (tabControl1.SelectedTab as Page).UpdateTab();
         }
 
@@ -456,6 +467,8 @@ namespace STLNormalSwitcher {
 
             undoButton.Enabled = true;
             changed = true;
+            SetPanelsChanged();
+            SetPanelsChanged();
             (tabControl1.SelectedTab as Page).UpdateTab();
         }
 
@@ -476,6 +489,7 @@ namespace STLNormalSwitcher {
 
                 undoButton.Enabled = true;
                 changed = true;
+                SetPanelsChanged();
                 (tabControl1.SelectedTab as Page).UpdateTab();
             }
         }

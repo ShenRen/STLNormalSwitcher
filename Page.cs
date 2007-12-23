@@ -38,6 +38,13 @@ namespace STLNormalSwitcher {
 
         #endregion
 
+        #region Properties
+
+        /// <value>Sets the value of panel.Changed</value>
+        internal bool Changed { set { panel.Changed = value; }}
+
+        #endregion
+
         #region Constructors
 
         /// <summary>
