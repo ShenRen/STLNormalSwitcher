@@ -1,0 +1,195 @@
+\chapter{Introduction}
+
+STLNormalSwitcher is a small program to view STL-files (see chapter \ref{stlFormat}) and to switch the normal vectors of the triangles contained in it. Switching\index{Switching} a normal vector $(x,y,z)$ means to negate the normal vector to $(-x,-y,-z)$, so that it points the opposite way. STL-files opened in STLNormalSwitcher should not contain more than 16777214 triangles for STLNormalSwitcher to work.\\
+
+\noindent
+It allows picking the triangles whose normal vectors are to be switched either from a list\index{List} displaying the numerical values or directly in the graphical representation\index{Display-Area}. With version 2.0 triangles can also be edited, added or removed.\\
+
+\noindent
+The STLNormalSwitcher can also be used to convert STL-files from ASCII to Binary or vice versa.
+
+\enlargethispage{3\baselineskip}
+\begin{figure}[hb]
+	\centering
+	\includegraphics[width=0.81\linewidth]{window1}
+\end{figure}
+
+
+\chapter{The Menu}
+
+\section{The File Menu}
+
+\subsection{Open}
+\index{Open}
+Closes a previously opened file and opens a new one.\\
+The file has to be a valid STL-file\index{STL} (see chapter \ref{stlFormat}).
+
+\subsection{Save}
+\index{Save}
+Saves changes to the currently opened STL-file in the current format (ASCII or Binary) overwriting the old file.
+
+\subsection{Save As...}
+\index{Save As}
+Saves changes to the STL-file chosen in the displayed dialogue in the chosen format (ASCII or Binary).
+
+\subsection{Close}
+\index{Close}
+Closes the current STL-file asking the user whether he wants to save changes and resets the STLNormalSwitcher window.
+
+\subsection{Exit}
+\index{Exit}
+Ends the program, asking the user to save changes, if at least one triangle is left.
+
+\newpage
+\section{The Edit Menu}
+
+\subsection{UnDo}
+\index{UnDo}
+Reverts the last switching operation.
+
+\subsection{Reset}
+\index{Reset}
+Reverts all switching operations since the STL-file was opened.
+
+\subsection{Clear History}
+\index{Clear History}
+Clears the UnDo-list\index{UnDo}. This can save a bit of memory, but changes can only be undone completely, by using ''Reset'' or by reloading the saved STL-file.
+
+\subsection{Switch All}
+\index{Switching!All}
+Switches all normal vectors.
+
+\subsection{Switch Selected}
+\index{Switching!Selected}
+Switches the selected normal vectors.
+
+\chapter{The Window}
+
+\section{The Controls}
+
+The buttons ''UnDo''\index{UnDo}, ''Clear History''\index{Clear History}, ''Reset''\index{Reset}, ''Switch All''\index{Switching!All} and ''Switch Selected''\index{Switching!Selected} do just the same as the corresponding menuitems. 
+
+\begin{figure}[hb]
+	\centering
+	\includegraphics[width=0.9\linewidth]{window2}
+\end{figure}
+
+\newpage\noindent
+The slider allows a change of the origin of rotation along the z-axis. That value can also be set using the ''Rotation origin''\index{Rotation Origin} textbox. The value has to be an integer value. The limits for that value will be set according to the values of the vertices in the STL-file\index{STL}. A valid value is accepted when the ''Return-key'' or the ''Enter-key'' is pressed. If the entered value is not valid the rotation origin will be set back to the previous value.
+
+\begin{figure}[hb]
+	\centering
+	\includegraphics[width=0.9\linewidth]{window3}
+\end{figure}
+
+\newpage
+\section{The List-Tab}
+
+In the Edit-Tab\index{List-Tab} at the bottom of the window four columns are displayed. The first column shows the normal vectors and the other columns show vertices of the triangles.
+Clicking on a column header will sort the items in the list as strings.
+Items can be selected as usual, clicking on them using the left mouse button, pulling a rectangle over the left column with the left mouse button pressed to select neighboring items or clicking individual items with the Ctrl-key pressed to selected items that are not direct neighbors.
+The selected triangles will be marked red in the Display-Area\index{Display-Area} (see section \ref{displayArea}).
+
+\begin{figure}[hb]
+	\centering
+	\includegraphics[width=0.9\linewidth]{window4}
+\end{figure}
+
+\newpage
+\section{The Edit-Tab}
+
+The controls in the Edit-Tab\index{Edit-Tab} are only active, when exactly one triangle is selected in the Display-Area\index{Display-Area}. The coordinates of the vertices and the normal vector of that triangles are displayed in TextBoxes and can be edited individually. The TextBoxes will only accept floating point values. Only one negative prefix will be accepted and written at the beginning. Only one decimal separator will be accepted as well. With the ''Reset'' button on the Edit-Tab the orinigal values of the selected triangle will be written to the TextBoxes again. The button ''Accept Triangle'' will edit the selected triangle to match the entered values. Any entered values for the normal vector will be ignored and a normal vector vertical to the triangle will be calculated. Since there are two possible normal vectors, it may have to be switched afterwards. To manipulate the normal vector as well, the button ''Accept Triangle and Normal'' can be used. The entered values have to form real triangles. If all three vertices are colinear, the triangle will not be accepted. 
+
+\begin{figure}[htb]
+	\centering
+	\includegraphics[width=0.8\linewidth]{window6}
+\end{figure}
+
+\noindent
+The original corners of the triangle are marked in the Display-Area\index{Display-Area} by small spheres. If the values in the TextBoxes are correct floating point values, the vertex they represent will be displayed as a big sphere in the corresponding color in the Display-Area\index{Display-Area}. The A-sphere dominates the other spheres and the B-sphere dominates the C-sphere. So if all vertices are identical, only the yellow sphere will be visible.
+
+On the right side of the Edit-Tab\index{Edit-Tab} the next neighbors of each vertex of the selected triangle can be displayed. The number entered in the TextBox must be larger than zero. If the number entered is larger than the amount of possible neighbors ((number of triangles minus one) times three), it is set to that number. The correct amount of neighbors is calculated when the ''Next Neighbors'' button is pressed. With the ''Copy'' buttons the values of the selected neighbors can be copied to the TextBoxes on the left side of the Edit-Tab\index{Edit-Tab}.
+
+\begin{figure}[htb]
+	\centering
+	\includegraphics[width=0.8\linewidth]{window7}
+\end{figure}
+
+\newpage
+\section{The Add/Remove-Tab}
+
+The Add/Remove-Tab\index{Add/Remove-Tab} works much like the Edit-Tab\index{Edit-Tab} as far as selection in the Display-Area\index{Display-Area} and display of the vertices is concerned.
+
+Additionally the triangle can be selected in the ComboBox at the top of the tab. The values of all three vertices and the normal vector can be copied to the TextBoxes using the ''Copy'' button next to that ComboBox. The ComboBoxes on the right side of the tab contain all vertices to be copied to the TextBoxes individually.
+
+With the ''Remove'' button the selected triangle can be removed from the list of triangles and thus in the Display-Area\index{Display-Area}.
+
+\begin{figure}[htb]
+	\centering
+	\includegraphics[width=0.9\linewidth]{window9}
+\end{figure}
+
+\newpage
+\noindent
+The entered values will be displayed as spheres, just like on the Edit-Tab\index{Edit-Tab}, but no changes will be made to the selected triangle. The button ''Add Triangle'' will add the triangle indicated by the three big spheres to the list of triangles and calculate the normal vector. The button ''Add Triangle with Normal'' will use the entered normal vector.
+
+\begin{figure}[htb]
+	\centering
+	\includegraphics[width=0.9\linewidth]{window10}
+\end{figure}
+
+\newpage
+\section{The Display-Area}\label{displayArea}
+
+In the Display-Area\index{Display-Area} the workpiece represented in the STL-file\index{STL} is shown. It can be rotated by pressing the right mouse button and dragging the mouse. Zooming is done using the mouse wheel. A single triangle can be picked by clicking it with the left mouse button. Several triangles are picked clicking them with the left mouse button individually and holding down the Ctrl-key. Selected triangles are marked red. Selecting a triangle twice will deselect it. Clicking on the background with the left mouse button will deselect all selected triangles. Triangles with normal vectors pointing away from the viewer can be easily recognised. They don't reflect the light and appear darker as can be seen in the picture below.
+
+\begin{figure}[hb]
+	\centering
+	\includegraphics[width=0.9\linewidth]{window5}
+\end{figure}
+
+
+\chapter{STL file format}\label{stlFormat}
+
+STL (SurfaceTesselationLanguage)\index{STL} is a file format native to the stereolithography CAD software created by 3D Systems. This file format is supported by many other software packages. It is widely used for rapid prototyping and computer-aided manufacturing. STL files describe only the surface geometry of a three dimensional object without any representation of color, texture or other common CAD model attributes. The STL format specifies both ASCII and binary representations. Binary files are more common, since they are more compact.
+
+An STL file describes a raw unstructured triangulated surface by the unit normal and vertices of the triangles using a three-dimensional Cartesian coordinate system.
+
+
+\section{ASCII STL}
+
+An ASCII STL\index{STL!ASCII} file must start with the line:
+
+\begin{verbatim}
+	solid name
+\end{verbatim}
+
+\noindent
+where name is an optional string. The file continues with any number of triangles, each represented as follows:
+\begin{verbatim}
+ facet normal n1 n2 n3
+   outer loop
+     vertex v11 v12 v13
+     vertex v21 v22 v23
+     vertex v31 v32 v33
+   endloop
+ endfacet
+\end{verbatim}
+
+\noindent
+and concludes with:
+
+\begin{verbatim}
+ endsolid name
+\end{verbatim}
+
+\noindent
+White space (spaces, tabs, newlines) may be used anywhere in the file except within numbers or words. The spaces between 'facet' and 'normal' and between 'outer' and 'loop' are required.
+
+
+\section{Binary STL}
+
+Because ASCII STL files can become very large, a binary version of STL \index{STL!Binary} exists. A binary STL file has an 80 character header (Which will be ignored by this program - but should not contain 'vertex' or 'facet'. In contrast to many other programs STLNormalSwitcher can handle headers beginning with 'solid'.). Following the header is a 4 byte unsigned integer indicating the number of triangular facets in the file. Following that is data describing each triangle in turn. The file simply ends after the last triangle.\\
+
+\noindent
+Each triangle is described by twelve floating point numbers: three for the normal and then three for the X/Y/Z coordinate of each vertex - just as with the ASCII version of STL. After the twelve floats there is a two byte unsigned 'short' integer that is the 'attribute byte count' - in the standard format, this should be zero because most software does not understand anything else.
