@@ -133,7 +133,7 @@ namespace STLNormalSwitcher {
         #region Methods
 
         /// <summary>
-        /// Calculates the normal vector for the triangle.
+        /// Calculates the normal vector for the triangle with vertices ordered counter-clockwise.
         /// </summary>
         /// <returns>The normal vector</returns>
         private Vertex CalculateNormal() {
@@ -144,7 +144,7 @@ namespace STLNormalSwitcher {
 
             double factor = 0;
             for (int i = 0; i < 3; i++) {
-                n[i] = this[0][i] - n[i];
+                n[i] = n[i] - this[0][i];
                 factor += n[i] * n[i];
             }
             factor = Math.Sqrt(factor);
