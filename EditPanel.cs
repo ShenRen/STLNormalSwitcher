@@ -908,11 +908,9 @@ namespace STLNormalSwitcher {
         /// <param name="e">Standard EventArgs</param>
         private void A_Changed(object sender, EventArgs e) {
             try {
-                Vertex a = owner.TriangleList.VisualPositionOfVertex(new Vertex((float)Convert.ToDouble(aX.Text),
-                    (float)Convert.ToDouble(aY.Text), (float)Convert.ToDouble(aZ.Text)));
-                owner.TriVertices[0] = a[0];
-                owner.TriVertices[1] = a[1];
-                owner.TriVertices[2] = a[2];
+                owner.TriVertices[0] = (float)Convert.ToDouble(aX.Text);
+                owner.TriVertices[1] = (float)Convert.ToDouble(aY.Text);
+                owner.TriVertices[2] = (float)Convert.ToDouble(aZ.Text);
                 owner.Visualization.Vertices[0] = true;
             } catch { owner.Visualization.Vertices[0] = false; } finally { owner.Visualization.Refresh(); }
         }
@@ -924,11 +922,9 @@ namespace STLNormalSwitcher {
         /// <param name="e">Standard EventArgs</param>
         private void B_Changed(object sender, EventArgs e) {
             try {
-                Vertex b = owner.TriangleList.VisualPositionOfVertex(new Vertex((float)Convert.ToDouble(bX.Text),
-                    (float)Convert.ToDouble(bY.Text), (float)Convert.ToDouble(bZ.Text)));
-                owner.TriVertices[3] = b[0];
-                owner.TriVertices[4] = b[1];
-                owner.TriVertices[5] = b[2];
+                owner.TriVertices[3] = (float)Convert.ToDouble(bX.Text);
+                owner.TriVertices[4] = (float)Convert.ToDouble(bY.Text);
+                owner.TriVertices[5] = (float)Convert.ToDouble(bZ.Text);
                 owner.Visualization.Vertices[1] = true;
             } catch { owner.Visualization.Vertices[1] = false; } finally { owner.Visualization.Refresh(); }
         }
@@ -940,11 +936,9 @@ namespace STLNormalSwitcher {
         /// <param name="e">Standard EventArgs</param>
         private void C_Changed(object sender, EventArgs e) {
             try {
-                Vertex c = owner.TriangleList.VisualPositionOfVertex(new Vertex((float)Convert.ToDouble(cX.Text),
-                    (float)Convert.ToDouble(cY.Text), (float)Convert.ToDouble(cZ.Text)));
-                owner.TriVertices[6] = c[0];
-                owner.TriVertices[7] = c[1];
-                owner.TriVertices[8] = c[2];
+                owner.TriVertices[6] = (float)Convert.ToDouble(cX.Text);
+                owner.TriVertices[7] = (float)Convert.ToDouble(cY.Text);
+                owner.TriVertices[8] = (float)Convert.ToDouble(cZ.Text);
                 owner.Visualization.Vertices[2] = true;
             } catch { owner.Visualization.Vertices[2] = false; } finally { owner.Visualization.Refresh(); }
         }

@@ -105,7 +105,7 @@ namespace STLNormalSwitcher {
             for (int i = 0; i < this.Count; i++) {
                 for (int j = 0; j < 3; j++) {
                     for (int k = 0; k < 3; k++) {
-                        vertexArray[i * 9 + j * 3 + k] = scale * (((this[i][j][k] - min[k]) / (scale)) - 0.5f);
+                        vertexArray[i * 9 + j * 3 + k] = this[i][j][k];
                     }
                 }
             }
@@ -160,20 +160,6 @@ namespace STLNormalSwitcher {
 
             CalculateArrays();
             FillVertexList();
-        }
-
-        /// <summary>
-        /// Calculates the visual position of a given Vertex,
-        /// as they are in the vertexArray, from the real position.
-        /// </summary>
-        /// <param name="vertex">A given Vertex in real position</param>
-        /// <returns>The same vertex in visual position</returns>
-        internal Vertex VisualPositionOfVertex(Vertex vertex) {
-            if (scale != 0.0f) {
-                Vertex temp = new Vertex(scale * (((vertex[0] - min[0]) / (scale)) - 0.5f),
-                    scale * (((vertex[1] - min[1]) / (scale)) - 0.5f), scale * (((vertex[2] - min[2]) / (scale)) - 0.5f));
-                return temp;
-            } else { return vertex; }
         }
 
         /// <summary>

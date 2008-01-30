@@ -34,6 +34,7 @@ namespace STLNormalSwitcher {
         #region Fields
 
         private Triangle owner;
+        private string asString;
 
         #endregion
 
@@ -46,7 +47,7 @@ namespace STLNormalSwitcher {
         }
 
         /// <value>Gets the Vertex as a string</value>
-        public string AsString { get { return this.ToString(); } }
+        public string AsString { get { return asString; } }
 
         #endregion
 
@@ -62,6 +63,7 @@ namespace STLNormalSwitcher {
             this.Add(x);
             this.Add(y);
             this.Add(z);
+            asString = this.ToString();
         }
 
         #endregion
@@ -116,7 +118,7 @@ namespace STLNormalSwitcher {
         /// <returns>true, if obj == this</returns>
         public override bool Equals(object obj) {
             if (obj is Vertex) {
-                if ((this[0] == (obj as Vertex)[0]) && (this[1] == (obj as Vertex)[1]) && (this[1] == (obj as Vertex)[1])) {
+                if (this.asString == (obj as Vertex).AsString) {
                     return true;
                 } else { return false; }
             } else { return base.Equals(obj); }

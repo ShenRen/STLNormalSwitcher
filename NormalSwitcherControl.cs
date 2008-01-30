@@ -354,7 +354,7 @@ namespace STLNormalSwitcher {
                 Gl.glColor3fv(aColor);
                 Gl.glPushMatrix();
                 Gl.glTranslatef(owner.TriVertices[0], owner.TriVertices[1], owner.TriVertices[2]);
-                Glu.gluSphere(quadobj, 2, 10, 10);
+                Glu.gluSphere(quadobj, scale/100, 10, 10);
                 Gl.glPopMatrix();
             }
 
@@ -362,7 +362,7 @@ namespace STLNormalSwitcher {
                 Gl.glColor3fv(bColor);
                 Gl.glPushMatrix();
                 Gl.glTranslatef(owner.TriVertices[3], owner.TriVertices[4], owner.TriVertices[5]);
-                Glu.gluSphere(quadobj, 2, 10, 10);
+                Glu.gluSphere(quadobj, scale / 100, 10, 10);
                 Gl.glPopMatrix();
             }
 
@@ -370,7 +370,7 @@ namespace STLNormalSwitcher {
                 Gl.glColor3fv(cColor);
                 Gl.glPushMatrix();
                 Gl.glTranslatef(owner.TriVertices[6], owner.TriVertices[7], owner.TriVertices[8]);
-                Glu.gluSphere(quadobj, 2, 10, 10);
+                Glu.gluSphere(quadobj, scale / 100, 10, 10);
                 Gl.glPopMatrix();
             }
 
@@ -387,19 +387,19 @@ namespace STLNormalSwitcher {
             Gl.glColor3fv(aColor);
             Gl.glPushMatrix();
             Gl.glTranslatef(owner.Corners[0],owner.Corners[1], owner.Corners[2]);
-            Glu.gluSphere(quadobj, 1, 10, 10);
+            Glu.gluSphere(quadobj, scale / 200, 10, 10);
             Gl.glPopMatrix();
 
             Gl.glColor3fv(bColor);
             Gl.glPushMatrix();
             Gl.glTranslatef(owner.Corners[3], owner.Corners[4], owner.Corners[5]);
-            Glu.gluSphere(quadobj, 1, 10, 10);
+            Glu.gluSphere(quadobj, scale / 200, 10, 10);
             Gl.glPopMatrix();
 
             Gl.glColor3fv(cColor);
             Gl.glPushMatrix();
             Gl.glTranslatef(owner.Corners[6], owner.Corners[7], owner.Corners[8]);
-            Glu.gluSphere(quadobj, 1, 10, 10);
+            Glu.gluSphere(quadobj, scale / 200, 10, 10);
             Gl.glPopMatrix();
 
             Glu.gluDeleteQuadric(quadobj);
@@ -494,8 +494,8 @@ namespace STLNormalSwitcher {
         /// <param name="sender"> The mouse wheel </param>
         /// <param name="ev"> Standard MouseEventArgs </param>
         private void MouseWheelEvent(object sender, MouseEventArgs ev) {
-            if (this.zoom + ev.Delta / 10 < scale) {
-                this.zoom += ev.Delta / 10;
+            if (this.zoom + scale * ev.Delta / 1000 < scale) {
+                this.zoom += scale * ev.Delta / 1000;
                 this.SetView();
                 this.Invalidate();
             }
