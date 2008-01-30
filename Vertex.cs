@@ -161,6 +161,13 @@ namespace STLNormalSwitcher {
         #endregion
 
         /// <summary>
+        /// Sets asString to the correct value;
+        /// </summary>
+        internal void Finish() {
+            asString = this.ToString();
+        }
+
+        /// <summary>
         /// Returns a copy of this Vertex.
         /// </summary>
         /// <returns>Copy of this Vertex</returns>

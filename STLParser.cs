@@ -120,6 +120,7 @@ namespace STLNormalSwitcher {
                         for (int h = 0; h < 3; h++) {
                             tmp[k][h] = binReader.ReadSingle();
                         }
+                        tmp[k].Finish();
                     }
 
                     // Last two bytes are only to fill up to 50 bytes
@@ -170,6 +171,7 @@ namespace STLNormalSwitcher {
                             for (int i = 0; i < 3; i++) {
                                 tmp[count - 1][i] = float.Parse(v[i+1], NumberStyles.Float, numberFormatInfo);
                             }
+                            tmp[count - 1].Finish();
                             count++;
                         } else if (v[0].ToLower() == "facet") {
                             for (int j = 0; j < 3; j++) {
