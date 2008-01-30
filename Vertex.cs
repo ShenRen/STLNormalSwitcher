@@ -70,11 +70,7 @@ namespace STLNormalSwitcher {
 
         #region Methods
 
-        /// <summary>
-        /// Returns a copy of this Vertex.
-        /// </summary>
-        /// <returns>Copy of this Vertex</returns>
-        internal Vertex Copy() { return new Vertex(this[0], this[1], this[2]); }
+        #region Operators
 
         /// <summary>
         /// Calculates the distance of this Vertex from the Vertex given by <paramref name="v2"/>.
@@ -86,19 +82,89 @@ namespace STLNormalSwitcher {
         }
 
         /// <summary>
-        /// Normalizes this Vertex, so the vector it represents has length 1.
+        /// Calculates the Vertex's length, when seen as a vector
         /// </summary>
-        /// <returns>The normalized Vertex</returns>
-        internal Vertex Normalize() {
-            if ((this[0] == 0) && (this[1] == 0) && (this[2] == 0)) {
-                throw new ArgumentException("The normal vector can not be [0,0,0]!");
-            }
-            double factor = Math.Sqrt(Math.Pow(this[0], 2) + Math.Pow(this[1], 2) + Math.Pow(this[2], 2));
-            for (int i = 0; i < 3; i++) {
-                this[i] /= (float)factor;
-            }
-            return this;
+        /// <returns></returns>
+        internal float Length() {
+            return (float)System.Math.Sqrt(SqrLength());
         }
+
+        /// <summary>
+        /// Calculates the square of the Vertex's length, when seen as a vector
+        /// </summary>
+        /// <returns></returns>
+        internal float SqrLength() {
+            return this[0] * this[0] + this[1] * this[1] + this[2] * this[2];
+        }
+
+        /// <summary>
+        /// Normalizes the Vertex, when seen as a vector, to a length of 1
+        /// </summary>
+        internal void Normalize() {
+            float l = 1.0f / Length();
+            this[0] *= l;
+            this[1] *= l;
+            this[2] *= l;
+        }
+
+        /// <summary>
+        /// Calculate's the cross product (or inner product)
+        /// </summary>
+        /// <param name="v1">The first Vertex for the cross product</param>
+        /// <param name="v2">The second Vertex for the cross product</param>
+        /// <returns>The Cross product</returns>
+        internal static Vertex Cross(Vertex v1, Vertex v2) {
+            return new Vertex(v1[1] * v2[2] - v1[2] * v2[1], v1[2] * v2[0] - v1[0] * v2[2],
+                v1[0] * v2[1] - v1[1] * v2[0]);
+        }
+
+        /// <summary>
+        /// Calculates the difference of the given vertices.
+        /// </summary>
+        /// <param name="v1">The first Vertex</param>
+        /// <param name="v2">The second Vertex</param>
+        /// <returns>The Difference</returns>
+        public static Vertex operator -(Vertex v1, Vertex v2) {
+            return new Vertex(v1[0] - v2[0], v1[1] - v2[1], v1[2] - v2[2]);
+        }
+
+        /// <summary>
+        /// Calculates the product of a Vertex and a factor
+        /// </summary>
+        /// <param name="factor">the factor</param>
+        /// <param name="v">The Vertex</param>
+        /// <returns>The Product</returns>
+        public static Vertex operator *(float factor, Vertex v) {
+            return new Vertex(v[0] * factor, v[1] * factor, v[2] * factor);
+        }
+
+        /// <summary>
+        /// Calculates the cross product
+        /// </summary>
+        /// <param name="v1">The first Vertex for the cross product</param>
+        /// <param name="v2">The second Vertex for the cross product</param>
+        /// <returns>The Cross product</returns>
+        public static Vertex operator %(Vertex v1, Vertex v2) {
+            return Vertex.Cross(v1, v2);
+        }
+
+        /// <summary>
+        /// Calculates the additive inverse.
+        /// </summary>
+        /// <param name="v">The Vertex</param>
+        /// <returns>The Vertex times -1</returns>
+        public static Vertex operator -(Vertex v) {
+            return -1.0f * v;
+        }
+
+
+        #endregion
+
+        /// <summary>
+        /// Returns a copy of this Vertex.
+        /// </summary>
+        /// <returns>Copy of this Vertex</returns>
+        internal Vertex Copy() { return new Vertex(this[0], this[1], this[2]); }
 
         /// <summary>
         /// Returns the Vertex as a string.

@@ -119,7 +119,8 @@ namespace STLNormalSwitcher {
             this.Add(b);
             this.Add(c);
             if (!IsTriangle()) { throw new ArgumentException("The selected vertices do not form a triangle!"); }
-            this.Add(n.Normalize());
+            n.Normalize();
+            this.Add(n);
 
             for (int i = 0; i < this.Count; i++) {
                 this[i].Owner = this;
@@ -137,22 +138,13 @@ namespace STLNormalSwitcher {
         /// </summary>
         /// <returns>The normal vector</returns>
         private Vertex CalculateNormal() {
-            Vertex ab = new Vertex(this[1][0] - this[0][0], this[1][1] - this[0][1], this[1][2] - this[0][2]);
-            Vertex ac = new Vertex(this[2][0] - this[0][0], this[2][1] - this[0][1], this[2][2] - this[0][2]);
+            Vertex v1 = this[1] - this[0];
+            Vertex v2 = this[2] - this[0];
 
-            Vertex n = new Vertex(ab[1] * ac[2] - ab[2] * ac[1], ab[2] * ac[0] - ab[0] * ac[2], ab[0] * ac[1] - ab[1] * ac[0]);
+            Vertex normal = v1 % v2;
+            normal.Normalize();
 
-            double factor = 0;
-            for (int i = 0; i < 3; i++) {
-                n[i] = n[i] - this[0][i];
-                factor += n[i] * n[i];
-            }
-            factor = Math.Sqrt(factor);
-            for (int i = 0; i < 3; i++) {
-                n[i] /= (float)factor;
-            }
-
-            return n;
+            return normal;
         }
 
         /// <summary>
@@ -224,9 +216,7 @@ namespace STLNormalSwitcher {
         /// Switches the normal vector. Each value of the normal is multiplied by -1.
         /// </summary>
         internal void SwitchNormal() {
-            for (int i = 0; i < 3; i++) {
-                this[3][i] *= -1;
-            }
+            this[3] = -this[3];
         }
 
         /// <summary>
