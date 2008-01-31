@@ -181,7 +181,7 @@ namespace STLNormalSwitcher {
         }
 
         /// <summary>
-        /// Calculates the Extrema
+        /// Calculates the extrema, the scale and the center.
         /// </summary>
         private void SetExtrema() {
             for (int k = 0; k < 3; k++) {

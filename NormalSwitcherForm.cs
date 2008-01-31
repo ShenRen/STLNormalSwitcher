@@ -46,7 +46,7 @@ namespace STLNormalSwitcher {
         private TriangleList triangleList;
         private TriangleList backupList;
 
-        private int origin;
+        private float origin;
         private float[] triVertices = new float[9];
         private float[] corners = new float[9];
         private bool changed = false;
@@ -77,7 +77,7 @@ namespace STLNormalSwitcher {
         internal float[] Corners { get { return corners; } }
 
         /// <value>Gets the origin, the z-value to rotate around</value>
-        internal float Origin { get { return (float)origin; } }
+        internal float Origin { get { return origin; } }
 
         /// <value>Gets the currentSelection or sets it</value>
         internal Event CurrentSelection {
@@ -179,9 +179,10 @@ namespace STLNormalSwitcher {
         /// Sets the origin for rotation.
         /// </summary>
         internal void SetOrigin() {
-            originTrackBar.Minimum = -(int)(triangleList.Scale / 2);
-            originTrackBar.Maximum = (int)(triangleList.Scale / 2);
-            originTrackBar.Value = origin = 0;
+            originTrackBar.Minimum = -100;
+            originTrackBar.Maximum = 100;
+            originTrackBar.Value = 0;
+            origin = 0.0f;
             rotationOriginTextBox.Text = origin.ToString();
         }
 
@@ -549,8 +550,8 @@ namespace STLNormalSwitcher {
         /// <param name="sender">originTrackBar</param>
         /// <param name="e">Standard EventArgs</param>
         private void OriginTrackBar_ValueChanged(object sender, EventArgs e) {
-            origin = originTrackBar.Value;
-            rotationOriginTextBox.Text = origin.ToString();
+            origin = triangleList.Scale * originTrackBar.Value / 100;
+            rotationOriginTextBox.Text = originTrackBar.Value.ToString();
             visualization.Refresh();
         }
 
