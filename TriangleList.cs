@@ -184,10 +184,12 @@ namespace STLNormalSwitcher {
         /// Calculates the Extrema
         /// </summary>
         private void SetExtrema() {
-            this.min = new float[3] { 0, 0, 0 };
-            this.max = new float[3] { 0, 0, 0 };
+            for (int k = 0; k < 3; k++) {
+                min[k] = this[0].Min[k];
+                max[k] = this[0].Max[k];
+            }
 
-            for (int i = 0; i < this.Count; i++) {
+            for (int i = 1; i < this.Count; i++) {
                 for (int j = 0; j < 3; j++) {
                     if (this[i].Min[j] < min[j]) { min[j] = this[i].Min[j]; }
                     if (this[i].Max[j] > max[j]) { max[j] = this[i].Max[j]; }
