@@ -37,6 +37,7 @@ namespace STLNormalSwitcher {
 
         private float[] min = new float[3] { 0, 0, 0 };
         private float[] max = new float[3] { 0, 0, 0 };
+        private float[] center = new float[3] { 0, 0, 0 };
         private float scale;
         private float[] vertexArray;
         private float[] normalArray;
@@ -57,6 +58,9 @@ namespace STLNormalSwitcher {
 
         /// <value>Gets the scale used for drawing</value>
         internal float Scale { get { return scale; } }
+
+        /// <value>Gets the center of the object</value>
+        internal float[] Center { get { return center; } }
 
         #endregion
 
@@ -139,12 +143,19 @@ namespace STLNormalSwitcher {
         /// </summary>
         internal void FillVertexList() {
             vertices.Clear();
+            SortedList<string, Vertex> tmp = new SortedList<string, Vertex>();
+            string key;
             for (int i = 0; i < this.Count; i++) {
                 for (int j = 0; j < 3; j++) {
-                    if (!vertices.Contains(this[i][j])) {
-                        vertices.Add(this[i][j]);
+                    key = this[i][j].AsString;
+                    if (!tmp.ContainsKey(key)) {
+                        tmp.Add(key, this[i][j]);
                     }
                 }
+            }
+
+            for (int i = 0; i < tmp.Count; i++) {
+                vertices.Add(tmp.Values[i]);
             }
         }
 
@@ -153,10 +164,6 @@ namespace STLNormalSwitcher {
         /// </summary>
         internal void Finish() {
             SetExtrema();
-
-            scale = max[0] - min[0];
-            if (max[1] - min[1] > scale) { scale = max[1] - min[1]; }
-            if (max[2] - min[2] > scale) { scale = max[2] - min[2]; }
 
             CalculateArrays();
             FillVertexList();
@@ -186,6 +193,14 @@ namespace STLNormalSwitcher {
                     if (this[i].Max[j] > max[j]) { max[j] = this[i].Max[j]; }
                 }
             }
+
+            for (int i = 0; i < 3; i++) {
+                center[i] = (max[i] + min[i]) / 2;
+            }
+
+            scale = max[0] - min[0];
+            if (max[1] - min[1] > scale) { scale = max[1] - min[1]; }
+            if (max[2] - min[2] > scale) { scale = max[2] - min[2]; }
         }
 
         /// <summary>

@@ -292,6 +292,7 @@ namespace STLNormalSwitcher {
             Gl.glPushMatrix();
             Gl.glRotatef(-this.xRot, 1.0f, 0.0f, 0.0f);
             Gl.glRotatef(this.yRot, 0.0f, 0.0f, 1.0f);
+            Gl.glTranslatef(-owner.TriangleList.Center[0], -owner.TriangleList.Center[1], -owner.TriangleList.Center[2]);
             Gl.glTranslatef(0.0f, 0.0f, -owner.Origin);
 
             this.DrawSTL();
